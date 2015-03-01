@@ -1,7 +1,7 @@
 package com.github.gfx.hatebulet.api;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -19,13 +19,19 @@ public class HatebuFeedHandler extends DefaultHandler {
     enum ParsingElement {
         NONE,
         TITLE,
+        LINK,
         DESCRIPTION,
-        LINK
+        DATE,
+        SUBJECT,
+        BOOKMARK_COUNT
     }
 
     List<HatebuEntry> items = new ArrayList<>();
     @Nullable
     HatebuEntry currentItem = null;
+
+    @NonNull
+    StringBuilder currentContent = new StringBuilder();
 
     ParsingElement parsing = ParsingElement.NONE;
 
@@ -42,15 +48,24 @@ public class HatebuFeedHandler extends DefaultHandler {
             case "title":
                 parsing = ParsingElement.TITLE;
                 break;
-            case "description":
-                parsing = ParsingElement.DESCRIPTION;
-                break;
             case "link":
                 parsing = ParsingElement.LINK;
                 break;
-            default:
-                Log.w(TAG, "unknown element: " + qName);
+            case "description":
+                parsing = ParsingElement.DESCRIPTION;
+                break;
+            case "dc:date":
+                parsing = ParsingElement.DATE;
+                break;
+            case "dc:subject":
+                parsing = ParsingElement.SUBJECT;
+                break;
+            case "hatena:bookmarkcount":
+                parsing = ParsingElement.BOOKMARK_COUNT;
+                break;
         }
+
+        currentContent.setLength(0);
     }
 
     @Override
@@ -58,7 +73,29 @@ public class HatebuFeedHandler extends DefaultHandler {
         if (qName.equals("item")) {
             items.add(currentItem);
             currentItem = null;
+        } else if (currentItem != null) {
+            switch(parsing) {
+                case TITLE:
+                    currentItem.title = currentContent.toString();
+                    break;
+                case DESCRIPTION:
+                    currentItem.description = currentContent.toString();
+                    break;
+                case LINK:
+                    currentItem.link = currentContent.toString();
+                    break;
+                case SUBJECT:
+                    currentItem.subject = currentContent.toString();
+                    break;
+                case BOOKMARK_COUNT:
+                    currentItem.bookmarkCount = currentContent.toString();
+                    break;
+                case DATE:
+                    currentItem.date = currentContent.toString();
+                    break;
+            }
         }
+
         parsing = ParsingElement.NONE;
     }
 
@@ -68,16 +105,6 @@ public class HatebuFeedHandler extends DefaultHandler {
             return;
         }
 
-        switch(parsing) {
-            case TITLE:
-                currentItem.title = new String(ch, start, length);
-                break;
-            case DESCRIPTION:
-                currentItem.description = new String(ch, start, length);
-                break;
-            case LINK:
-                currentItem.link = new String(ch, start, length);
-                break;
-        }
+        currentContent.append(ch, start, length);
     }
 }
