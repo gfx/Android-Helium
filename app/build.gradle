@@ -26,4 +26,14 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'io.reactivex:rxandroid:0.24.0'
+    compile 'io.reactivex:rxjava:1.0.7'
+    compile('com.squareup.retrofit:converter-simplexml:1.9.0') {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
+    debugCompile 'com.facebook.stetho:stetho:1.0.1'
+    debugCompile 'com.facebook.stetho:stetho-okhttp:1.0.1'
 }
