@@ -55,7 +55,7 @@
                             android:id="@+id/subject"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Small.Inverse"
+                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
                             android:text="@string/placeholder_subject"
                             android:layout_weight="1" />
 
@@ -63,7 +63,7 @@
                             android:id="@+id/date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Small.Inverse"
+                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
                             android:text="@string/placeholder_date"
                             android:layout_weight="1" />
 
