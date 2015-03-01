@@ -6,9 +6,13 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
+import retrofit.http.GET;
+import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -16,29 +20,29 @@ import rx.Subscriber;
 public class HatebuFeedClient {
     private static final String TAG = HatebuFeedClient.class.getSimpleName();
 
-    public static final String ENDPOINT = "http://b.hatena.ne.jp/";
+    public static final String FEEDBURNER_ENDPOINT = "http://feeds.feedburner.com/";
+    public static final String HATENA_ENDPOINT = "http://b.hatena.ne.jp/";
 
-    final OkHttpClient httpClient;
-    final RestAdapter restAdapter;
-    final HatebuFeedService hatebuFeedService;
+    final RestAdapter feedburnerAdapter;
+    final FeedburnerService feedburnerService;
 
     public HatebuFeedClient(OkHttpClient httpClient) {
-        this.httpClient = httpClient;
+        OkClient client = new OkClient(httpClient);
 
-        restAdapter = new RestAdapter.Builder()
-                .setClient(new OkClient(httpClient))
-                .setEndpoint(ENDPOINT)
+        feedburnerAdapter = new RestAdapter.Builder()
+                .setClient(client)
+                .setEndpoint(FEEDBURNER_ENDPOINT)
                 .setConverter(new HatebuFeedConverter())
                 .build();
 
-        hatebuFeedService = restAdapter.create(HatebuFeedService.class);
+        feedburnerService = feedburnerAdapter.create(FeedburnerService.class);
     }
 
     public Observable<List<HatebuEntry>> getHotentries() {
         return Observable.create(new Observable.OnSubscribe<List<HatebuEntry>>() {
             @Override
             public void call(final Subscriber<? super List<HatebuEntry>> subscriber) {
-                hatebuFeedService.getHotentries(new retrofit.Callback<List<HatebuEntry>>() {
+                feedburnerService.getHotentries(new retrofit.Callback<List<HatebuEntry>>() {
                     @Override
                     public void success(List<HatebuEntry> hatebuEntries, retrofit.client.Response response) {
                         subscriber.onNext(hatebuEntries);
@@ -52,5 +56,15 @@ public class HatebuFeedClient {
                 });
             }
         });
+    }
+
+    static interface FeedburnerService {
+        @GET("/hatena/b/hotentry")
+        void getHotentries(Callback<List<HatebuEntry>> cb);
+    }
+
+    static interface HatenaService {
+        @GET("/hotentry/{category}.rss")
+        void getHotentry(@Path("category") String category, @Query("of") int of, Callback<List<HatebuEntry>> cb);
     }
 }

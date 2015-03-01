@@ -39,4 +39,5 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp:1.0.1'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.9'
 }
