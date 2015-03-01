@@ -1,10 +1,15 @@
-package com.github.gfx.hatebulet;
+package com.github.gfx.hatebulet.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.github.gfx.hatebulet.R;
+import static com.github.gfx.hatebulet.Constants.*;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -34,13 +39,15 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_view_hatebu) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_HATEBU));
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_view_about) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
+            startActivity(intent);
             return true;
         }
 

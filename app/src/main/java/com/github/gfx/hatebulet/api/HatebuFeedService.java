@@ -9,7 +9,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 
 public interface HatebuFeedService {
-    @GET("/hotentry?mode=rss")
+    @GET("/hotentry.rss")
     void getHotentries(Callback<List<HatebuEntry>> cb);
 
     @GET("/hotentry/{category}.rss")
