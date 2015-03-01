@@ -5,13 +5,15 @@
     android:layout_height="match_parent"
     tools:context="com.github.gfx.hatebulet.fragment.EntryFragment">
 
-    <GridView
+    <com.etsy.android.grid.StaggeredGridView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"
         android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"
+        android:verticalSpacing="4dp"
+        android:horizontalSpacing="4dp" />
 
     <TextView
         android:id="@android:id/empty"
