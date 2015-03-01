@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.gfx.hatebulet.view;
+package com.github.gfx.hatebulet.view.util;
 
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;

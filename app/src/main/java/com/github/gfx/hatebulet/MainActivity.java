@@ -2,22 +2,8 @@ package com.github.gfx.hatebulet;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.github.gfx.hatebulet.api.HatebuEntry;
-import com.github.gfx.hatebulet.api.HatebuFeedConverter;
-import com.github.gfx.hatebulet.api.HatebuFeedService;
-import com.squareup.okhttp.OkHttpClient;
-
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
 
 
 public class MainActivity extends Activity {
@@ -33,26 +19,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        OkHttpClient httpClient = new OkHttpClient();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new OkClient(httpClient))
-                .setEndpoint("http://b.hatena.ne.jp/")
-                .setConverter(new HatebuFeedConverter())
-                .build();
-        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
-
-        restAdapter.create(HatebuFeedService.class).getEntries(new Callback<List<HatebuEntry>>() {
-            @Override
-            public void success(List<HatebuEntry> hatebuEntries, Response response) {
-                Log.d(TAG, hatebuEntries.toString());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.wtf(TAG, error);
-            }
-        });
     }
 
     @Override

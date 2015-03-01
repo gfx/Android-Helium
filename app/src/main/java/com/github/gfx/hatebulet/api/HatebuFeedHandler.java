@@ -13,7 +13,7 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-class HatebuFeedHandler extends DefaultHandler {
+public class HatebuFeedHandler extends DefaultHandler {
     static final String TAG = HatebuFeedHandler.class.getSimpleName();
 
     enum ParsingElement {
@@ -23,12 +23,13 @@ class HatebuFeedHandler extends DefaultHandler {
         LINK
     }
 
-    List<FeedEntity> items = new ArrayList<>();
-    @Nullable FeedEntity currentItem = null;
+    List<HatebuEntry> items = new ArrayList<>();
+    @Nullable
+    HatebuEntry currentItem = null;
 
     ParsingElement parsing = ParsingElement.NONE;
 
-    List<FeedEntity> getItems() {
+    List<HatebuEntry> getItems() {
         return items;
     }
 
@@ -36,7 +37,7 @@ class HatebuFeedHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         switch(qName) {
             case "item":
-                currentItem = new FeedEntity();
+                currentItem = new HatebuEntry();
                 break;
             case "title":
                 parsing = ParsingElement.TITLE;
