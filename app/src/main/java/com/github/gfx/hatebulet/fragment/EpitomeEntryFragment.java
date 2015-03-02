@@ -103,8 +103,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         startActivity(intent);
     }
 
-
-    private class EntriesAdapter extends ArrayAdapter<EpitomeEntry> {
+    static class EntriesAdapter extends ArrayAdapter<EpitomeEntry> {
 
         public EntriesAdapter(Context context) {
             super(context, 0);
@@ -113,7 +112,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.card_epitome_entry, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.card_epitome_entry, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 
@@ -125,21 +124,73 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
             viewHolder.date.setText(entry.publishedAt);
             viewHolder.views.setText(Integer.toString(entry.views));
 
+            viewHolder.gists.setAdapter(new GistsAdapter(getContext(), entry.gists));
+
+            adjustHeight(viewHolder.gists);
+
             return convertView;
+        }
+
+        void adjustHeight(ListView listView) {
+            int h = 0;
+
+            for (int i = 0; i < listView.getCount(); i++) {
+                View view = listView.getAdapter().getView(i, null, listView);
+                view.measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                h += view.getMeasuredHeight();
+            }
+
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = h;
+            listView.setLayoutParams(params);
+        }
+
+        static class ViewHolder {
+            @InjectView(R.id.title)
+            TextView title;
+
+            @InjectView(R.id.views)
+            TextView views;
+
+            @InjectView(R.id.published_date)
+            TextView date;
+
+            @InjectView(R.id.gists)
+            ListView gists;
         }
     }
 
-    static class ViewHolder {
-        @InjectView(R.id.title)
-        TextView title;
+    static class GistsAdapter extends ArrayAdapter<EpitomeEntry.Gist> {
 
-        @InjectView(R.id.views)
-        TextView views;
+        public GistsAdapter(Context context, List<EpitomeEntry.Gist> gists) {
+            super(context, 0, gists);
+        }
 
-        @InjectView(R.id.published_date)
-        TextView date;
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_gist, parent, false);
+                convertView.setTag(new ViewHolder());
+            }
 
-        @InjectView(R.id.gists)
-        ListView gists;
+            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+            ButterKnife.inject(viewHolder, convertView);
+
+            EpitomeEntry.Gist gist = getItem(position);
+            viewHolder.point.setText(Integer.toString(position + 1));
+            viewHolder.text.setText(gist.content);
+
+            return convertView;
+        }
+
+        static class ViewHolder {
+            @InjectView(R.id.gist_point)
+            TextView point;
+
+            @InjectView(R.id.gist_text)
+            TextView text;
+        }
     }
 }

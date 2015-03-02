@@ -5,4 +5,6 @@
     <color name="app_accent">#5DACF2</color>
 
     <color name="bookmark_count">#5DACF2</color>
+
+    <color name="gist_point">#f64747</color>
 </resources>

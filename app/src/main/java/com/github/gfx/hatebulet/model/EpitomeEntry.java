@@ -28,6 +28,6 @@ public class EpitomeEntry {
 
     public static class Gist {
         @SerializedName("content")
-        String content;
+        public String content;
     }
 }

@@ -85,6 +85,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
+            // TODO: make a model to handle tabs
             switch (position) {
                 case 0:
                     return new EpitomeEntryFragment();
