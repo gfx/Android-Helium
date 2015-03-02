@@ -16,6 +16,10 @@ import android.view.View;
 import com.github.gfx.hatebulet.R;
 import com.github.gfx.hatebulet.fragment.EpitomeEntryFragment;
 import com.github.gfx.hatebulet.fragment.HatebuEntryFragment;
+import com.github.gfx.hatebulet.model.EntryTab;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,7 +46,22 @@ public class MainActivity extends ActionBarActivity {
 
         setSupportActionBar(toolbar);
 
-        viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager()));
+        List<EntryTab> tabs = Arrays.asList(
+                new EntryTab("Epitome", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return new EpitomeEntryFragment();
+                    }
+                }),
+                new EntryTab("Hotentry", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return new HatebuEntryFragment();
+                    }
+                })
+        );
+
+        viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
         viewPager.setCurrentItem(1); // hatebu/hotentry
     }
 
@@ -73,37 +92,27 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class MainTabsAdapter  extends FragmentStatePagerAdapter {
-        public MainTabsAdapter(FragmentManager fm) {
+    class MainTabsAdapter extends FragmentStatePagerAdapter {
+        final List<EntryTab> tabs;
+
+        public MainTabsAdapter(FragmentManager fm, List<EntryTab> tabs) {
             super(fm);
+            this.tabs = tabs;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return tabs.size();
         }
 
         @Override
         public Fragment getItem(int position) {
-            // TODO: make a model to handle tabs
-            switch (position) {
-                case 0:
-                    return new EpitomeEntryFragment();
-                case 1:
-                    return new HatebuEntryFragment();
-            }
-            throw new IllegalStateException("not reached");
+            return tabs.get(position).createFragment();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Epitome";
-                case 1:
-                    return "Hatebu Hotentry";
-            }
-            throw new IllegalStateException("not reached");
+            return tabs.get(0).title;
         }
 
         @Override
