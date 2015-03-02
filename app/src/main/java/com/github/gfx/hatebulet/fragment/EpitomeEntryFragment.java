@@ -79,16 +79,10 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
 
-        swipeRefreshLayout.setRefreshing(false);
-        reload().subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        reload().subscribe();
     }
 
     Observable<?> reload() {
@@ -160,7 +154,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
             }
 
             ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = h;
+            params.height = h + (listView.getDividerHeight() * (listView.getAdapter().getCount() - 1));
             listView.setLayoutParams(params);
         }
 
@@ -200,6 +194,11 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
             viewHolder.text.setText(gist.content);
 
             return convertView;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return false;
         }
 
         static class ViewHolder {

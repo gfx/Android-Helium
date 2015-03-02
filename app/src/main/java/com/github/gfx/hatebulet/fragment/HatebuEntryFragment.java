@@ -58,19 +58,6 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        swipeRefreshLayout.setRefreshing(true);
-        reload().subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
@@ -93,6 +80,13 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
             }
         });
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        reload().subscribe();
     }
 
     @Override
