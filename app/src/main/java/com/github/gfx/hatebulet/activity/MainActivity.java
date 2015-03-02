@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import static com.github.gfx.hatebulet.Constants.SITE_APP;
+import static com.github.gfx.hatebulet.Constants.SITE_EPITOME;
 import static com.github.gfx.hatebulet.Constants.SITE_HATEBU;
 
 
@@ -59,6 +60,10 @@ public class MainActivity extends ActionBarActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_HATEBU));
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_view_epitome) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_EPITOME));
+            startActivity(intent);
+            return true;
         } else if (id == R.id.action_view_about) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
             startActivity(intent);
@@ -85,6 +90,17 @@ public class MainActivity extends ActionBarActivity {
                     return new EpitomeEntryFragment();
                 case 1:
                     return new HatebuEntryFragment();
+            }
+            throw new IllegalStateException("not reached");
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Epitome";
+                case 1:
+                    return "Hatebu Hotentry";
             }
             throw new IllegalStateException("not reached");
         }

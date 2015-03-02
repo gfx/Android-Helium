@@ -8,6 +8,11 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_view_epitome"
+        android:title="@string/action_view_epitome"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_view_about"
         android:title="@string/action_view_about"
         android:orderInCategory="100"

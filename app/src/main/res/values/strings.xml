@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Hatebulet</string>
 
-    <string name="action_view_hatebu">Hatebu</string>
+    <string name="action_view_hatebu">Hatena Bookmark</string>
+    <string name="action_view_epitome">Epitome</string>
     <string name="action_view_about">About</string>
     <string name="placeholder_count">123</string>
     <string name="placeholder_title">Hateblet+LinkBubbleの組み合わせが便利すぎる！</string>
