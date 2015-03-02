@@ -2,10 +2,12 @@ machine:
     environment:
         TERM: dumb
         ANDROID_HOME: /usr/local/android-sdk-linux
+    java:
+        version: oraclejdk8
 
 dependencies:
-  override:
-      - echo y | android update sdk --no-ui --filter "android-21,build-tools-21.1.2"
+    pre:
+        - echo y | android update sdk --no-ui --all --filter "platform-tools,tools,android-21,build-tools-21.1.2"
 
 test:
     override:
