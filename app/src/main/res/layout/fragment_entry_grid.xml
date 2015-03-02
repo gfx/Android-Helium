@@ -5,7 +5,7 @@
     android:id="@+id/pull_to_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.gfx.hatebulet.fragment.EntryFragment">
+    tools:context="com.github.gfx.hatebulet.fragment.HatebuEntryFragment">
 
     <com.etsy.android.grid.StaggeredGridView
         android:id="@android:id/list"

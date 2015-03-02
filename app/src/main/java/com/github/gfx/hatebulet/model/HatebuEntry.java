@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.api;
+package com.github.gfx.hatebulet.model;
 
 public class HatebuEntry {
     public String title;

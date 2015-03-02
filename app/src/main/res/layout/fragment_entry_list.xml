@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.gfx.hatebulet.fragment.EntryFragment">
+    tools:context="com.github.gfx.hatebulet.fragment.HatebuEntryFragment">
 
     <ListView
         android:id="@android:id/list"

@@ -9,13 +9,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.fragment.EntryFragment;
+import com.github.gfx.hatebulet.fragment.EpitomeEntryFragment;
+import com.github.gfx.hatebulet.fragment.HatebuEntryFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager()));
+        viewPager.setCurrentItem(1); // hatebu/hotentry
     }
 
     @Override
@@ -74,19 +75,24 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return new EntryFragment();
+            switch (position) {
+                case 0:
+                    return new EpitomeEntryFragment();
+                case 1:
+                    return new HatebuEntryFragment();
+            }
+            throw new IllegalStateException("not reached");
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            Log.d(TAG, "view=" + view + ", object=" + object);
-            return true;
+            Fragment fragment = (Fragment) object;
+            return view == fragment.getView();
         }
-
     }
 }

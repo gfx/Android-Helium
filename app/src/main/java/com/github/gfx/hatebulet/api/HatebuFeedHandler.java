@@ -3,6 +3,8 @@ package com.github.gfx.hatebulet.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.github.gfx.hatebulet.model.HatebuEntry;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

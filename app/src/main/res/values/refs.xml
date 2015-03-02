@@ -8,5 +8,4 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <item name="fragment_entry" type="layout">@layout/fragment_entry_list</item>
-
 </resources>

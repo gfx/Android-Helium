@@ -3,7 +3,7 @@
 
     <string name="action_view_hatebu">Hatebu</string>
     <string name="action_view_about">About</string>
-    <string name="placeholder_bookmark_count">123</string>
+    <string name="placeholder_count">123</string>
     <string name="placeholder_title">Hateblet+LinkBubbleの組み合わせが便利すぎる！</string>
     <string name="placeholder_description">1. blah blah blah\n2. blah blah blah\n3. blah blah blah\n4. blah blah blah</string>
     <string name="placeholder_subject">テクノロジー</string>

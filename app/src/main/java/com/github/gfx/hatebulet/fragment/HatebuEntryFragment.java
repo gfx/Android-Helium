@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.api.HatebuEntry;
+import com.github.gfx.hatebulet.model.HatebuEntry;
 import com.github.gfx.hatebulet.api.HatebuFeedClient;
 import com.github.gfx.hatebulet.api.HttpClientHolder;
 
@@ -34,8 +34,8 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class EntryFragment extends Fragment implements AbsListView.OnItemClickListener {
-    static final String TAG = EntryFragment.class.getSimpleName();
+public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
+    static final String TAG = HatebuEntryFragment.class.getSimpleName();
 
     @InjectView(android.R.id.list)
     AbsListView listView;
@@ -47,7 +47,7 @@ public class EntryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     ArrayAdapter<HatebuEntry> adapter;
 
-    public EntryFragment() {
+    public HatebuEntryFragment() {
     }
 
     @Override
@@ -66,7 +66,7 @@ public class EntryFragment extends Fragment implements AbsListView.OnItemClickLi
         pullToRefresh.setRefreshing(true);
         reload().subscribe(new Action1<Object>() {
             @Override
-            public void call(Object _) {
+            public void call(Object o) {
                 pullToRefresh.setRefreshComplete();
             }
         });
@@ -89,7 +89,7 @@ public class EntryFragment extends Fragment implements AbsListView.OnItemClickLi
                     public void onRefreshStarted(View view) {
                         reload().subscribe(new Action1<Object>() {
                             @Override
-                            public void call(Object _) {
+                            public void call(Object o) {
                                 pullToRefresh.setRefreshComplete();
                             }
                         });
@@ -110,6 +110,7 @@ public class EntryFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     Observable<?> reload() {
+        Log.d(TAG, "reload for " + this);
         return feedClient.getHotentries()
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
@@ -128,7 +129,7 @@ public class EntryFragment extends Fragment implements AbsListView.OnItemClickLi
                 });
     }
 
-    class EntriesAdapter extends ArrayAdapter<HatebuEntry> {
+    private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {
 
         public EntriesAdapter(Context context) {
             super(context, 0);
@@ -137,7 +138,7 @@ public class EntryFragment extends Fragment implements AbsListView.OnItemClickLi
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.card_entry, parent, false);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.card_hatebu_entry, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 

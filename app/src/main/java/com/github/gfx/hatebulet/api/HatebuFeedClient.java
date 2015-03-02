@@ -1,5 +1,6 @@
 package com.github.gfx.hatebulet.api;
 
+import com.github.gfx.hatebulet.model.HatebuEntry;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.List;
@@ -65,6 +66,6 @@ public class HatebuFeedClient {
 
     static interface HatenaService {
         @GET("/hotentry/{category}.rss")
-        void getHotentry(@Path("category") String category, @Query("of") int of, Callback<List<HatebuEntry>> cb);
+        void getHotentries(@Path("category") String category, @Query("of") int of, Callback<List<HatebuEntry>> cb);
     }
 }
