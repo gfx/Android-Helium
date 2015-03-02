@@ -2,3 +2,11 @@ machine:
     environment:
         TERM: dumb
         ANDROID_HOME: /usr/local/android-sdk-linux
+
+dependencies:
+  override:
+      - echo y | android update sdk --no-ui --filter "android-21,build-tools-21.1.2"
+
+deployment:
+    commands:
+        - ./gradlew build
