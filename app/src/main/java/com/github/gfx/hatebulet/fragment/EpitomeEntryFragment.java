@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,7 +106,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
                 });
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EpitomeEntry entry = adapter.getItem(position);
@@ -135,11 +135,36 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
             viewHolder.date.setText(entry.publishedAt);
             viewHolder.views.setText(Integer.toString(entry.views));
 
-            viewHolder.gists.setAdapter(new GistsAdapter(getContext(), entry.gists));
-
-            adjustHeight(viewHolder.gists);
+            fillGists(viewHolder.gists, entry.gists);
 
             return convertView;
+        }
+
+        void fillGists(LinearLayout layout, List<EpitomeEntry.Gist> gists) {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+
+            int height = 0;
+
+            for (int i = 0; i < gists.size(); i++) {
+                View view = inflater.inflate(R.layout.item_gist, layout, false);
+
+                GistViewHolder vh = new GistViewHolder();
+                ButterKnife.inject(vh, view);
+
+                vh.point.setText(Integer.toString(i + 1));
+                vh.text.setText(gists.get(i).content);
+
+                view.measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                height += view.getMeasuredHeight();
+
+                layout.addView(view);
+            }
+
+            ViewGroup.LayoutParams params = layout.getLayoutParams();
+            params.height = height;
+            layout.setLayoutParams(params);
         }
 
         void adjustHeight(ListView listView) {
@@ -169,7 +194,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
             TextView date;
 
             @InjectView(R.id.gists)
-            ListView gists;
+            LinearLayout gists;
         }
     }
 
@@ -183,10 +208,10 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_gist, parent, false);
-                convertView.setTag(new ViewHolder());
+                convertView.setTag(new GistViewHolder());
             }
 
-            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+            GistViewHolder viewHolder = (GistViewHolder) convertView.getTag();
             ButterKnife.inject(viewHolder, convertView);
 
             EpitomeEntry.Gist gist = getItem(position);
@@ -200,13 +225,13 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         public boolean isEnabled(int position) {
             return false;
         }
+    }
 
-        static class ViewHolder {
-            @InjectView(R.id.gist_point)
-            TextView point;
+    static class GistViewHolder {
+        @InjectView(R.id.gist_point)
+        TextView point;
 
-            @InjectView(R.id.gist_text)
-            TextView text;
-        }
+        @InjectView(R.id.gist_text)
+        TextView text;
     }
 }
