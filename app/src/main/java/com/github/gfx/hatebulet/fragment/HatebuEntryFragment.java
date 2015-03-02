@@ -1,6 +1,5 @@
 package com.github.gfx.hatebulet.fragment;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +7,8 @@ import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.model.HatebuEntry;
 import com.github.gfx.hatebulet.api.HatebuFeedClient;
 import com.github.gfx.hatebulet.api.HttpClientHolder;
+import com.github.gfx.hatebulet.model.HatebuEntry;
 
 import java.util.List;
 
@@ -30,9 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
@@ -40,8 +38,8 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
     @InjectView(android.R.id.list)
     AbsListView listView;
 
-    @InjectView(R.id.pull_to_refresh)
-    PullToRefreshLayout pullToRefresh;
+    @InjectView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     HatebuFeedClient feedClient;
 
@@ -63,11 +61,11 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
     public void onResume() {
         super.onResume();
 
-        pullToRefresh.setRefreshing(true);
+        swipeRefreshLayout.setRefreshing(true);
         reload().subscribe(new Action1<Object>() {
             @Override
             public void call(Object o) {
-                pullToRefresh.setRefreshComplete();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -82,21 +80,18 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        ActionBarPullToRefresh.from(getActivity())
-                .allChildrenArePullable()
-                .listener(new OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reload().subscribe(new Action1<Object>() {
                     @Override
-                    public void onRefreshStarted(View view) {
-                        reload().subscribe(new Action1<Object>() {
-                            @Override
-                            public void call(Object o) {
-                                pullToRefresh.setRefreshComplete();
-                            }
-                        });
+                    public void call(Object o) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
-                })
-                .setup(pullToRefresh);
+                });
 
+            }
+        });
         return view;
     }
 

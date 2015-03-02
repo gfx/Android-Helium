@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,9 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     @InjectView(android.R.id.list)
     AbsListView listView;
 
+    @InjectView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     EntriesAdapter adapter;
 
     EpitomeFeedClient feedClient;
@@ -59,6 +63,18 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
 
         listView.setOnItemClickListener(this);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reload().subscribe(new Action1<Object>() {
+                    @Override
+                    public void call(Object o) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        });
+
         return view;
     }
 
@@ -66,10 +82,11 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     public void onResume() {
         super.onResume();
 
+        swipeRefreshLayout.setRefreshing(false);
         reload().subscribe(new Action1<Object>() {
             @Override
             public void call(Object o) {
-
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
