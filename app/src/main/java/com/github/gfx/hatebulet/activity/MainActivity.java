@@ -3,36 +3,49 @@ package com.github.gfx.hatebulet.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.github.gfx.hatebulet.R;
-import static com.github.gfx.hatebulet.Constants.*;
+import com.github.gfx.hatebulet.fragment.EntryFragment;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+import static com.github.gfx.hatebulet.Constants.SITE_APP;
+import static com.github.gfx.hatebulet.Constants.SITE_HATEBU;
 
 
 public class MainActivity extends ActionBarActivity {
     static final String TAG = MainActivity.class.getSimpleName();
 
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @InjectView(R.id.view_pager)
+    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+        viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager()));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -52,5 +65,28 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class MainTabsAdapter  extends FragmentStatePagerAdapter {
+        public MainTabsAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new EntryFragment();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            Log.d(TAG, "view=" + view + ", object=" + object);
+            return true;
+        }
+
     }
 }
