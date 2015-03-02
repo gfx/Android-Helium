@@ -1,3 +1,4 @@
 machine:
     environment:
         TERM: dumb
+        ANDROID_HOME: /usr/local/android-sdk-linux
