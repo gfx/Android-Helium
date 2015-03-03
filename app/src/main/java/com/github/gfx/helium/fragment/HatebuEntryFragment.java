@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.fragment;
+package com.github.gfx.helium.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -20,20 +21,40 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.api.HatebuFeedClient;
-import com.github.gfx.hatebulet.api.HttpClientHolder;
-import com.github.gfx.hatebulet.model.HatebuEntry;
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.HttpClientHolder;
+import com.github.gfx.helium.model.HatebuEntry;
 
 import java.util.List;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 
+@ParametersAreNonnullByDefault
 public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
+
+    static final String kCategory = "category";
+
+
+    public static HatebuEntryFragment newInstance() {
+        HatebuEntryFragment fragment = new HatebuEntryFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
+    public static HatebuEntryFragment newInstance(String category) {
+        HatebuEntryFragment fragment = new HatebuEntryFragment();
+        Bundle args = new Bundle();
+        args.putString(kCategory, category);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @InjectView(android.R.id.list)
     AbsListView listView;
@@ -58,10 +79,9 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
-
         ButterKnife.inject(this, view);
 
         listView.setAdapter(adapter);
@@ -100,7 +120,14 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
 
     Observable<?> reload() {
         Log.d(TAG, "reload for " + this);
-        return feedClient.getHotentries()
+
+        Observable<List<HatebuEntry>> observable;
+        if (getArguments() != null && getArguments().getString(kCategory) != null) {
+            observable = feedClient.getHotentries(getArguments().getString(kCategory));
+        } else {
+            observable = feedClient.getHotentries();
+        }
+        return observable
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
@@ -125,7 +152,7 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.card_hatebu_entry, parent, false);
                 convertView.setTag(new ViewHolder());

@@ -1,7 +1,7 @@
-package com.github.gfx.hatebulet.api;
+package com.github.gfx.helium.api;
 
-import com.github.gfx.hatebulet.model.EpitomeBeam;
-import com.github.gfx.hatebulet.model.EpitomeEntry;
+import com.github.gfx.helium.model.EpitomeBeam;
+import com.github.gfx.helium.model.EpitomeEntry;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 

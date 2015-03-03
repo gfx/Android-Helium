@@ -1,12 +1,12 @@
-package com.github.gfx.hatebulet;
+package com.github.gfx.helium;
 
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.github.gfx.hatebulet.api.HttpClientHolder;
+import com.github.gfx.helium.api.HttpClientHolder;
 
-public class HatebuletApplication extends Application {
+public class HeliumApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

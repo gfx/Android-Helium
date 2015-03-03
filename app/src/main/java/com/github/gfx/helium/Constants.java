@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet;
+package com.github.gfx.helium;
 
 public class Constants {
     public static final String SITE_HATEBU = "http://b.hatena.ne.jp/";

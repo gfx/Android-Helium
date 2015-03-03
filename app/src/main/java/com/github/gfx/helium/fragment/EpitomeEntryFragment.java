@@ -1,9 +1,10 @@
-package com.github.gfx.hatebulet.fragment;
+package com.github.gfx.helium.fragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -14,24 +15,36 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.api.EpitomeFeedClient;
-import com.github.gfx.hatebulet.api.HttpClientHolder;
-import com.github.gfx.hatebulet.model.EpitomeEntry;
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.api.EpitomeFeedClient;
+import com.github.gfx.helium.api.HttpClientHolder;
+import com.github.gfx.helium.model.EpitomeEntry;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
+@ParametersAreNonnullByDefault
 public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
     static final String TAG = EpitomeEntry.class.getSimpleName();
+
+    public static EpitomeEntryFragment newInstance() {
+        EpitomeEntryFragment fragment = new EpitomeEntryFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+
+    }
 
     @InjectView(android.R.id.list)
     AbsListView listView;
@@ -55,13 +68,12 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
         ButterKnife.inject(this, view);
 
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -75,7 +87,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
                 });
             }
         });
-
         return view;
     }
 
@@ -110,7 +121,8 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EpitomeEntry entry = adapter.getItem(position);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(entry.epitomeUrl));
+        Uri uri = Uri.parse(entry.upstreamUrl);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
 
@@ -121,32 +133,62 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public void addAll(Collection<? extends EpitomeEntry> collection) {
+            Iterator<? extends EpitomeEntry> iterator = Observable.from(collection)
+                    .filter(new Func1<EpitomeEntry, Boolean>() {
+                        @Override
+                        public Boolean call(EpitomeEntry epitomeEntry) {
+                            return epitomeEntry.hasKnownScheme();
+                        }
+                    })
+                    .toBlocking()
+                    .getIterator();
+
+
+            while (iterator.hasNext()) {
+                add(iterator.next());
+            }
+        }
+
+        @Override
+        public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.card_epitome_entry, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 
-            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-            ButterKnife.inject(viewHolder, convertView);
-
             EpitomeEntry entry = getItem(position);
+
+            if (entry.isGists()) {
+                setupSchemaGists(convertView, entry);
+                convertView.setVisibility(View.VISIBLE);
+            } else {
+                throw new IllegalStateException("Unknown scheme: " + entry.scheme);
+            }
+
+            return convertView;
+        }
+
+        void setupSchemaGists(View view, EpitomeEntry entry) {
+
+            ViewHolder viewHolder = (ViewHolder) view.getTag();
+            ButterKnife.inject(viewHolder, view);
+
             viewHolder.title.setText(entry.title);
             viewHolder.date.setText(entry.publishedAt);
             viewHolder.views.setText(Integer.toString(entry.views));
 
             fillGists(viewHolder.gists, entry.gists);
 
-            return convertView;
         }
 
         void fillGists(LinearLayout layout, List<EpitomeEntry.Gist> gists) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
 
-            int height = 0;
+            layout.removeAllViews();
 
             for (int i = 0; i < gists.size(); i++) {
-                View view = inflater.inflate(R.layout.item_gist, layout, false);
+                View view = inflater.inflate(R.layout.item_epitome_gist, layout, false);
 
                 GistViewHolder vh = new GistViewHolder();
                 ButterKnife.inject(vh, view);
@@ -154,33 +196,8 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
                 vh.point.setText(Integer.toString(i + 1));
                 vh.text.setText(gists.get(i).content);
 
-                view.measure(
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                height += view.getMeasuredHeight();
-
                 layout.addView(view);
             }
-
-            ViewGroup.LayoutParams params = layout.getLayoutParams();
-            params.height = height;
-            layout.setLayoutParams(params);
-        }
-
-        void adjustHeight(ListView listView) {
-            int h = 0;
-
-            for (int i = 0; i < listView.getCount(); i++) {
-                View view = listView.getAdapter().getView(i, null, listView);
-                view.measure(
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                h += view.getMeasuredHeight();
-            }
-
-            ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = h + (listView.getDividerHeight() * (listView.getAdapter().getCount() - 1));
-            listView.setLayoutParams(params);
         }
 
         static class ViewHolder {
@@ -195,35 +212,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
 
             @InjectView(R.id.gists)
             LinearLayout gists;
-        }
-    }
-
-    static class GistsAdapter extends ArrayAdapter<EpitomeEntry.Gist> {
-
-        public GistsAdapter(Context context, List<EpitomeEntry.Gist> gists) {
-            super(context, 0, gists);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_gist, parent, false);
-                convertView.setTag(new GistViewHolder());
-            }
-
-            GistViewHolder viewHolder = (GistViewHolder) convertView.getTag();
-            ButterKnife.inject(viewHolder, convertView);
-
-            EpitomeEntry.Gist gist = getItem(position);
-            viewHolder.point.setText(Integer.toString(position + 1));
-            viewHolder.text.setText(gist.content);
-
-            return convertView;
-        }
-
-        @Override
-        public boolean isEnabled(int position) {
-            return false;
         }
     }
 
