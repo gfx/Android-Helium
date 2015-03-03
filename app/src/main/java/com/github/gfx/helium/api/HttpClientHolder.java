@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.api;
+package com.github.gfx.helium.api;
 
 import android.support.annotation.NonNull;
 

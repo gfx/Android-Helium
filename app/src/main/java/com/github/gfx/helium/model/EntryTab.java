@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.model;
+package com.github.gfx.helium.model;
 
 import android.support.v4.app.Fragment;
 

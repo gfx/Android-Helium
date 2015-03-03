@@ -5,7 +5,7 @@
     android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.gfx.hatebulet.fragment.HatebuEntryFragment">
+    tools:context="com.github.gfx.helium.fragment.HatebuEntryFragment">
 
     <ListView
         android:id="@android:id/list"

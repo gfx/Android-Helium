@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet;
+package com.github.gfx.helium;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

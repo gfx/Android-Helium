@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.activity;
+package com.github.gfx.helium.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,10 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.fragment.EpitomeEntryFragment;
-import com.github.gfx.hatebulet.fragment.HatebuEntryFragment;
-import com.github.gfx.hatebulet.model.EntryTab;
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.fragment.EpitomeEntryFragment;
+import com.github.gfx.helium.fragment.HatebuEntryFragment;
+import com.github.gfx.helium.model.EntryTab;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +24,9 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-import static com.github.gfx.hatebulet.Constants.SITE_APP;
-import static com.github.gfx.hatebulet.Constants.SITE_EPITOME;
-import static com.github.gfx.hatebulet.Constants.SITE_HATEBU;
+import static com.github.gfx.helium.Constants.SITE_APP;
+import static com.github.gfx.helium.Constants.SITE_EPITOME;
+import static com.github.gfx.helium.Constants.SITE_HATEBU;
 
 
 public class MainActivity extends ActionBarActivity {
