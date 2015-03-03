@@ -23,6 +23,8 @@ import com.github.gfx.helium.api.EpitomeFeedClient;
 import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.EpitomeEntry;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,6 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
 public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
@@ -131,16 +134,47 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         }
 
         @Override
+        public void addAll(Collection<? extends EpitomeEntry> collection) {
+            Iterator<? extends EpitomeEntry> iterator = Observable.from(collection)
+                    .filter(new Func1<EpitomeEntry, Boolean>() {
+                        @Override
+                        public Boolean call(EpitomeEntry epitomeEntry) {
+                            return epitomeEntry.hasKnownScheme();
+                        }
+                    })
+                    .toBlocking()
+                    .getIterator();
+
+
+            while (iterator.hasNext()) {
+                add(iterator.next());
+            }
+        }
+
+        @Override
         public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.card_epitome_entry, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 
-            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-            ButterKnife.inject(viewHolder, convertView);
-
             EpitomeEntry entry = getItem(position);
+
+            if (entry.isGists()) {
+                setupSchemaGists(convertView, entry);
+                convertView.setVisibility(View.VISIBLE);
+            } else {
+                throw new IllegalStateException("Unknown scheme: " + entry.scheme);
+            }
+
+            return convertView;
+        }
+
+        void setupSchemaGists(View view, EpitomeEntry entry) {
+
+            ViewHolder viewHolder = (ViewHolder) view.getTag();
+            ButterKnife.inject(viewHolder, view);
+
             viewHolder.title.setText(entry.title);
             viewHolder.date.setText(entry.publishedAt);
             viewHolder.views.setText(Integer.toString(entry.views));
@@ -149,7 +183,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
 
             adjustHeight(viewHolder.gists);
 
-            return convertView;
         }
 
         void adjustHeight(ListView listView) {

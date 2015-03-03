@@ -5,8 +5,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class EpitomeEntry {
+    final static String SCHEME_GISTS = "gists";
+
     @SerializedName("id")
     public String id;
+
+    @SerializedName("scheme")
+    public String scheme;
 
     @SerializedName("title")
     public String title;
@@ -29,5 +34,13 @@ public class EpitomeEntry {
     public static class Gist {
         @SerializedName("content")
         public String content;
+    }
+
+    public boolean hasKnownScheme() {
+        return isGists();
+    }
+
+    public boolean isGists() {
+        return SCHEME_GISTS.equals(scheme);
     }
 }
