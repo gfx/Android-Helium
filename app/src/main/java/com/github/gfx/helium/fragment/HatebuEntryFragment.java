@@ -38,11 +38,13 @@ import rx.Observable;
 import rx.functions.Action1;
 
 @ParametersAreNonnullByDefault
-public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class HatebuEntryFragment extends Fragment
+        implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
 
-    static final String kCategory = "category";
+    static final String kHatebuEntryPrefix = "http://b.hatena.ne.jp/entry/";
 
+    static final String kCategory = "category";
 
     public static HatebuEntryFragment newInstance() {
         HatebuEntryFragment fragment = new HatebuEntryFragment();
@@ -88,6 +90,7 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -109,15 +112,6 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
         super.onStart();
 
         reload().subscribe();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        HatebuEntry entry = adapter.getItem(position);
-
-        Uri uri = Uri.parse(entry.link);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
     }
 
     Observable<?> reload() {
@@ -145,6 +139,25 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        HatebuEntry entry = adapter.getItem(position);
+
+        Uri uri = Uri.parse(entry.link);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        HatebuEntry entry = adapter.getItem(position);
+
+        Uri uri = Uri.parse(kHatebuEntryPrefix + entry.link);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+        return true;
     }
 
     private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {

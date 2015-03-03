@@ -38,7 +38,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
     static final String TAG = EpitomeEntry.class.getSimpleName();
 
     public static EpitomeEntryFragment newInstance() {
@@ -77,6 +77,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -126,6 +127,16 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         Uri uri = Uri.parse(entry.upstreamUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        EpitomeEntry entry = adapter.getItem(position);
+
+        Uri uri = Uri.parse(entry.epitomeUrl);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+        return true;
     }
 
     static class EntriesAdapter extends ArrayAdapter<EpitomeEntry> {
