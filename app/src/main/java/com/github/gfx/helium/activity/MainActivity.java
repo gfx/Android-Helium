@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
                         return HatebuEntryFragment.newInstance("it");
                     }
                 }),
-                new EntryTab("総合", new EntryTab.FragmentFactory() {
+                new EntryTab("一般", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
                         return HatebuEntryFragment.newInstance("general");
