@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.fragment;
+package com.github.gfx.helium.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.gfx.hatebulet.R;
-import com.github.gfx.hatebulet.api.EpitomeFeedClient;
-import com.github.gfx.hatebulet.api.HttpClientHolder;
-import com.github.gfx.hatebulet.model.EpitomeEntry;
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.api.EpitomeFeedClient;
+import com.github.gfx.helium.api.HttpClientHolder;
+import com.github.gfx.helium.model.EpitomeEntry;
 
 import java.util.List;
 

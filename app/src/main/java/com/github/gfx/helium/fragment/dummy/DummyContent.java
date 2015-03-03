@@ -1,4 +1,4 @@
-package com.github.gfx.hatebulet.fragment.dummy;
+package com.github.gfx.helium.fragment.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

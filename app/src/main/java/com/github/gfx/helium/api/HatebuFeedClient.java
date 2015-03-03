@@ -1,7 +1,7 @@
-package com.github.gfx.hatebulet.api;
+package com.github.gfx.helium.api;
 
-import com.github.gfx.hatebulet.BuildConfig;
-import com.github.gfx.hatebulet.model.HatebuEntry;
+import com.github.gfx.helium.BuildConfig;
+import com.github.gfx.helium.model.HatebuEntry;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.List;
