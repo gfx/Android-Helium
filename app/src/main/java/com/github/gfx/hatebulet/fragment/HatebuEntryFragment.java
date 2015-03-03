@@ -82,7 +82,6 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
-
         ButterKnife.inject(this, view);
 
         listView.setAdapter(adapter);

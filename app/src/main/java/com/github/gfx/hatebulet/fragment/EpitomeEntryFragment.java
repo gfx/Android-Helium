@@ -71,7 +71,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         ButterKnife.inject(this, view);
 
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -85,7 +84,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
                 });
             }
         });
-
         return view;
     }
 
@@ -121,7 +119,8 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EpitomeEntry entry = adapter.getItem(position);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(entry.epitomeUrl));
+        Uri uri = Uri.parse(entry.upstreamUrl);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
 
