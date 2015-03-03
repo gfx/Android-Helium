@@ -36,8 +36,8 @@ import rx.functions.Action1;
 public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
     static final String TAG = EpitomeEntry.class.getSimpleName();
 
-    public static HatebuEntryFragment newInstance() {
-        HatebuEntryFragment fragment = new HatebuEntryFragment();
+    public static EpitomeEntryFragment newInstance() {
+        EpitomeEntryFragment fragment = new EpitomeEntryFragment();
         fragment.setArguments(new Bundle());
         return fragment;
 
