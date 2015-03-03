@@ -44,4 +44,5 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp:1.0.1'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'net.danlew:android.joda:2.7.1'
 }

@@ -26,6 +26,8 @@ import com.github.gfx.helium.api.HatebuFeedClient;
 import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.HatebuEntry;
 
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -164,7 +166,7 @@ public class HatebuEntryFragment extends Fragment implements AbsListView.OnItemC
             HatebuEntry entry = getItem(position);
 
             viewHolder.title.setText(entry.title);
-            viewHolder.date.setText(entry.date);
+            viewHolder.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
             viewHolder.subject.setText(entry.subject);
             viewHolder.bookmarkCount.setText(entry.bookmarkCount);
             viewHolder.description.setText(entry.description);

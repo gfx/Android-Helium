@@ -23,6 +23,8 @@ import com.github.gfx.helium.api.EpitomeFeedClient;
 import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.EpitomeEntry;
 
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -175,11 +177,11 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
             ButterKnife.inject(viewHolder, view);
 
             viewHolder.title.setText(entry.title);
-            viewHolder.date.setText(entry.publishedAt);
-            viewHolder.views.setText(Integer.toString(entry.views));
+            viewHolder.upstreamUrl.setText(entry.upstreamUrl);
+            viewHolder.views.setText("閲覧数: " + Integer.toString(entry.views));
+            viewHolder.date.setText("投稿日: " + ISODateTimeFormat.date().print(entry.getTimestamp()));
 
             fillGists(viewHolder.gists, entry.gists);
-
         }
 
         void fillGists(LinearLayout layout, List<EpitomeEntry.Gist> gists) {
@@ -203,6 +205,9 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         static class ViewHolder {
             @InjectView(R.id.title)
             TextView title;
+
+            @InjectView(R.id.upstream_url)
+            TextView upstreamUrl;
 
             @InjectView(R.id.views)
             TextView views;

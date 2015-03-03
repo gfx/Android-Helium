@@ -2,6 +2,9 @@ package com.github.gfx.helium.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.util.List;
 
 public class EpitomeEntry {
@@ -34,6 +37,10 @@ public class EpitomeEntry {
     public static class Gist {
         @SerializedName("content")
         public String content;
+    }
+
+    public DateTime getTimestamp() {
+        return ISODateTimeFormat.dateTimeParser().parseDateTime(publishedAt);
     }
 
     public boolean hasKnownScheme() {
