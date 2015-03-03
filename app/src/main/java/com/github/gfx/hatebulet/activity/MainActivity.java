@@ -65,6 +65,54 @@ public class MainActivity extends ActionBarActivity {
                     public Fragment createFragment() {
                         return HatebuEntryFragment.newInstance("it");
                     }
+                }),
+                new EntryTab("総合", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("general");
+                    }
+                }),
+                new EntryTab("世の中", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("social");
+                    }
+                }),
+                new EntryTab("政治と経済", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("economics");
+                    }
+                }),
+                new EntryTab("暮らし", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("life");
+                    }
+                }),
+                new EntryTab("学び", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("knowledge");
+                    }
+                }),
+                new EntryTab("おもしろ", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("fun");
+                    }
+                }),
+                new EntryTab("エンタメ", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("entertainment");
+                    }
+                }),
+                new EntryTab("アニメとゲーム", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("game");
+                    }
                 })
                 );
 
