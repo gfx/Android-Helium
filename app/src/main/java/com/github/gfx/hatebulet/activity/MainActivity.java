@@ -46,20 +46,27 @@ public class MainActivity extends ActionBarActivity {
 
         setSupportActionBar(toolbar);
 
+        // TODO: make tabs customizable
         List<EntryTab> tabs = Arrays.asList(
                 new EntryTab("Epitome", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return new EpitomeEntryFragment();
+                        return EpitomeEntryFragment.newInstance();
                     }
                 }),
-                new EntryTab("Hotentry", new EntryTab.FragmentFactory() {
+                new EntryTab("総合", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return new HatebuEntryFragment();
+                        return HatebuEntryFragment.newInstance();
+                    }
+                }),
+                new EntryTab("テクノロジー", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance("it");
                     }
                 })
-        );
+                );
 
         viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
         viewPager.setCurrentItem(1); // hatebu/hotentry
@@ -112,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return tabs.get(0).title;
+            return tabs.get(position).title;
         }
 
         @Override

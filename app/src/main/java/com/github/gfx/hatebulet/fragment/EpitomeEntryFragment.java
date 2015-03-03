@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -24,13 +25,23 @@ import com.github.gfx.hatebulet.model.EpitomeEntry;
 
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.functions.Action1;
 
+@ParametersAreNonnullByDefault
 public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener {
     static final String TAG = EpitomeEntry.class.getSimpleName();
+
+    public static HatebuEntryFragment newInstance() {
+        HatebuEntryFragment fragment = new HatebuEntryFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+
+    }
 
     @InjectView(android.R.id.list)
     AbsListView listView;
@@ -54,8 +65,8 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
         ButterKnife.inject(this, view);
 
@@ -121,7 +132,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.card_epitome_entry, parent, false);
                 convertView.setTag(new ViewHolder());
@@ -180,7 +191,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_gist, parent, false);
                 convertView.setTag(new ViewHolder());
