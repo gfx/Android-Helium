@@ -192,7 +192,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         @Override
         public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_gist, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_epitome_gist, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 
