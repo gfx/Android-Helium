@@ -1,5 +1,12 @@
 package com.github.gfx.helium.fragment;
 
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.api.EpitomeFeedClient;
+import com.github.gfx.helium.api.HttpClientHolder;
+import com.github.gfx.helium.model.EpitomeEntry;
+
+import org.joda.time.format.ISODateTimeFormat;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,13 +24,6 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.github.gfx.helium.R;
-import com.github.gfx.helium.api.EpitomeFeedClient;
-import com.github.gfx.helium.api.HttpClientHolder;
-import com.github.gfx.helium.model.EpitomeEntry;
-
-import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -124,7 +124,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EpitomeEntry entry = adapter.getItem(position);
 
-        Uri uri = Uri.parse(entry.upstreamUrl);
+        Uri uri = Uri.parse(entry.epitomeUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
@@ -133,7 +133,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         EpitomeEntry entry = adapter.getItem(position);
 
-        Uri uri = Uri.parse(entry.epitomeUrl);
+        Uri uri = Uri.parse(entry.upstreamUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
         return true;
