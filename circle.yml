@@ -11,4 +11,4 @@ dependencies:
 
 test:
     override:
-        - ./gradlew build
+        - ./gradlew --stacktrace build
