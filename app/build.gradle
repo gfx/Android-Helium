@@ -2,6 +2,8 @@ apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'android-power-assert'
 
+apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -10,13 +12,36 @@ android {
         applicationId "com.github.gfx.helium"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+
+        def version = readVersion(rootProject.file("VERSION"))
+        versionCode version.toVersionCode()
+        versionName version.toVersionName()
     }
+
+    signingConfigs {
+        release {
+            storeFile file(project.ext.ReleaseStoreFile.replaceAll("~", System.getenv("HOME")))
+            storePassword project.ext.ReleaseStorePassword
+            keyAlias project.ext.ReleaseKeyAlias
+            keyPassword project.ext.ReleaseKeyPassword
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            if (signingConfigs.release.storeFile.exists()) {
+                signingConfig signingConfigs.release
+            } else {
+                logger.info("keystore ${signingConfigs.release.storeFile} does not exist. Release signing is ignored.")
+            }
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
         }
     }
 
