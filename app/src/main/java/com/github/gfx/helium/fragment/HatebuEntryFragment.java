@@ -1,5 +1,12 @@
 package com.github.gfx.helium.fragment;
 
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.HttpClientHolder;
+import com.github.gfx.helium.model.HatebuEntry;
+
+import org.joda.time.format.ISODateTimeFormat;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,13 +27,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.github.gfx.helium.R;
-import com.github.gfx.helium.api.HatebuFeedClient;
-import com.github.gfx.helium.api.HttpClientHolder;
-import com.github.gfx.helium.model.HatebuEntry;
-
-import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.List;
 
@@ -92,6 +92,7 @@ public class HatebuEntryFragment extends Fragment
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.app_primary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

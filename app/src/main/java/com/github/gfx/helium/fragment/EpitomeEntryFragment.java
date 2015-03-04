@@ -38,7 +38,9 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
+public class EpitomeEntryFragment extends Fragment
+        implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
+
     static final String TAG = EpitomeEntry.class.getSimpleName();
 
     public static EpitomeEntryFragment newInstance() {
@@ -71,7 +73,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
         ButterKnife.inject(this, view);
 
@@ -79,6 +81,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.app_primary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -114,7 +117,8 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
                     public void call(Throwable throwable) {
                         Log.wtf(TAG, "Error while loading entries: " + throwable);
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), "Error while loading entries", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Error while loading entries",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -157,7 +161,6 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
                     .toBlocking()
                     .getIterator();
 
-
             while (iterator.hasNext()) {
                 add(iterator.next());
             }
@@ -166,7 +169,8 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         @Override
         public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.card_epitome_entry, parent, false);
+                convertView = LayoutInflater.from(getContext())
+                        .inflate(R.layout.card_epitome_entry, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 
@@ -214,6 +218,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
         }
 
         static class ViewHolder {
+
             @InjectView(R.id.title)
             TextView title;
 
@@ -232,6 +237,7 @@ public class EpitomeEntryFragment extends Fragment implements AbsListView.OnItem
     }
 
     static class GistViewHolder {
+
         @InjectView(R.id.gist_point)
         TextView point;
 
