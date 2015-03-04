@@ -21,10 +21,12 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(project.ext.ReleaseStoreFile.replaceAll("~", System.getenv("HOME")))
-            storePassword project.ext.ReleaseStorePassword
-            keyAlias project.ext.ReleaseKeyAlias
-            keyPassword project.ext.ReleaseKeyPassword
+            if (project.ext.has('ReleaseStoreFile')) {
+                storeFile file(project.ext.ReleaseStoreFile.replaceAll("~", System.getenv("HOME")))
+                storePassword project.ext.ReleaseStorePassword
+                keyAlias project.ext.ReleaseKeyAlias
+                keyPassword project.ext.ReleaseKeyPassword
+            }
         }
     }
 
@@ -33,20 +35,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            if (signingConfigs.release.storeFile.exists()) {
+            if (signingConfigs.release.storeFile != null && signingConfigs.release.storeFile.exists()) {
                 signingConfig signingConfigs.release
             } else {
                 logger.info("keystore ${signingConfigs.release.storeFile} does not exist. Release signing is ignored.")
             }
 
-           buildConfigField("String", "GA_TRACKING_ID", "\"${project.ext.GA_TRACKING_ID_RELEASE}\"")
+           buildConfigField("String", "GA_TRACKING_ID", "\"${project.ext.has('GA_TRACKING_ID_RELEASE') ? project.ext.GA_TRACKING_ID_RELEASE : ''}\"")
         }
 
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
 
-            buildConfigField("String", "GA_TRACKING_ID", "\"${project.ext.GA_TRACKING_ID_DEBUG}\"")
+            buildConfigField("String", "GA_TRACKING_ID", "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
         }
     }
 
