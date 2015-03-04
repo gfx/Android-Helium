@@ -194,17 +194,18 @@ public class HatebuEntryFragment extends Fragment
     static void setTextMask(final TextView view) {
         final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            viewTreeObserver.addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                    Shader textShader = new LinearGradient(0, 0, 0, view.getHeight(),
-                            new int[]{Color.BLACK, Color.TRANSPARENT},
-                            new float[]{0, 1}, Shader.TileMode.CLAMP);
-                    view.getPaint().setShader(textShader);
-                }
-            });
+                            Shader textShader = new LinearGradient(0, 0, 0, view.getHeight(),
+                                    new int[]{Color.BLACK, Color.TRANSPARENT},
+                                    new float[]{0, 1}, Shader.TileMode.CLAMP);
+                            view.getPaint().setShader(textShader);
+                        }
+                    });
         }
     }
 
