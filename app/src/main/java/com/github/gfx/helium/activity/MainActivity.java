@@ -1,5 +1,11 @@
 package com.github.gfx.helium.activity;
 
+import com.github.gfx.helium.R;
+import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.fragment.EpitomeEntryFragment;
+import com.github.gfx.helium.fragment.HatebuEntryFragment;
+import com.github.gfx.helium.model.EntryTab;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,11 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.github.gfx.helium.R;
-import com.github.gfx.helium.fragment.EpitomeEntryFragment;
-import com.github.gfx.helium.fragment.HatebuEntryFragment;
-import com.github.gfx.helium.model.EntryTab;
 
 import java.util.Arrays;
 import java.util.List;
@@ -118,6 +119,8 @@ public class MainActivity extends ActionBarActivity {
 
         viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
         viewPager.setCurrentItem(1); // hatebu/hotentry
+
+        TrackingUtils.sendScreenView(this, TAG);
     }
 
     @Override

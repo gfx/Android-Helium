@@ -1,6 +1,7 @@
 package com.github.gfx.helium.fragment;
 
 import com.github.gfx.helium.R;
+import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.EpitomeFeedClient;
 import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.EpitomeEntry;
@@ -41,7 +42,7 @@ import rx.functions.Func1;
 public class EpitomeEntryFragment extends Fragment
         implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
 
-    static final String TAG = EpitomeEntry.class.getSimpleName();
+    static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
     public static EpitomeEntryFragment newInstance() {
         EpitomeEntryFragment fragment = new EpitomeEntryFragment();
@@ -101,6 +102,8 @@ public class EpitomeEntryFragment extends Fragment
         super.onStart();
 
         reload().subscribe();
+
+        TrackingUtils.sendScreenView(getActivity(), TAG);
     }
 
     Observable<?> reload() {
@@ -131,6 +134,8 @@ public class EpitomeEntryFragment extends Fragment
         Uri uri = Uri.parse(entry.epitomeUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+
+        TrackingUtils.sendEvent(getActivity(), TAG, "service");
     }
 
     @Override
@@ -140,6 +145,8 @@ public class EpitomeEntryFragment extends Fragment
         Uri uri = Uri.parse(entry.upstreamUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+
+        TrackingUtils.sendEvent(getActivity(), TAG, "original");
         return true;
     }
 

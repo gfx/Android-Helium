@@ -1,6 +1,7 @@
 package com.github.gfx.helium.fragment;
 
 import com.github.gfx.helium.R;
+import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.HatebuFeedClient;
 import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.HatebuEntry;
@@ -113,14 +114,17 @@ public class HatebuEntryFragment extends Fragment
         super.onStart();
 
         reload().subscribe();
+
+        String category = getCategory();
+        TrackingUtils.sendScreenView(getActivity(), category != null ? TAG + "-" + category : TAG);
     }
 
     Observable<?> reload() {
         Log.d(TAG, "reload for " + this);
 
         Observable<List<HatebuEntry>> observable;
-        if (getArguments() != null && getArguments().getString(kCategory) != null) {
-            observable = feedClient.getHotentries(getArguments().getString(kCategory));
+        if (getCategory() != null) {
+            observable = feedClient.getHotentries(getCategory());
         } else {
             observable = feedClient.getHotentries();
         }
@@ -142,6 +146,11 @@ public class HatebuEntryFragment extends Fragment
                 });
     }
 
+    @Nullable
+    String getCategory() {
+        return getArguments() != null ? getArguments().getString(kCategory) : null;
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HatebuEntry entry = adapter.getItem(position);
@@ -149,6 +158,8 @@ public class HatebuEntryFragment extends Fragment
         Uri uri = Uri.parse(entry.link);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+
+        trackOpenUrl("original");
     }
 
     @Override
@@ -158,7 +169,14 @@ public class HatebuEntryFragment extends Fragment
         Uri uri = Uri.parse(kHatebuEntryPrefix + entry.link);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+
+        trackOpenUrl("service");
         return true;
+    }
+
+    void trackOpenUrl(String action) {
+        String category = getCategory();
+        TrackingUtils.sendEvent(getActivity(), category != null ? TAG + "-" + category : TAG, action);
     }
 
     private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {
