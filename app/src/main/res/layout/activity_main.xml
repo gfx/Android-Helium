@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
 
     <android.support.v4.view.ViewPager
@@ -20,10 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.view.PagerTabStrip
+        <android.support.v4.view.PagerTitleStrip
             android:id="@+id/pager_tap_strip"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:background="@color/app_primary"
+            android:textAppearance="@android:style/TextAppearance.Holo.Small.Inverse"/>
+
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>
