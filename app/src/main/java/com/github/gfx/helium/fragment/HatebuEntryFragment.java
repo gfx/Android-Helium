@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,6 +39,7 @@ import butterknife.InjectView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
 public class HatebuEntryFragment extends Fragment
@@ -138,14 +140,15 @@ public class HatebuEntryFragment extends Fragment
                         adapter.clear();
                         adapter.addAll(items);
                     }
-                }).doOnError(new Action1<Throwable>() {
+                }).onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public List<HatebuEntry> call(Throwable throwable) {
                         Log.wtf(TAG, "Error while loading entries: " + throwable);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), "Error while loading entries",
                                     Toast.LENGTH_LONG).show();
                         }
+                        return Collections.emptyList();
                     }
                 });
     }

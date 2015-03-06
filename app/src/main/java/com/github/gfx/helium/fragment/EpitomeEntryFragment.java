@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -120,14 +121,15 @@ public class EpitomeEntryFragment extends Fragment
                         adapter.addAll(entries);
                     }
                 })
-                .doOnError(new Action1<Throwable>() {
+                .onErrorReturn(new Func1<Throwable, List<EpitomeEntry>>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public List<EpitomeEntry> call(Throwable throwable) {
                         Log.wtf(TAG, "Error while loading entries: " + throwable);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), "Error while loading entries",
                                     Toast.LENGTH_LONG).show();
                         }
+                        return Collections.emptyList();
                     }
                 });
     }
