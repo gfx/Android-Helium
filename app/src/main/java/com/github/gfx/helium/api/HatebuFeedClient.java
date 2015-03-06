@@ -18,38 +18,42 @@ import rx.Observable;
 
 @ParametersAreNonnullByDefault
 public class HatebuFeedClient {
+
     private static final String TAG = HatebuFeedClient.class.getSimpleName();
 
     public static final String FEEDBURNER_ENDPOINT = "http://feeds.feedburner.com/";
+
     public static final String HATEBU_ENDPOINT = "http://b.hatena.ne.jp/";
 
     final RestAdapter feedburnerAdapter;
+
     final FeedburnerService feedburnerService;
 
     final RestAdapter hatebuAdapter;
+
     final HatebuService hatebuService;
 
     public HatebuFeedClient(Context context, OkHttpClient httpClient) {
+        feedburnerAdapter = createCommonBuilder(context, httpClient)
+                .setEndpoint(FEEDBURNER_ENDPOINT)
+                .build();
+        feedburnerService = feedburnerAdapter.create(FeedburnerService.class);
+
+        hatebuAdapter = createCommonBuilder(context, httpClient)
+                .setEndpoint(HATEBU_ENDPOINT)
+                .build();
+        hatebuService = hatebuAdapter.create(HatebuService.class);
+    }
+
+    static RestAdapter.Builder createCommonBuilder(Context context, OkHttpClient httpClient) {
         OkClient client = new OkClient(httpClient);
 
-        feedburnerAdapter = new RestAdapter.Builder()
+        return new RestAdapter.Builder()
                 .setClient(client)
-                .setEndpoint(FEEDBURNER_ENDPOINT)
                 .setConverter(new HatebuFeedConverter())
                 .setRequestInterceptor(new OfflineRequestInterceptor(context))
                 .setLogLevel(
-                        BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
-                .build();
-
-        feedburnerService = feedburnerAdapter.create(FeedburnerService.class);
-
-        hatebuAdapter = new RestAdapter.Builder()
-                .setClient(client)
-                .setEndpoint(HATEBU_ENDPOINT)
-                .setConverter(new HatebuFeedConverter())
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
-                .build();
-        hatebuService = hatebuAdapter.create(HatebuService.class);
+                        BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE);
     }
 
     public Observable<List<HatebuEntry>> getHotentries() {
@@ -62,11 +66,13 @@ public class HatebuFeedClient {
 
 
     static interface FeedburnerService {
+
         @GET("/hatena/b/hotentry")
         Observable<List<HatebuEntry>> getHotentries();
     }
 
     static interface HatebuService {
+
         @GET("/hotentry/{category}.rss")
         Observable<List<HatebuEntry>> getHotentries(@Path("category") String category);
     }

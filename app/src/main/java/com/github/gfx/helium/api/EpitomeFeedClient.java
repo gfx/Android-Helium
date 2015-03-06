@@ -2,6 +2,7 @@ package com.github.gfx.helium.api;
 
 import com.google.gson.Gson;
 
+import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.EpitomeBeam;
 import com.github.gfx.helium.model.EpitomeEntry;
 import com.squareup.okhttp.OkHttpClient;
@@ -21,6 +22,7 @@ import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
 public class EpitomeFeedClient {
+
     final String ENDPOINT = "https://ja.epitomeup.com/";
 
     final RestAdapter adapter;
@@ -29,10 +31,13 @@ public class EpitomeFeedClient {
 
     public EpitomeFeedClient(Context context, OkHttpClient httpClient) {
         adapter = new RestAdapter.Builder()
-                .setClient(new OkClient(httpClient))
                 .setEndpoint(ENDPOINT)
+                .setClient(new OkClient(httpClient))
                 .setConverter(new GsonConverter(new Gson()))
                 .setRequestInterceptor(new OfflineRequestInterceptor(context))
+                .setLogLevel(
+                        BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
+
                 .build();
 
         service = adapter.create(EpitomeService.class);
@@ -48,6 +53,7 @@ public class EpitomeFeedClient {
     }
 
     static interface EpitomeService {
+
         @GET("/feed/beam")
         Observable<EpitomeBeam> getBeam();
     }
