@@ -211,6 +211,7 @@ public class HatebuEntryFragment extends Fragment
             viewHolder.subject.setText(entry.subject);
             viewHolder.bookmarkCount.setText(entry.bookmarkCount);
             viewHolder.description.setText(entry.description);
+            viewHolder.originalUrl.setText(entry.link);
 
             setTextMask(viewHolder.description);
 
@@ -252,5 +253,8 @@ public class HatebuEntryFragment extends Fragment
 
         @InjectView(R.id.date)
         TextView date;
+
+        @InjectView(R.id.original_url)
+        TextView originalUrl;
     }
 }

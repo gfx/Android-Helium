@@ -206,9 +206,9 @@ public class EpitomeEntryFragment extends Fragment
             ButterKnife.inject(viewHolder, view);
 
             viewHolder.title.setText(entry.title);
-            viewHolder.upstreamUrl.setText(entry.upstreamUrl);
             viewHolder.views.setText("閲覧数: " + Integer.toString(entry.views));
             viewHolder.date.setText("投稿日: " + ISODateTimeFormat.date().print(entry.getTimestamp()));
+            viewHolder.originalUrl.setText(entry.upstreamUrl);
 
             fillGists(viewHolder.gists, entry.gists);
         }
@@ -236,8 +236,8 @@ public class EpitomeEntryFragment extends Fragment
             @InjectView(R.id.title)
             TextView title;
 
-            @InjectView(R.id.upstream_url)
-            TextView upstreamUrl;
+            @InjectView(R.id.original_url)
+            TextView originalUrl;
 
             @InjectView(R.id.views)
             TextView views;
