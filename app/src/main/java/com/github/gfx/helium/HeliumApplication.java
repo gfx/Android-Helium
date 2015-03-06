@@ -30,7 +30,7 @@ public class HeliumApplication extends Application {
 
         tracker = GoogleAnalytics.getInstance(this).newTracker(BuildConfig.GA_TRACKING_ID);
 
-
+        setupOkHttp();
 
         if (BuildConfig.DEBUG) {
             setupDebugFeatures();

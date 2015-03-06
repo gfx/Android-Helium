@@ -4,6 +4,8 @@ import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.HatebuEntry;
 import com.squareup.okhttp.OkHttpClient;
 
+import android.content.Context;
+
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -27,14 +29,16 @@ public class HatebuFeedClient {
     final RestAdapter hatebuAdapter;
     final HatebuService hatebuService;
 
-    public HatebuFeedClient(OkHttpClient httpClient) {
+    public HatebuFeedClient(Context context, OkHttpClient httpClient) {
         OkClient client = new OkClient(httpClient);
 
         feedburnerAdapter = new RestAdapter.Builder()
                 .setClient(client)
                 .setEndpoint(FEEDBURNER_ENDPOINT)
                 .setConverter(new HatebuFeedConverter())
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
+                .setRequestInterceptor(new OfflineRequestInterceptor(context))
+                .setLogLevel(
+                        BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
                 .build();
 
         feedburnerService = feedburnerAdapter.create(FeedburnerService.class);

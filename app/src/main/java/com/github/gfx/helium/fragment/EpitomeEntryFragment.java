@@ -74,7 +74,7 @@ public class EpitomeEntryFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         adapter = new EntriesAdapter(getActivity());
-        feedClient = new EpitomeFeedClient(HttpClientHolder.CLIENT);
+        feedClient = new EpitomeFeedClient(getActivity(), HttpClientHolder.CLIENT);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class EpitomeEntryFragment extends Fragment
                 .onErrorReturn(new Func1<Throwable, List<EpitomeEntry>>() {
                     @Override
                     public List<EpitomeEntry> call(Throwable throwable) {
-                        Log.wtf(TAG, "Error while loading entries: " + throwable);
+                        Log.w(TAG, "Error while loading entries", throwable);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), "Error while loading entries",
                                     Toast.LENGTH_LONG).show();

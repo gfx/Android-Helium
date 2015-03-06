@@ -84,7 +84,7 @@ public class HatebuEntryFragment extends Fragment
 
         adapter = new EntriesAdapter(getActivity());
 
-        feedClient = new HatebuFeedClient(HttpClientHolder.CLIENT);
+        feedClient = new HatebuFeedClient(getActivity(), HttpClientHolder.CLIENT);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class HatebuEntryFragment extends Fragment
                 }).onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
                     public List<HatebuEntry> call(Throwable throwable) {
-                        Log.wtf(TAG, "Error while loading entries: " + throwable);
+                        Log.w(TAG, "Error while loading entries", throwable);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), "Error while loading entries",
                                     Toast.LENGTH_LONG).show();

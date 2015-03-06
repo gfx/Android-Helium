@@ -6,7 +6,11 @@ import com.github.gfx.helium.model.EpitomeBeam;
 import com.github.gfx.helium.model.EpitomeEntry;
 import com.squareup.okhttp.OkHttpClient;
 
+import android.content.Context;
+
 import java.util.List;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -15,6 +19,7 @@ import retrofit.http.GET;
 import rx.Observable;
 import rx.functions.Func1;
 
+@ParametersAreNonnullByDefault
 public class EpitomeFeedClient {
     final String ENDPOINT = "https://ja.epitomeup.com/";
 
@@ -22,11 +27,12 @@ public class EpitomeFeedClient {
 
     final EpitomeService service;
 
-    public EpitomeFeedClient(OkHttpClient httpClient) {
+    public EpitomeFeedClient(Context context, OkHttpClient httpClient) {
         adapter = new RestAdapter.Builder()
                 .setClient(new OkClient(httpClient))
                 .setEndpoint(ENDPOINT)
                 .setConverter(new GsonConverter(new Gson()))
+                .setRequestInterceptor(new OfflineRequestInterceptor(context))
                 .build();
 
         service = adapter.create(EpitomeService.class);
