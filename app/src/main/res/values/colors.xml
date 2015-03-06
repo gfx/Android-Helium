@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_primary">#181fcf</color>
-    <color name="app_primary_dark">#080fcf</color>
-    <color name="app_accent">#5DACF2</color>
+    <color name="app_primary">#4D81FF</color>
+    <color name="app_primary_dark">#1A5EFF</color>
+    <color name="app_accent">#f64747</color>
 
     <color name="bookmark_count">#5DACF2</color>
 
