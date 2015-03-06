@@ -35,6 +35,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -56,6 +57,9 @@ public class EpitomeEntryFragment extends Fragment
 
     @InjectView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @InjectView(android.R.id.empty)
+            TextView empty;
 
     EntriesAdapter adapter;
 
@@ -108,6 +112,7 @@ public class EpitomeEntryFragment extends Fragment
 
     Observable<?> reload() {
         return feedClient.getEntries()
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<List<EpitomeEntry>>() {
                     @Override
                     public void call(List<EpitomeEntry> entries) {

@@ -36,11 +36,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 @ParametersAreNonnullByDefault
 public class HatebuEntryFragment extends Fragment
         implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
+
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
 
     static final String kHatebuEntryPrefix = "http://b.hatena.ne.jp/entry/";
@@ -85,7 +87,7 @@ public class HatebuEntryFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
         ButterKnife.inject(this, view);
 
@@ -129,6 +131,7 @@ public class HatebuEntryFragment extends Fragment
             observable = feedClient.getHotentries();
         }
         return observable
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
@@ -140,7 +143,8 @@ public class HatebuEntryFragment extends Fragment
                     public void call(Throwable throwable) {
                         Log.wtf(TAG, "Error while loading entries: " + throwable);
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), "Error while loading entries", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Error while loading entries",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -176,7 +180,8 @@ public class HatebuEntryFragment extends Fragment
 
     void trackOpenUrl(String action) {
         String category = getCategory();
-        TrackingUtils.sendEvent(getActivity(), category != null ? TAG + "-" + category : TAG, action);
+        TrackingUtils
+                .sendEvent(getActivity(), category != null ? TAG + "-" + category : TAG, action);
     }
 
     private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {
@@ -188,7 +193,8 @@ public class HatebuEntryFragment extends Fragment
         @Override
         public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.card_hatebu_entry, parent, false);
+                convertView = LayoutInflater.from(getActivity())
+                        .inflate(R.layout.card_hatebu_entry, parent, false);
                 convertView.setTag(new ViewHolder());
             }
 
@@ -228,8 +234,10 @@ public class HatebuEntryFragment extends Fragment
     }
 
     class ViewHolder {
+
         @InjectView(R.id.title)
         TextView title;
+
         @InjectView(R.id.description)
         TextView description;
 

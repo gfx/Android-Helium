@@ -8,14 +8,11 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import rx.Observable;
-import rx.Subscriber;
 
 @ParametersAreNonnullByDefault
 public class HatebuFeedClient {
@@ -52,53 +49,21 @@ public class HatebuFeedClient {
     }
 
     public Observable<List<HatebuEntry>> getHotentries() {
-        return Observable.create(new Observable.OnSubscribe<List<HatebuEntry>>() {
-            @Override
-            public void call(final Subscriber<? super List<HatebuEntry>> subscriber) {
-                feedburnerService.getHotentries(new Callback<List<HatebuEntry>>() {
-                    @Override
-                    public void success(List<HatebuEntry> hatebuEntries, retrofit.client.Response response) {
-                        subscriber.onNext(hatebuEntries);
-                        subscriber.onCompleted();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        subscriber.onError(error);
-                    }
-                });
-            }
-        });
+        return feedburnerService.getHotentries();
     }
 
     public Observable<List<HatebuEntry>> getHotentries(final String category) {
-        return Observable.create(new Observable.OnSubscribe<List<HatebuEntry>>() {
-            @Override
-            public void call(final Subscriber<? super List<HatebuEntry>> subscriber) {
-                hatebuService.getHotentries(category, new Callback<List<HatebuEntry>>() {
-                    @Override
-                    public void success(List<HatebuEntry> hatebuEntries, retrofit.client.Response response) {
-                        subscriber.onNext(hatebuEntries);
-                        subscriber.onCompleted();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        subscriber.onError(error);
-                    }
-                });
-            }
-        });
+        return hatebuService.getHotentries(category);
     }
 
 
     static interface FeedburnerService {
         @GET("/hatena/b/hotentry")
-        void getHotentries(Callback<List<HatebuEntry>> cb);
+        Observable<List<HatebuEntry>> getHotentries();
     }
 
     static interface HatebuService {
         @GET("/hotentry/{category}.rss")
-        void getHotentries(@Path("category") String category, Callback<List<HatebuEntry>> cb);
+        Observable<List<HatebuEntry>> getHotentries(@Path("category") String category);
     }
 }
