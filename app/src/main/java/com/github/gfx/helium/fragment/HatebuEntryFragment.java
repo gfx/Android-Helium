@@ -158,30 +158,26 @@ public class HatebuEntryFragment extends Fragment
         return getArguments() != null ? getArguments().getString(kCategory) : null;
     }
 
+    void openUri(String uri, String action) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
+        trackOpenUri(action);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HatebuEntry entry = adapter.getItem(position);
-
-        Uri uri = Uri.parse(entry.link);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-
-        trackOpenUrl("original");
+        openUri(entry.link, "original");
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         HatebuEntry entry = adapter.getItem(position);
-
-        Uri uri = Uri.parse(kHatebuEntryPrefix + entry.link);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-
-        trackOpenUrl("service");
+        openUri(kHatebuEntryPrefix + entry.link, "service");
         return true;
     }
 
-    void trackOpenUrl(String action) {
+    void trackOpenUri(String action) {
         String category = getCategory();
         TrackingUtils
                 .sendEvent(getActivity(), category != null ? TAG + "-" + category : TAG, action);
@@ -204,7 +200,7 @@ public class HatebuEntryFragment extends Fragment
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
             ButterKnife.inject(viewHolder, convertView);
 
-            HatebuEntry entry = getItem(position);
+            final HatebuEntry entry = getItem(position);
 
             viewHolder.title.setText(entry.title);
             viewHolder.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
@@ -212,6 +208,13 @@ public class HatebuEntryFragment extends Fragment
             viewHolder.bookmarkCount.setText(entry.bookmarkCount);
             viewHolder.description.setText(entry.description);
             viewHolder.originalUrl.setText(entry.link);
+
+            viewHolder.bookmarkCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openUri(kHatebuEntryPrefix + entry.link, "service");
+                }
+            });
 
             setTextMask(viewHolder.description);
 

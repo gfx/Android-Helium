@@ -32,6 +32,7 @@
                         android:textColor="@color/bookmark_count"
                         android:gravity="center"
                         android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+                        android:clickable="true"
                         android:text="@string/placeholder_count"/>
 
                 <LinearLayout
