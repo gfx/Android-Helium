@@ -34,7 +34,7 @@ public class EpitomeFeedClient {
                 .setEndpoint(ENDPOINT)
                 .setClient(new OkClient(httpClient))
                 .setConverter(new GsonConverter(new Gson()))
-                .setRequestInterceptor(new OfflineRequestInterceptor(context))
+                .setRequestInterceptor(new HeliumRequestInterceptor(context))
                 .setLogLevel(
                         BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
 

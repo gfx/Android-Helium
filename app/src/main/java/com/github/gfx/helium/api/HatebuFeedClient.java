@@ -54,7 +54,7 @@ public class HatebuFeedClient {
         return new RestAdapter.Builder()
                 .setClient(client)
                 .setConverter(new SimpleXMLConverter())
-                .setRequestInterceptor(new OfflineRequestInterceptor(context))
+                .setRequestInterceptor(new HeliumRequestInterceptor(context))
                 .setLogLevel(
                         BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE);
     }
