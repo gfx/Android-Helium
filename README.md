@@ -1,6 +1,6 @@
-# ![](app/src/main/res/mipmap-hdpi/ic_launcher.png) Helium for Android [![Circle CI](https://circleci.com/gh/gfx/Android-Helium/tree/master.svg?style=svg)](https://circleci.com/gh/gfx/Android-Helium/tree/master)
+# ![](app/src/main/res/mipmap-mdpi/ic_launcher.png) Helium for Android [![Circle CI](https://circleci.com/gh/gfx/Android-Helium/tree/master.svg?style=svg)](https://circleci.com/gh/gfx/Android-Helium/tree/master)
 
-Helium (He), which comes from "Hatebu" + "Epitome", is a Hatebu reader for Android.
+Helium (He), which comes from "**H**atebu" + "**E**pitome", is a Hatebu reader for Android.
 
 [![Android app on Google Play](https://developer.android.com/images/brand/en_app_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.github.gfx.helium)
 
