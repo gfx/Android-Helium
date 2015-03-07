@@ -11,7 +11,6 @@ dependencies:
         - echo y | android update sdk --no-ui --all --filter "platform-tools,tools,android-21,build-tools-21.1.2"
     cache_directories:
         - build/
-        - /usr/local/android-sdk-linux
 
 test:
     override:
