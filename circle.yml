@@ -2,6 +2,7 @@ machine:
     environment:
         TERM: dumb
         ANDROID_HOME: /usr/local/android-sdk-linux
+        DEFAULT_JAVA_OPTS: -Xms256m -Xmx512m
     java:
         version: oraclejdk8
 
