@@ -124,8 +124,6 @@ public class HatebuEntryFragment extends Fragment
     }
 
     Observable<?> reload() {
-        Log.d(TAG, "reload for " + this);
-
         Observable<List<HatebuEntry>> observable;
         if (getCategory() != null) {
             observable = feedClient.getHotentries(getCategory());

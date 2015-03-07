@@ -22,7 +22,7 @@ public class OfflineRequestInterceptor implements RequestInterceptor {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
-            int maxAge = 60;
+            int maxAge = 2 * 60;
             request.addHeader("cache-control", "public, max-age=" + maxAge);
         } else {
             int maxStale = 30 * 24 * 60 * 60; // 30 days
