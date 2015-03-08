@@ -25,11 +25,12 @@ ENV PATH ${ANDROID_HOME}/tools:$ANDROID_HOME/platform-tools:$PATH
 # Android project
 ENV TERM dumb
 ENV JAVA_OPTS -Xms256m -Xmx512m
+ENV PROJECT /project
 
-RUN mkdir /project
-WORKDIR /project
+RUN mkdir $PROJECT
+WORKDIR $PROJECT
 
-ADD . .
+ADD . $PROJECT
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
 RUN ./gradlew --stacktrace androidDependencies
