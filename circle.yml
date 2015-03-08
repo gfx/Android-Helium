@@ -4,8 +4,8 @@ machine:
 
 dependencies:
     override:
-        - docker build -t Android-Helium .
+        - docker build -t android_helium .
 
 test:
     override:
-        - docker run -it Android-Helium ./gradlew --stacktrace test build
+        - docker run -it android_helium ./gradlew --stacktrace test build
