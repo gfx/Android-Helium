@@ -11,9 +11,17 @@ Helium (He), which comes from "**H**atebu" + "**E**pitome", is a Hatebu reader f
 
 ## Build
 
+In your local machine:
+
 ```sh
 # make an apk and install it to the connected device
 ./gradlew installDebug
+```
+
+To test it with Docker (what circleci.yml does):
+```
+docker build -t android_helium .
+docker run -it android_helium ./gradlew --stacktrace test build
 ```
 
 ## Special Thanks
