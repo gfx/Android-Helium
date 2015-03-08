@@ -29,7 +29,7 @@ ENV JAVA_OPTS -Xms256m -Xmx512m
 RUN mkdir /project
 WORKDIR /project
 
-COPY . .
+ADD . .
 
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
 RUN ./gradlew --stacktrace androidDependencies
