@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Dependencies
 RUN dpkg --add-architecture i386 && apt-get update && apt-get install -yq libstdc++6:i386 zlib1g:i386 libncurses5:i386 ant maven --no-install-recommends
+RUN tar --version && curl --version
 
 # Download and untar SDK
 ENV ANDROID_SDK_URL http://dl.google.com/android/android-sdk_r24.1.2-linux.tgz
