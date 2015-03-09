@@ -8,4 +8,4 @@ dependencies:
 
 test:
     override:
-        - docker run -it android_helium ./gradlew --stacktrace test build
+        - docker run android_helium
