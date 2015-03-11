@@ -22,8 +22,8 @@ public class HatebuEntry {
     public String date;
 
     @Namespace(prefix = "dc")
-    @Element(name = "subject")
-    public String subject;
+    @Element(name = "subject", required = false)
+    public String subject = "総合";
 
     @Namespace(prefix = "hatena")
     @Element(name = "bookmarkcount")
