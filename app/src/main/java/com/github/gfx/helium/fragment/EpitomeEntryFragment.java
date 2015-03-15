@@ -36,6 +36,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
+import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -112,7 +113,7 @@ public class EpitomeEntryFragment extends Fragment
     }
 
     Observable<?> reload() {
-        return feedClient.getEntries()
+        return AppObservable.bindFragment(this, feedClient.getEntries())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<List<EpitomeEntry>>() {
                     @Override
