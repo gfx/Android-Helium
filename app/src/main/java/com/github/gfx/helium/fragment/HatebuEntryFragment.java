@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+import static com.github.gfx.helium.api.HatebuFeedClient.TYPE_CATEGORY;
+import static com.github.gfx.helium.api.HatebuFeedClient.TYPE_FAVORITE;
+import static com.github.gfx.helium.api.HatebuFeedClient.TYPE_HOT;
+
 @ParametersAreNonnullByDefault
 public class HatebuEntryFragment extends Fragment
         implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
@@ -49,18 +54,14 @@ public class HatebuEntryFragment extends Fragment
 
     static final String kHatebuEntryPrefix = "http://b.hatena.ne.jp/entry/";
 
-    static final String kCategory = "category";
+    static final String kType = "type";
+    static final String kArg = "arg";
 
-    public static HatebuEntryFragment newInstance() {
-        HatebuEntryFragment fragment = new HatebuEntryFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
-    public static HatebuEntryFragment newInstance(String category) {
+    public static HatebuEntryFragment newInstance(String type, String arg) {
         HatebuEntryFragment fragment = new HatebuEntryFragment();
         Bundle args = new Bundle();
-        args.putString(kCategory, category);
+        args.putString(kType, type);
+        args.putString(kArg, arg);
         fragment.setArguments(args);
         return fragment;
     }
@@ -119,18 +120,24 @@ public class HatebuEntryFragment extends Fragment
 
         reload().subscribe();
 
-        String category = getCategory();
-        TrackingUtils.sendScreenView(getActivity(), category != null ? TAG + "-" + category : TAG);
+        TrackingUtils.sendScreenView(getActivity(), trackingCategory());
+    }
+
+    Observable<List<HatebuEntry>> getEntries() {
+        switch (getType()) {
+            case TYPE_HOT:
+                return feedClient.getHotentries();
+            case TYPE_CATEGORY:
+                return feedClient.getHotentries(getArg());
+            case TYPE_FAVORITE:
+                return feedClient.getFavorites(getArg());
+            default:
+                throw new IllegalStateException("Unknown entry type: " + getType());
+        }
     }
 
     Observable<?> reload() {
-        Observable<List<HatebuEntry>> observable;
-        if (getCategory() != null) {
-            observable = feedClient.getHotentries(getCategory());
-        } else {
-            observable = feedClient.getHotentries();
-        }
-        return observable
+        return getEntries()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
@@ -151,15 +158,18 @@ public class HatebuEntryFragment extends Fragment
                 });
     }
 
-    @Nullable
-    String getCategory() {
-        return getArguments() != null ? getArguments().getString(kCategory) : null;
+    String getType() {
+        return getArguments().getString(kType);
+    }
+    String getArg() {
+        return getArguments().getString(kArg);
     }
 
     void openUri(String uri, String action) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
-        trackOpenUri(action);
+
+        TrackingUtils.sendEvent(getActivity(), trackingCategory(), action);
     }
 
     @Override
@@ -175,10 +185,8 @@ public class HatebuEntryFragment extends Fragment
         return true;
     }
 
-    void trackOpenUri(String action) {
-        String category = getCategory();
-        TrackingUtils
-                .sendEvent(getActivity(), category != null ? TAG + "-" + category : TAG, action);
+    String trackingCategory() {
+        return TAG + "-" + getType() + "-" + getArg();
     }
 
     private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {
@@ -202,7 +210,7 @@ public class HatebuEntryFragment extends Fragment
 
             viewHolder.title.setText(entry.title);
             viewHolder.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
-            viewHolder.subject.setText(entry.subject);
+            viewHolder.subject.setText(TextUtils.join(" ", entry.subject));
             viewHolder.bookmarkCount.setText(entry.bookmarkCount);
             viewHolder.description.setText(entry.description);
             viewHolder.originalUrl.setText(entry.link);
