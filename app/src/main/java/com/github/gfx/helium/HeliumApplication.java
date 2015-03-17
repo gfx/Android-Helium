@@ -14,7 +14,6 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import android.app.Application;
 
 import java.io.File;
-import java.io.IOException;
 
 public class HeliumApplication extends Application {
     static final String CACHE_FILE_NAME = "okhttp.cache";
@@ -38,13 +37,9 @@ public class HeliumApplication extends Application {
     }
 
     private void setupOkHttp() {
-        try {
-            File cacheDir = new File(getCacheDir(), CACHE_FILE_NAME);
-            Cache cache = new Cache(cacheDir, MAX_CACHE_SIZE);
-            HttpClientHolder.CLIENT.setCache(cache);
-        } catch (IOException e) {
-            // ignore
-        }
+        File cacheDir = new File(getCacheDir(), CACHE_FILE_NAME);
+        Cache cache = new Cache(cacheDir, MAX_CACHE_SIZE);
+        HttpClientHolder.CLIENT.setCache(cache);
     }
 
     private void setupDebugFeatures() {
