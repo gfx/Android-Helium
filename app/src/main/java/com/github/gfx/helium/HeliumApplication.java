@@ -27,13 +27,16 @@ public class HeliumApplication extends Application {
 
         JodaTimeAndroid.init(this);
 
-        tracker = GoogleAnalytics.getInstance(this).newTracker(BuildConfig.GA_TRACKING_ID);
-
         setupOkHttp();
 
         if (BuildConfig.DEBUG) {
             setupDebugFeatures();
         }
+    }
+
+    private void setupGoogleAnalytics() {
+        tracker = GoogleAnalytics.getInstance(this).newTracker(BuildConfig.GA_TRACKING_ID);
+        tracker.enableExceptionReporting(true);
     }
 
     private void setupOkHttp() {
