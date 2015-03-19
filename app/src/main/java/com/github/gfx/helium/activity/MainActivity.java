@@ -10,6 +10,7 @@ import com.github.gfx.helium.fragment.HatebuEntryFragment;
 import com.github.gfx.helium.model.EntryTab;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,10 +37,18 @@ import static com.github.gfx.helium.Constants.SITE_HATEBU;
 
 
 public class MainActivity extends ActionBarActivity {
+
     static final String TAG = MainActivity.class.getSimpleName();
+
+    static String KEY_SELECTED_TAB = "activity_main_selected_tab";
+
+    static int DEFAULT_SELECTED_TAB = 1;
 
     @Inject
     Tracker tracker;
+
+    @Inject
+    SharedPreferences prefs;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -124,12 +133,25 @@ public class MainActivity extends ActionBarActivity {
                         return HatebuEntryFragment.newInstance("game");
                     }
                 })
-                );
+        );
 
         viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
-        viewPager.setCurrentItem(1); // hatebu/hotentry
 
         TrackingUtils.sendScreenView(tracker, TAG);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewPager.setCurrentItem(prefs.getInt(KEY_SELECTED_TAB, DEFAULT_SELECTED_TAB));
+    }
+
+    @Override
+    protected void onPause() {
+        prefs.edit()
+                .putInt(KEY_SELECTED_TAB, viewPager.getCurrentItem())
+                .apply();
+        super.onPause();
     }
 
     @Override
@@ -160,6 +182,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     class MainTabsAdapter extends FragmentStatePagerAdapter {
+
         final List<EntryTab> tabs;
 
         public MainTabsAdapter(FragmentManager fm, List<EntryTab> tabs) {

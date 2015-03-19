@@ -10,6 +10,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.io.File;
 
@@ -22,6 +23,7 @@ import dagger.Provides;
 public class ApiClientModule {
     static final String CACHE_FILE_NAME = "okhttp.cache";
     static final long MAX_CACHE_SIZE = 4 * 1024 * 1024;
+    static final String SHARED_PREF_NAME = "preferences";
 
     private HeliumApplication context;
 
@@ -68,5 +70,10 @@ public class ApiClientModule {
     @Provides
     public EpitomeFeedClient privideEpitomeFeedClient(Context context, OkHttpClient httpClient) {
         return new EpitomeFeedClient(context, httpClient);
+    }
+
+    @Provides
+    public SharedPreferences provideSharedPreferences(Context context) {
+        return context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 }
