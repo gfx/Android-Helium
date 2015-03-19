@@ -1,9 +1,11 @@
 package com.github.gfx.helium.fragment;
 
+import com.google.android.gms.analytics.Tracker;
+
+import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.HatebuFeedClient;
-import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.HatebuEntry;
 
 import org.joda.time.format.ISODateTimeFormat;
@@ -33,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -72,7 +75,11 @@ public class HatebuEntryFragment extends Fragment
     @InjectView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @Inject
     HatebuFeedClient feedClient;
+
+    @Inject
+    Tracker tracker;
 
     ArrayAdapter<HatebuEntry> adapter;
 
@@ -83,9 +90,9 @@ public class HatebuEntryFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        adapter = new EntriesAdapter(getActivity());
+        HeliumApplication.getApiClientComponent().inject(this);
 
-        feedClient = new HatebuFeedClient(getActivity(), HttpClientHolder.CLIENT);
+        adapter = new EntriesAdapter(getActivity());
     }
 
     @Override
@@ -121,7 +128,7 @@ public class HatebuEntryFragment extends Fragment
         reload().subscribe();
 
         String category = getCategory();
-        TrackingUtils.sendScreenView(getActivity(), category != null ? TAG + "-" + category : TAG);
+        TrackingUtils.sendScreenView(tracker, category != null ? TAG + "-" + category : TAG);
     }
 
     Observable<?> reload() {
@@ -179,7 +186,7 @@ public class HatebuEntryFragment extends Fragment
     void trackOpenUri(String action) {
         String category = getCategory();
         TrackingUtils
-                .sendEvent(getActivity(), category != null ? TAG + "-" + category : TAG, action);
+                .sendEvent(tracker, category != null ? TAG + "-" + category : TAG, action);
     }
 
     private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {

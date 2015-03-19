@@ -1,5 +1,8 @@
 package com.github.gfx.helium.activity;
 
+import com.google.android.gms.analytics.Tracker;
+
+import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
@@ -22,6 +25,8 @@ import android.view.View;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -32,6 +37,9 @@ import static com.github.gfx.helium.Constants.SITE_HATEBU;
 
 public class MainActivity extends ActionBarActivity {
     static final String TAG = MainActivity.class.getSimpleName();
+
+    @Inject
+    Tracker tracker;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -44,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+        HeliumApplication.getApiClientComponent().inject(this);
 
         setSupportActionBar(toolbar);
 
@@ -120,7 +129,7 @@ public class MainActivity extends ActionBarActivity {
         viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
         viewPager.setCurrentItem(1); // hatebu/hotentry
 
-        TrackingUtils.sendScreenView(this, TAG);
+        TrackingUtils.sendScreenView(tracker, TAG);
     }
 
     @Override
