@@ -6,46 +6,44 @@ import com.google.android.gms.analytics.Tracker;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.github.gfx.helium.api.HttpClientHolder;
-import com.squareup.okhttp.Cache;
+import com.github.gfx.helium.api.ApiClientComponent;
+import com.github.gfx.helium.api.ApiClientModule;
+import com.github.gfx.helium.api.Dagger_ApiClientComponent;
+import com.squareup.okhttp.OkHttpClient;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
-import java.io.File;
+import javax.inject.Inject;
 
 public class HeliumApplication extends Application {
-    static final String CACHE_FILE_NAME = "okhttp.cache";
-    static final long MAX_CACHE_SIZE = 4 * 1024 * 1024;
-
     Tracker tracker;
+
+    static ApiClientComponent apiClientComponent;
+
+    @Inject
+    OkHttpClient httpClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        JodaTimeAndroid.init(this);
+        apiClientComponent = Dagger_ApiClientComponent.builder()
+                .apiClientModule(new ApiClientModule(this))
+                .build();
 
-        setupOkHttp();
+        JodaTimeAndroid.init(this);
 
         if (BuildConfig.DEBUG) {
             setupDebugFeatures();
         }
     }
 
-    private void setupGoogleAnalytics() {
-        tracker = GoogleAnalytics.getInstance(this).newTracker(BuildConfig.GA_TRACKING_ID);
-        tracker.enableExceptionReporting(true);
-    }
-
-    private void setupOkHttp() {
-        File cacheDir = new File(getCacheDir(), CACHE_FILE_NAME);
-        Cache cache = new Cache(cacheDir, MAX_CACHE_SIZE);
-        HttpClientHolder.CLIENT.setCache(cache);
-    }
-
     private void setupDebugFeatures() {
+        apiClientComponent.inject(this); // for httpClient
+
         GoogleAnalytics.getInstance(this)
                 .getLogger()
                 .setLogLevel(Logger.LogLevel.VERBOSE);
@@ -55,11 +53,14 @@ public class HeliumApplication extends Application {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
-        HttpClientHolder.CLIENT.networkInterceptors()
+
+        httpClient.networkInterceptors()
                 .add(new StethoInterceptor());
     }
 
-    public Tracker getTracker() {
-        return tracker;
+    @NonNull
+    public static ApiClientComponent getApiClientComponent() {
+        assert apiClientComponent != null;
+        return apiClientComponent;
     }
 }

@@ -1,9 +1,16 @@
 apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'android-power-assert'
+apply plugin: 'com.neenbedankt.android-apt'
 //apply plugin: 'galette'
 
 apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
+
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots" // for dagger 2
+    }
+}
 
 android {
     compileSdkVersion 22
@@ -77,6 +84,9 @@ dependencies {
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'net.danlew:android.joda:2.7.1'
     compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
+    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    provided 'javax.annotation:jsr250-api:1.0'
 
     compile 'com.facebook.stetho:stetho:1.0.1'
     compile 'com.facebook.stetho:stetho-okhttp:1.0.1'

@@ -1,9 +1,11 @@
 package com.github.gfx.helium.fragment;
 
+import com.google.android.gms.analytics.Tracker;
+
+import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.EpitomeFeedClient;
-import com.github.gfx.helium.api.HttpClientHolder;
 import com.github.gfx.helium.model.EpitomeEntry;
 
 import org.joda.time.format.ISODateTimeFormat;
@@ -32,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -65,7 +68,11 @@ public class EpitomeEntryFragment extends Fragment
 
     EntriesAdapter adapter;
 
+    @Inject
     EpitomeFeedClient feedClient;
+
+    @Inject
+    Tracker tracker;
 
     public EpitomeEntryFragment() {
     }
@@ -74,8 +81,9 @@ public class EpitomeEntryFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        HeliumApplication.getApiClientComponent().inject(this);
+
         adapter = new EntriesAdapter(getActivity());
-        feedClient = new EpitomeFeedClient(getActivity(), HttpClientHolder.CLIENT);
     }
 
     @Override
@@ -109,7 +117,7 @@ public class EpitomeEntryFragment extends Fragment
 
         reload().subscribe();
 
-        TrackingUtils.sendScreenView(getActivity(), TAG);
+        TrackingUtils.sendScreenView(tracker, TAG);
     }
 
     Observable<?> reload() {
@@ -143,7 +151,7 @@ public class EpitomeEntryFragment extends Fragment
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 
-        TrackingUtils.sendEvent(getActivity(), TAG, "service");
+        TrackingUtils.sendEvent(tracker, TAG, "service");
     }
 
     @Override
@@ -154,7 +162,7 @@ public class EpitomeEntryFragment extends Fragment
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 
-        TrackingUtils.sendEvent(getActivity(), TAG, "original");
+        TrackingUtils.sendEvent(tracker, TAG, "original");
         return true;
     }
 
