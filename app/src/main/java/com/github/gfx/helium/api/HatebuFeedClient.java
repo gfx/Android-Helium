@@ -28,6 +28,10 @@ public class HatebuFeedClient {
 
     public static final String HATEBU_ENDPOINT = "http://b.hatena.ne.jp/";
 
+    public static final String TYPE_HOT = "type_hot";
+    public static final String TYPE_CATEGORY = "type_category";
+    public static final String TYPE_FAVORITE = "type_favorite";
+
     final RestAdapter feedburnerAdapter;
 
     final FeedburnerService feedburnerService;
@@ -77,16 +81,27 @@ public class HatebuFeedClient {
         });
     }
 
+    public Observable<List<HatebuEntry>> getFavorites(String user) {
+        return hatebuService.getFavorites(user).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
+            @Override
+            public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
+                return hatebuFeed.items;
+            }
+        });
+    }
 
-    static interface FeedburnerService {
+    interface FeedburnerService {
 
         @GET("/hatena/b/hotentry")
         Observable<HatebuFeed> getHotentries();
     }
 
-    static interface HatebuService {
+    interface HatebuService {
 
         @GET("/hotentry/{category}.rss")
         Observable<HatebuFeed> getHotentries(@Path("category") String category);
+
+        @GET("/{user}/favorite.rss")
+        Observable<HatebuFeed> getFavorites(@Path("user") String user);
     }
 }

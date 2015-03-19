@@ -28,7 +28,7 @@ import butterknife.InjectView;
 import static com.github.gfx.helium.Constants.SITE_APP;
 import static com.github.gfx.helium.Constants.SITE_EPITOME;
 import static com.github.gfx.helium.Constants.SITE_HATEBU;
-
+import static com.github.gfx.helium.api.HatebuFeedClient.*;
 
 public class MainActivity extends ActionBarActivity {
     static final String TAG = MainActivity.class.getSimpleName();
@@ -55,64 +55,71 @@ public class MainActivity extends ActionBarActivity {
                         return EpitomeEntryFragment.newInstance();
                     }
                 }),
+
+                new EntryTab("gfx", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return HatebuEntryFragment.newInstance(TYPE_FAVORITE, "gfx");
+                    }
+                }),
                 new EntryTab("総合", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance();
+                        return HatebuEntryFragment.newInstance(TYPE_HOT, "all");
                     }
                 }),
                 new EntryTab("テクノロジー", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("it");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "it");
                     }
                 }),
                 new EntryTab("一般", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("general");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "general");
                     }
                 }),
                 new EntryTab("世の中", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("social");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "social");
                     }
                 }),
                 new EntryTab("政治と経済", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("economics");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "economics");
                     }
                 }),
                 new EntryTab("暮らし", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("life");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "life");
                     }
                 }),
                 new EntryTab("学び", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("knowledge");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "knowledge");
                     }
                 }),
                 new EntryTab("おもしろ", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("fun");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "fun");
                     }
                 }),
                 new EntryTab("エンタメ", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("entertainment");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "entertainment");
                     }
                 }),
                 new EntryTab("アニメとゲーム", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
-                        return HatebuEntryFragment.newInstance("game");
+                        return HatebuEntryFragment.newInstance(TYPE_CATEGORY, "game");
                     }
                 })
                 );
