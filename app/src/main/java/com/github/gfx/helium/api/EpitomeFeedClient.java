@@ -52,7 +52,7 @@ public class EpitomeFeedClient {
         });
     }
 
-    static interface EpitomeService {
+    interface EpitomeService {
 
         @GET("/feed/beam")
         Observable<EpitomeBeam> getBeam();

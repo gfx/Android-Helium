@@ -78,13 +78,13 @@ public class HatebuFeedClient {
     }
 
 
-    static interface FeedburnerService {
+    interface FeedburnerService {
 
         @GET("/hatena/b/hotentry")
         Observable<HatebuFeed> getHotentries();
     }
 
-    static interface HatebuService {
+    interface HatebuService {
 
         @GET("/hotentry/{category}.rss")
         Observable<HatebuFeed> getHotentries(@Path("category") String category);

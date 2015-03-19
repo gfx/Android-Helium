@@ -2,7 +2,6 @@ package com.github.gfx.helium;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
-import com.google.android.gms.analytics.Tracker;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
@@ -19,8 +18,6 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 
 public class HeliumApplication extends Application {
-    Tracker tracker;
-
     static ApiClientComponent apiClientComponent;
 
     @Inject
