@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        HeliumApplication.getApiClientComponent().inject(this);
+        HeliumApplication.getAppComponent().inject(this);
 
         setSupportActionBar(toolbar);
 

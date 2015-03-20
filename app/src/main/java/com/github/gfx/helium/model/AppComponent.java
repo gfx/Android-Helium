@@ -1,4 +1,4 @@
-package com.github.gfx.helium.api;
+package com.github.gfx.helium.model;
 
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.activity.MainActivity;
@@ -10,8 +10,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { ApiClientModule.class })
-public interface ApiClientComponent {
+@Component(modules = { AppModule.class })
+public interface AppComponent {
     void inject(HeliumApplication app);
     void inject(HatebuEntryFragment fragment);
     void inject(EpitomeEntryFragment fragment);

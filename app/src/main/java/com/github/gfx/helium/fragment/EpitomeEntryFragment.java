@@ -81,7 +81,7 @@ public class EpitomeEntryFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        HeliumApplication.getApiClientComponent().inject(this);
+        HeliumApplication.getAppComponent().inject(this);
 
         adapter = new EntriesAdapter(getActivity());
     }

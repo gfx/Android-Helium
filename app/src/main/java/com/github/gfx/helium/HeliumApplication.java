@@ -5,9 +5,9 @@ import com.google.android.gms.analytics.Logger;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.github.gfx.helium.api.ApiClientComponent;
-import com.github.gfx.helium.api.ApiClientModule;
-import com.github.gfx.helium.api.Dagger_ApiClientComponent;
+import com.github.gfx.helium.model.AppComponent;
+import com.github.gfx.helium.model.AppModule;
+import com.github.gfx.helium.model.Dagger_AppComponent;
 import com.squareup.okhttp.OkHttpClient;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -18,7 +18,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 
 public class HeliumApplication extends Application {
-    static ApiClientComponent apiClientComponent;
+    static AppComponent appComponent;
 
     @Inject
     OkHttpClient httpClient;
@@ -27,8 +27,8 @@ public class HeliumApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        apiClientComponent = Dagger_ApiClientComponent.builder()
-                .apiClientModule(new ApiClientModule(this))
+        appComponent = Dagger_AppComponent.builder()
+                .appModule(new AppModule(this))
                 .build();
 
         JodaTimeAndroid.init(this);
@@ -39,7 +39,7 @@ public class HeliumApplication extends Application {
     }
 
     private void setupDebugFeatures() {
-        apiClientComponent.inject(this); // for httpClient
+        appComponent.inject(this); // for httpClient
 
         GoogleAnalytics.getInstance(this)
                 .getLogger()
@@ -56,8 +56,8 @@ public class HeliumApplication extends Application {
     }
 
     @NonNull
-    public static ApiClientComponent getApiClientComponent() {
-        assert apiClientComponent != null;
-        return apiClientComponent;
+    public static AppComponent getAppComponent() {
+        assert appComponent != null;
+        return appComponent;
     }
 }
