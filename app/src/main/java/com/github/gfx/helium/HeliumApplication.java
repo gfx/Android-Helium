@@ -17,11 +17,13 @@ import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
+
 public class HeliumApplication extends Application {
     static AppComponent appComponent;
 
     @Inject
-    OkHttpClient httpClient;
+    Lazy<OkHttpClient> httpClient;
 
     @Override
     public void onCreate() {
@@ -30,6 +32,7 @@ public class HeliumApplication extends Application {
         appComponent = Dagger_AppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+        appComponent.inject(this);
 
         JodaTimeAndroid.init(this);
 
@@ -39,8 +42,6 @@ public class HeliumApplication extends Application {
     }
 
     private void setupDebugFeatures() {
-        appComponent.inject(this); // for httpClient
-
         GoogleAnalytics.getInstance(this)
                 .getLogger()
                 .setLogLevel(Logger.LogLevel.VERBOSE);
@@ -51,7 +52,8 @@ public class HeliumApplication extends Application {
                         .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        httpClient.networkInterceptors()
+        httpClient.get()
+                .networkInterceptors()
                 .add(new StethoInterceptor());
     }
 
