@@ -1,11 +1,10 @@
 package com.github.gfx.helium.api;
 
-import com.github.gfx.helium.BuildConfig;
+import com.github.gfx.helium.util.UserAgent;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -22,11 +21,7 @@ public class HeliumRequestInterceptor implements RequestInterceptor {
         connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        userAgent = BuildConfig.APPLICATION_ID + "/" + BuildConfig.VERSION_NAME
-                + " ("
-                + Build.DEVICE + "; "
-                +  "Android/" + Build.VERSION.RELEASE
-                + ")";
+        userAgent = UserAgent.build();
     }
 
     @Override
