@@ -26,9 +26,7 @@ public class HeliumRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void intercept(RequestFacade request) {
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+        if (isConnected()) {
             int maxAge = 2 * 60;
             request.addHeader("cache-control", "public, max-age=" + maxAge);
         } else {
@@ -37,5 +35,10 @@ public class HeliumRequestInterceptor implements RequestInterceptor {
         }
 
         request.addHeader("user-agent", userAgent);
+    }
+
+    protected boolean isConnected() {
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 }

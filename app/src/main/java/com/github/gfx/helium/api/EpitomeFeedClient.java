@@ -5,16 +5,14 @@ import com.google.gson.Gson;
 import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.EpitomeBeam;
 import com.github.gfx.helium.model.EpitomeEntry;
-import com.squareup.okhttp.OkHttpClient;
-
-import android.content.Context;
 
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
+import retrofit.client.Client;
 import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
 import rx.Observable;
@@ -29,12 +27,12 @@ public class EpitomeFeedClient {
 
     final EpitomeService service;
 
-    public EpitomeFeedClient(Context context, OkHttpClient httpClient) {
+    public EpitomeFeedClient(Client client, RequestInterceptor requestInterceptor) {
         adapter = new RestAdapter.Builder()
                 .setEndpoint(ENDPOINT)
-                .setClient(new OkClient(httpClient))
+                .setClient(client)
                 .setConverter(new GsonConverter(new Gson()))
-                .setRequestInterceptor(new HeliumRequestInterceptor(context))
+                .setRequestInterceptor(requestInterceptor)
                 .setLogLevel(
                         BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
 
