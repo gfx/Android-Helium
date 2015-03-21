@@ -9,6 +9,13 @@ Helium (He), which comes from "**H**atebu" + "**E**pitome", is a Hatebu reader f
 * Shows [Hatena Bookmark](http://b.hatena.ne.jp/) hot-entries
 * Shows [Epitome](https://ja.epitomeup.com/) entries
 
+## Libraries Used
+
+* OkHttp
+* Retrofit
+* RxJava
+* Google Dagger
+
 ## Build
 
 In your local machine:
