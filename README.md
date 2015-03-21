@@ -21,7 +21,7 @@ In your local machine:
 To test it with Docker (what circleci.yml does):
 ```
 docker build -t android_helium .
-docker run -it android_helium ./gradlew --stacktrace test build
+docker run -it android_helium
 ```
 
 ## Special Thanks
