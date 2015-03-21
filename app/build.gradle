@@ -88,8 +88,8 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
     provided 'javax.annotation:jsr250-api:1.0'
 
-    compile 'com.facebook.stetho:stetho:1.0.1'
-    compile 'com.facebook.stetho:stetho-okhttp:1.0.1'
+    debugCompile 'com.facebook.stetho:stetho:1.0.1'
+    debugCompile 'com.facebook.stetho:stetho-okhttp:1.0.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'

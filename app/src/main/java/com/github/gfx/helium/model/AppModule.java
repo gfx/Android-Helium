@@ -1,6 +1,7 @@
 package com.github.gfx.helium.model;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import com.github.gfx.helium.BuildConfig;
@@ -26,8 +27,11 @@ import retrofit.client.OkClient;
 
 @Module
 public class AppModule {
+
     static final String CACHE_FILE_NAME = "okhttp.cache";
+
     static final long MAX_CACHE_SIZE = 4 * 1024 * 1024;
+
     static final String SHARED_PREF_NAME = "preferences";
 
     private Application context;
@@ -49,7 +53,13 @@ public class AppModule {
     @Singleton
     @Provides
     public Tracker providesGoogleAnalyticsTracker(Context context) {
-        Tracker tracker = GoogleAnalytics.getInstance(context).newTracker(BuildConfig.GA_TRACKING_ID);
+        GoogleAnalytics ga = GoogleAnalytics.getInstance(context);
+        if (BuildConfig.DEBUG) {
+            ga.getLogger()
+                    .setLogLevel(Logger.LogLevel.VERBOSE);
+
+        }
+        Tracker tracker = ga.newTracker(BuildConfig.GA_TRACKING_ID);
         tracker.enableExceptionReporting(true);
         return tracker;
     }
@@ -65,7 +75,7 @@ public class AppModule {
         File cacheDir = new File(context.getCacheDir(), CACHE_FILE_NAME);
         Cache cache = new Cache(cacheDir, MAX_CACHE_SIZE);
 
-        OkHttpClient httpClient =  new OkHttpClient();
+        OkHttpClient httpClient = new OkHttpClient();
         httpClient.setCache(cache);
         return httpClient;
     }
@@ -77,13 +87,15 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public HatebuFeedClient provideHatebuFeedClient(Client client, RequestInterceptor requestInterceptor) {
+    public HatebuFeedClient provideHatebuFeedClient(Client client,
+            RequestInterceptor requestInterceptor) {
         return new HatebuFeedClient(client, requestInterceptor);
     }
 
     @Singleton
     @Provides
-    public EpitomeFeedClient provideEpitomeFeedClient(Client client, RequestInterceptor requestInterceptor) {
+    public EpitomeFeedClient provideEpitomeFeedClient(Client client,
+            RequestInterceptor requestInterceptor) {
         return new EpitomeFeedClient(client, requestInterceptor);
     }
 
