@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -210,7 +211,7 @@ public class HatebuEntryFragment extends Fragment
 
             viewHolder.title.setText(entry.title);
             viewHolder.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
-            viewHolder.subject.setText(entry.subject);
+            viewHolder.subject.setText(TextUtils.join(" ", entry.subject));
             viewHolder.bookmarkCount.setText(entry.bookmarkCount);
             viewHolder.description.setText(entry.description);
             viewHolder.originalUrl.setText(entry.link);

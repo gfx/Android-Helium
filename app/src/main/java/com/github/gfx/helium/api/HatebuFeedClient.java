@@ -3,16 +3,14 @@ package com.github.gfx.helium.api;
 import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.model.HatebuFeed;
-import com.squareup.okhttp.OkHttpClient;
-
-import android.content.Context;
 
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
+import retrofit.client.Client;
 import retrofit.converter.SimpleXMLConverter;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -36,25 +34,23 @@ public class HatebuFeedClient {
 
     final HatebuService hatebuService;
 
-    public HatebuFeedClient(Context context, OkHttpClient httpClient) {
-        feedburnerAdapter = createCommonBuilder(context, httpClient)
+    public HatebuFeedClient(Client client, RequestInterceptor requestInterceptor) {
+        feedburnerAdapter = createCommonBuilder(client, requestInterceptor)
                 .setEndpoint(FEEDBURNER_ENDPOINT)
                 .build();
         feedburnerService = feedburnerAdapter.create(FeedburnerService.class);
 
-        hatebuAdapter = createCommonBuilder(context, httpClient)
+        hatebuAdapter = createCommonBuilder(client, requestInterceptor)
                 .setEndpoint(HATEBU_ENDPOINT)
                 .build();
         hatebuService = hatebuAdapter.create(HatebuService.class);
     }
 
-    static RestAdapter.Builder createCommonBuilder(Context context, OkHttpClient httpClient) {
-        OkClient client = new OkClient(httpClient);
-
+    static RestAdapter.Builder createCommonBuilder(Client client, RequestInterceptor requestIntercepter) {
         return new RestAdapter.Builder()
                 .setClient(client)
                 .setConverter(new SimpleXMLConverter())
-                .setRequestInterceptor(new HeliumRequestInterceptor(context))
+                .setRequestInterceptor(requestIntercepter)
                 .setLogLevel(
                         BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE);
     }
@@ -77,6 +73,15 @@ public class HatebuFeedClient {
         });
     }
 
+    public Observable<List<HatebuEntry>> getFavotites(final String user) {
+        return hatebuService.getFavorites(user).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
+            @Override
+            public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
+                return hatebuFeed.items;
+            }
+        });
+    }
+
 
     interface FeedburnerService {
 
@@ -88,5 +93,8 @@ public class HatebuFeedClient {
 
         @GET("/hotentry/{category}.rss")
         Observable<HatebuFeed> getHotentries(@Path("category") String category);
+
+        @GET("/{user}/favorite.rss")
+        Observable<HatebuFeed> getFavorites(@Path("user") String user);
     }
 }

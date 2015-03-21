@@ -3,8 +3,12 @@ package com.github.gfx.helium.model;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Root(name = "item", strict = false)
 public class HatebuEntry {
@@ -22,12 +26,16 @@ public class HatebuEntry {
     public String date;
 
     @Namespace(prefix = "dc")
-    @Element(name = "subject", required = false)
-    public String subject = "総合";
+    @ElementList(entry = "subject", inline = true, required = false)
+    public List<String> subject = new ArrayList<>();
 
     @Namespace(prefix = "hatena")
     @Element(name = "bookmarkcount")
     public String bookmarkCount;
+
+    @Namespace(prefix = "dc")
+    @Element(name = "creator", required = false)
+    public String creator;
 
     public DateTime getTimestamp() {
         return ISODateTimeFormat.dateTimeParser().parseDateTime(date);

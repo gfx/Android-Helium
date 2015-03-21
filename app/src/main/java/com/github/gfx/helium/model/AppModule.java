@@ -4,9 +4,9 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
 import com.github.gfx.helium.BuildConfig;
-import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.api.EpitomeFeedClient;
 import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -20,6 +20,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.RequestInterceptor;
+import retrofit.client.Client;
+import retrofit.client.OkClient;
 
 @Module
 public class AppModule {
@@ -27,9 +30,9 @@ public class AppModule {
     static final long MAX_CACHE_SIZE = 4 * 1024 * 1024;
     static final String SHARED_PREF_NAME = "preferences";
 
-    private HeliumApplication context;
+    private Application context;
 
-    public AppModule(HeliumApplication app) {
+    public AppModule(Application app) {
         context = app;
     }
 
@@ -51,6 +54,11 @@ public class AppModule {
         return tracker;
     }
 
+    @Provides
+    public RequestInterceptor provideRequestIntercepter(Context context) {
+        return new HeliumRequestInterceptor(context);
+    }
+
     @Singleton
     @Provides
     public OkHttpClient provideHttpClient(Context context) {
@@ -62,16 +70,21 @@ public class AppModule {
         return httpClient;
     }
 
-    @Singleton
     @Provides
-    public HatebuFeedClient provideHatebuFeedClient(Context context, OkHttpClient httpClient) {
-        return new HatebuFeedClient(context, httpClient);
+    public Client provicesRetrofitClient(OkHttpClient httpClient) {
+        return new OkClient(httpClient);
     }
 
     @Singleton
     @Provides
-    public EpitomeFeedClient provideEpitomeFeedClient(Context context, OkHttpClient httpClient) {
-        return new EpitomeFeedClient(context, httpClient);
+    public HatebuFeedClient provideHatebuFeedClient(Client client, RequestInterceptor requestInterceptor) {
+        return new HatebuFeedClient(client, requestInterceptor);
+    }
+
+    @Singleton
+    @Provides
+    public EpitomeFeedClient provideEpitomeFeedClient(Client client, RequestInterceptor requestInterceptor) {
+        return new EpitomeFeedClient(client, requestInterceptor);
     }
 
     @Provides
