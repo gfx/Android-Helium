@@ -26,7 +26,6 @@ public class HeliumApplication extends Application {
 
     @NonNull
     public static AppComponent getAppComponent() {
-        assert appComponent != null;
         return appComponent;
     }
 }

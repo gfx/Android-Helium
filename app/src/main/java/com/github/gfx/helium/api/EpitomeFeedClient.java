@@ -21,7 +21,7 @@ import rx.functions.Func1;
 @ParametersAreNonnullByDefault
 public class EpitomeFeedClient {
 
-    final String ENDPOINT = "https://ja.epitomeup.com/";
+    static final String ENDPOINT = "https://ja.epitomeup.com/";
 
     final RestAdapter adapter;
 
