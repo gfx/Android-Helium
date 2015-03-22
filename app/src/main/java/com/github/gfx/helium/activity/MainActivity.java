@@ -59,6 +59,8 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long t0 = System.currentTimeMillis();
+
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         HeliumApplication.getAppComponent().inject(this);
@@ -137,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
 
         viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
 
-        TrackingUtils.sendScreenView(tracker, TAG);
+        TrackingUtils.sendTiming(tracker, TAG, "onCreate", System.currentTimeMillis() - t0);
     }
 
     @Override
