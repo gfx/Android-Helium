@@ -65,7 +65,7 @@ public class AppModule {
     }
 
     @Provides
-    public RequestInterceptor provideRequestIntercepter(Context context) {
+    public RequestInterceptor provideRequestInterceptor(Context context) {
         return new HeliumRequestInterceptor(context);
     }
 
