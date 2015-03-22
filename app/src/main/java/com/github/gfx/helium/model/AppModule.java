@@ -65,7 +65,7 @@ public class AppModule {
     }
 
     @Provides
-    public RequestInterceptor provideRequestIntercepter(Context context) {
+    public RequestInterceptor provideRequestInterceptor(Context context) {
         return new HeliumRequestInterceptor(context);
     }
 
@@ -81,7 +81,7 @@ public class AppModule {
     }
 
     @Provides
-    public Client provicesRetrofitClient(OkHttpClient httpClient) {
+    public Client provideRetrofitClient(OkHttpClient httpClient) {
         return new OkClient(httpClient);
     }
 
