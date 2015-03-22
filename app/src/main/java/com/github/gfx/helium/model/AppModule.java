@@ -81,7 +81,7 @@ public class AppModule {
     }
 
     @Provides
-    public Client provicesRetrofitClient(OkHttpClient httpClient) {
+    public Client provideRetrofitClient(OkHttpClient httpClient) {
         return new OkClient(httpClient);
     }
 
