@@ -2,6 +2,7 @@ apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'android-power-assert'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.github.gfx.ribbonizer'
 //apply plugin: 'galette'
 
 apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
