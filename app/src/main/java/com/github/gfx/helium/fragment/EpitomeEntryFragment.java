@@ -122,7 +122,6 @@ public class EpitomeEntryFragment extends Fragment
 
     Observable<?> reload() {
         return AppObservable.bindFragment(this, feedClient.getEntries())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<List<EpitomeEntry>>() {
                     @Override
                     public void call(List<EpitomeEntry> entries) {

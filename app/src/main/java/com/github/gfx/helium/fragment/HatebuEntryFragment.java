@@ -140,7 +140,6 @@ public class HatebuEntryFragment extends Fragment
             observable = feedClient.getHotentries();
         }
         return AppObservable.bindFragment(this, observable)
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
