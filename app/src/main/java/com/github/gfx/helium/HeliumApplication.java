@@ -2,7 +2,7 @@ package com.github.gfx.helium;
 
 import com.github.gfx.helium.model.AppComponent;
 import com.github.gfx.helium.model.AppModule;
-import com.github.gfx.helium.model.Dagger_AppComponent;
+import com.github.gfx.helium.model.DaggerAppComponent;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -16,7 +16,7 @@ public class HeliumApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        appComponent = Dagger_AppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
         new StethoDelegator().setup();

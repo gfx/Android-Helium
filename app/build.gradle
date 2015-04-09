@@ -7,12 +7,6 @@ apply plugin: 'com.github.gfx.ribbonizer'
 
 apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
 
-repositories {
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots" // for dagger 2
-    }
-}
-
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -85,8 +79,8 @@ dependencies {
     compile 'net.danlew:android.joda:2.7.1'
     compile 'com.github.bumptech.glide:glide:3.5.2'
 
-    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
-    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    compile 'com.google.dagger:dagger:2.0'
+    apt 'com.google.dagger:dagger-compiler:2.0'
     provided 'javax.annotation:jsr250-api:1.0'
 
     debugCompile 'com.facebook.stetho:stetho:1.0.1'
