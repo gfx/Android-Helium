@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Holo.Small"
-                    android:singleLine="true"
+                    android:lines="1"
                     android:ellipsize="end"
                     android:paddingBottom="4dp"
                     tools:text="@string/placeholder_url"/>
