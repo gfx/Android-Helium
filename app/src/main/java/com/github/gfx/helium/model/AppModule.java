@@ -34,15 +34,10 @@ public class AppModule {
 
     static final String SHARED_PREF_NAME = "preferences";
 
-    private Application context;
+    private Context context;
 
     public AppModule(Application app) {
         context = app;
-    }
-
-    @Provides
-    public Application provideApplicationContext() {
-        return context;
     }
 
     @Provides
