@@ -69,7 +69,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'io.reactivex:rxandroid:0.24.0'
-    compile 'io.reactivex:rxjava:1.0.8'
+    compile 'io.reactivex:rxjava:1.0.9'
     compile('com.squareup.retrofit:converter-simplexml:1.9.0') {
         exclude module: 'stax'
         exclude module: 'stax-api'
@@ -81,10 +81,10 @@ dependencies {
 
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
-    provided 'javax.annotation:jsr250-api:1.0'
+    provided 'javax.annotation:jsr250-api:1.0' // for @Generated
 
-    debugCompile 'com.facebook.stetho:stetho:1.0.1'
-    debugCompile 'com.facebook.stetho:stetho-okhttp:1.0.1'
+    debugCompile 'com.facebook.stetho:stetho:1.1.0'
+    debugCompile 'com.facebook.stetho:stetho-okhttp:1.1.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'

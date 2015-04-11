@@ -8,7 +8,7 @@ buildscript {
         classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
         classpath 'com.github.gfx:android-power-assert-plugin:1.1.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-        classpath 'com.github.gfx.ribbonizer:plugin:0.1.0'
+        classpath 'com.github.gfx.ribbonizer:plugin:0.1.1'
         //classpath 'com.uphyca.galette:galette-plugin:0.9.9'
     }
 }
