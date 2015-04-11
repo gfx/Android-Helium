@@ -12,9 +12,6 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,7 +38,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.android.app.AppObservable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -222,27 +217,7 @@ public class HatebuEntryFragment extends Fragment
                 }
             });
 
-            setTextMask(viewHolder.description);
-
             return convertView;
-        }
-    }
-
-    static void setTextMask(final TextView view) {
-        final ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                            Shader textShader = new LinearGradient(0, 0, 0, view.getHeight(),
-                                    new int[]{Color.BLACK, Color.TRANSPARENT},
-                                    new float[]{0, 1}, Shader.TileMode.CLAMP);
-                            view.getPaint().setShader(textShader);
-                        }
-                    });
         }
     }
 
