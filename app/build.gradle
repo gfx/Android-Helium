@@ -37,20 +37,24 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            if (signingConfigs.release.storeFile != null && signingConfigs.release.storeFile.exists()) {
+            if (signingConfigs.release.storeFile != null &&
+                    signingConfigs.release.storeFile.exists()) {
                 signingConfig signingConfigs.release
             } else {
-                logger.info("keystore ${signingConfigs.release.storeFile} does not exist. Release signing is ignored.")
+                logger.info(
+                        "keystore ${signingConfigs.release.storeFile} does not exist. Release signing is ignored.")
             }
 
-           buildConfigField("String", "GA_TRACKING_ID", "\"${project.ext.has('GA_TRACKING_ID_RELEASE') ? project.ext.GA_TRACKING_ID_RELEASE : ''}\"")
+            buildConfigField("String", "GA_TRACKING_ID",
+                    "\"${project.ext.has('GA_TRACKING_ID_RELEASE') ? project.ext.GA_TRACKING_ID_RELEASE : ''}\"")
         }
 
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
 
-            buildConfigField("String", "GA_TRACKING_ID", "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
+            buildConfigField("String", "GA_TRACKING_ID",
+                    "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
         }
     }
 
@@ -60,9 +64,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.android.support:cardview-v7:22.0.0'
-    compile 'com.android.support:support-annotations:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.0'
+    compile 'com.android.support:cardview-v7:22.1.0'
+    compile 'com.android.support:support-annotations:22.1.0'
     compile 'com.google.android.gms:play-services-analytics:7.0.0'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile 'com.jakewharton:butterknife:6.1.0'
