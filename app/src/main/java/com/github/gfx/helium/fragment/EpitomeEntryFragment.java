@@ -40,7 +40,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observable;
 import rx.android.app.AppObservable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -50,13 +49,6 @@ public class EpitomeEntryFragment extends Fragment
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
-    public static EpitomeEntryFragment newInstance() {
-        EpitomeEntryFragment fragment = new EpitomeEntryFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-
-    }
-
     @InjectView(android.R.id.list)
     AbsListView listView;
 
@@ -64,7 +56,7 @@ public class EpitomeEntryFragment extends Fragment
     SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectView(android.R.id.empty)
-            TextView empty;
+    TextView empty;
 
     EntriesAdapter adapter;
 
@@ -75,6 +67,13 @@ public class EpitomeEntryFragment extends Fragment
     Tracker tracker;
 
     public EpitomeEntryFragment() {
+    }
+
+    public static EpitomeEntryFragment newInstance() {
+        EpitomeEntryFragment fragment = new EpitomeEntryFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+
     }
 
     @Override

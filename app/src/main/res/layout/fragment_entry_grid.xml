@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.github.gfx.helium.fragment.HatebuEntryFragment">
+<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
+                                              xmlns:android="http://schemas.android.com/apk/res/android"
+                                              xmlns:tools="http://schemas.android.com/tools"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              tools:context="com.github.gfx.helium.fragment.HatebuEntryFragment"
+        >
 
     <com.etsy.android.grid.StaggeredGridView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="2"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:verticalSpacing="4dp"
-        android:horizontalSpacing="4dp" />
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:horizontalSpacing="4dp"
+            android:numColumns="2"
+            android:verticalSpacing="4dp"
+            />
 
     <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            />
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -20,11 +20,11 @@ import rx.functions.Func1;
 @ParametersAreNonnullByDefault
 public class HatebuFeedClient {
 
-    private static final String TAG = HatebuFeedClient.class.getSimpleName();
-
     public static final String FEEDBURNER_ENDPOINT = "http://feeds.feedburner.com/";
 
     public static final String HATEBU_ENDPOINT = "http://b.hatena.ne.jp/";
+
+    private static final String TAG = HatebuFeedClient.class.getSimpleName();
 
     final RestAdapter feedburnerAdapter;
 

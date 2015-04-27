@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+        >
 
     <TextView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_margin="10dp"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:text="@string/placeholder_point"
-        android:textColor="@color/gist_point"
-        android:background="@drawable/circle"
-        android:gravity="center"
-        android:id="@+id/gist_point"/>
+            android:id="@+id/gist_point"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:text="@string/placeholder_point"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="@color/gist_point"
+            />
 
     <TextView
-        android:id="@+id/gist_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:text="@string/placeholder_gist"
-       />
+            android:id="@+id/gist_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/placeholder_gist"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            />
 </LinearLayout>

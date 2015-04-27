@@ -7,6 +7,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public final class TrackingUtils {
+
     public static void sendScreenView(Tracker tracker, String screenName) {
         tracker.setScreenName(screenName);
         tracker.send(new HitBuilders.ScreenViewBuilder().build());

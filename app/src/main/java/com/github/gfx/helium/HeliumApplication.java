@@ -10,7 +10,13 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 public class HeliumApplication extends Application {
+
     static AppComponent appComponent;
+
+    @NonNull
+    public static AppComponent getAppComponent() {
+        return appComponent;
+    }
 
     @Override
     public void onCreate() {
@@ -22,10 +28,5 @@ public class HeliumApplication extends Application {
         new StethoDelegator().setup();
 
         JodaTimeAndroid.init(this);
-    }
-
-    @NonNull
-    public static AppComponent getAppComponent() {
-        return appComponent;
     }
 }

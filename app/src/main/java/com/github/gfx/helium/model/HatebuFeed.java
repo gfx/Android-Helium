@@ -6,9 +6,10 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-@Namespace(prefix ="rdf")
+@Namespace(prefix = "rdf")
 @Root(name = "RDF", strict = false)
 public class HatebuFeed {
+
     @ElementList(name = "item", inline = true)
     public List<HatebuEntry> items;
 }

@@ -51,20 +51,6 @@ public class HatebuEntryFragment extends Fragment
 
     static final String kCategory = "category";
 
-    public static HatebuEntryFragment newInstance() {
-        HatebuEntryFragment fragment = new HatebuEntryFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
-    public static HatebuEntryFragment newInstance(String category) {
-        HatebuEntryFragment fragment = new HatebuEntryFragment();
-        Bundle args = new Bundle();
-        args.putString(kCategory, category);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @InjectView(android.R.id.list)
     AbsListView listView;
 
@@ -80,6 +66,20 @@ public class HatebuEntryFragment extends Fragment
     ArrayAdapter<HatebuEntry> adapter;
 
     public HatebuEntryFragment() {
+    }
+
+    public static HatebuEntryFragment newInstance() {
+        HatebuEntryFragment fragment = new HatebuEntryFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
+    public static HatebuEntryFragment newInstance(String category) {
+        HatebuEntryFragment fragment = new HatebuEntryFragment();
+        Bundle args = new Bundle();
+        args.putString(kCategory, category);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

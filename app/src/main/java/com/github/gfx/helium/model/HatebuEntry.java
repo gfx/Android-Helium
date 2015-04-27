@@ -12,6 +12,7 @@ import java.util.List;
 
 @Root(name = "item", strict = false)
 public class HatebuEntry {
+
     @Element(name = "title")
     public String title;
 
