@@ -36,9 +36,9 @@ public class ApiTest {
         }
     }
 
-    class MockRequestIntercepter extends HeliumRequestInterceptor {
+    class MockRequestInterceptor extends HeliumRequestInterceptor {
 
-        public MockRequestIntercepter() {
+        public MockRequestInterceptor() {
             super(new MockContextWithSystemService());
         }
 
@@ -88,7 +88,7 @@ public class ApiTest {
     public void testRequestHotentries() throws Exception {
         HatebuFeedClient feedClient = new HatebuFeedClient(
                 new MockClient("/hatena/b/hotentry", "hotentries.rss", "application/xml"),
-                new MockRequestIntercepter());
+                new MockRequestInterceptor());
 
         List<HatebuEntry> entry = feedClient.getHotentries().toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -98,7 +98,7 @@ public class ApiTest {
     public void testRequestHotentriesWithCategory() throws Exception {
         HatebuFeedClient feedClient = new HatebuFeedClient(
                 new MockClient("/hotentry/it.rss", "hotentries.rss", "application/xml"),
-                new MockRequestIntercepter());
+                new MockRequestInterceptor());
 
         List<HatebuEntry> entry = feedClient.getHotentries("it").toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -108,7 +108,7 @@ public class ApiTest {
     public void testRequestFavorites() throws Exception {
         HatebuFeedClient feedClient = new HatebuFeedClient(
                 new MockClient("/gfx/favorite.rss", "favorites.rss", "application/xml"),
-                new MockRequestIntercepter());
+                new MockRequestInterceptor());
 
         List<HatebuEntry> entry = feedClient.getFavotites("gfx").toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -118,7 +118,7 @@ public class ApiTest {
     public void testRequestEpitome() throws Exception {
         EpitomeFeedClient feedClient = new EpitomeFeedClient(
                 new MockClient("/feed/beam", "epitome.json", "application/json"),
-                new MockRequestIntercepter());
+                new MockRequestInterceptor());
 
         List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
