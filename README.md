@@ -38,6 +38,6 @@ docker run -it android_helium
 ## License
 
 This application is free software; you can redistribute it and/or modify it
-under the ters of the Apache License 2.0.
+under the terms of the Apache License 2.0.
 
 * http://www.apache.org/licenses/LICENSE-2.0
