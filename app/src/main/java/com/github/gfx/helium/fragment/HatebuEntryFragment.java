@@ -83,7 +83,7 @@ public class HatebuEntryFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         HeliumApplication.getAppComponent().inject(this);
@@ -114,17 +114,20 @@ public class HatebuEntryFragment extends Fragment
 
             }
         });
+
+        reload().subscribe();
+
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
-        reload().subscribe();
-
-        String category = getCategory();
-        TrackingUtils.sendScreenView(tracker, category != null ? TAG + "-" + category : TAG);
+        if (isVisibleToUser) {
+            String category = getCategory();
+            TrackingUtils.sendScreenView(tracker, category != null ? TAG + "-" + category : TAG);
+        }
     }
 
     Observable<?> reload() {

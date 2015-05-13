@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.gfx.helium">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.github.gfx.helium"
+        >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,6 +24,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- GA -->
+        <service
+                android:name="com.google.android.gms.analytics.AnalyticsService"
+                android:enabled="true"
+                android:exported="false"
+                />
+
+        <receiver
+                android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+                android:enabled="true"
+                tools:ignore="ExportedReceiver"
+                >
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+        <receiver
+                android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+                android:enabled="true"
+                tools:ignore="ExportedReceiver"
+                >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <service
+                android:name="com.google.android.gms.analytics.CampaignTrackingService"
+                android:enabled="true"
+                android:exported="false"
+                />
     </application>
 
 </manifest>

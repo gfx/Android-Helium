@@ -107,16 +107,19 @@ public class EpitomeEntryFragment extends Fragment
                 });
             }
         });
+
+        reload().subscribe();
+
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
-        reload().subscribe();
-
-        TrackingUtils.sendScreenView(tracker, TAG);
+        if (isVisibleToUser) {
+            TrackingUtils.sendScreenView(tracker, TAG);
+        }
     }
 
     Observable<?> reload() {

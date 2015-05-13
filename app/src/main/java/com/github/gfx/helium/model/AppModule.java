@@ -1,7 +1,6 @@
 package com.github.gfx.helium.model;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import com.github.gfx.helium.BuildConfig;
@@ -49,11 +48,6 @@ public class AppModule {
     @Provides
     public Tracker providesGoogleAnalyticsTracker(Context context) {
         GoogleAnalytics ga = GoogleAnalytics.getInstance(context);
-        if (BuildConfig.DEBUG) {
-            ga.getLogger()
-                    .setLogLevel(Logger.LogLevel.VERBOSE);
-
-        }
         Tracker tracker = ga.newTracker(BuildConfig.GA_TRACKING_ID);
         tracker.enableExceptionReporting(true);
         return tracker;
