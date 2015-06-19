@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-power-assert'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.gfx.ribbonizer'
-//apply plugin: 'galette'
 
 apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
 
@@ -89,7 +88,6 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.1'
     apt 'com.google.dagger:dagger-compiler:2.0.1'
     provided 'javax.annotation:jsr250-api:1.0'
-    // for @Generated
     debugCompile 'com.facebook.stetho:stetho:1.1.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp:1.1.1'
     testCompile 'junit:junit:4.12'

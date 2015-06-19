@@ -11,6 +11,7 @@
             <package name="org.mockito.Mockito" withSubpackages="true" static="false" />
             <package name="org.hamcrest.CoreMatchers" withSubpackages="true" static="false" />
             <package name="org.hamcrest.Matchers" withSubpackages="true" static="false" />
+            <package name="org.hamcrest.MatcherAssert" withSubpackages="true" static="false" />
             <package name="org.junit.Assert" withSubpackages="true" static="false" />
           </value>
         </option>
@@ -44,6 +45,7 @@
         <option name="JD_KEEP_EMPTY_EXCEPTION" value="false" />
         <option name="JD_KEEP_EMPTY_RETURN" value="false" />
         <option name="JD_PRESERVE_LINE_FEEDS" value="true" />
+        <option name="FORMATTER_TAGS_ENABLED" value="true" />
         <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
         <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
         <option name="BLANK_LINES_AROUND_FIELD" value="1" />
@@ -189,7 +191,7 @@
                   <match>
                     <AND>
                       <NAME>xmlns:android</NAME>
-                      <XML_NAMESPACE>Namespace:</XML_NAMESPACE>
+                      <XML_NAMESPACE>^$</XML_NAMESPACE>
                     </AND>
                   </match>
                 </rule>
@@ -199,7 +201,7 @@
                   <match>
                     <AND>
                       <NAME>xmlns:.*</NAME>
-                      <XML_NAMESPACE>Namespace:</XML_NAMESPACE>
+                      <XML_NAMESPACE>^$</XML_NAMESPACE>
                     </AND>
                   </match>
                   <order>BY_NAME</order>
