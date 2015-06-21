@@ -6,12 +6,15 @@ import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.EpitomeFeedClient;
+import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
+import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
 
 import org.joda.time.format.ISODateTimeFormat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,13 +52,13 @@ public class EpitomeEntryFragment extends Fragment
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
-    @InjectView(android.R.id.list)
+    @InjectView(R.id.list)
     AbsListView listView;
 
     @InjectView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    @InjectView(android.R.id.empty)
+    @InjectView(R.id.empty)
     TextView empty;
 
     EntriesAdapter adapter;
@@ -73,11 +76,10 @@ public class EpitomeEntryFragment extends Fragment
         EpitomeEntryFragment fragment = new EpitomeEntryFragment();
         fragment.setArguments(new Bundle());
         return fragment;
-
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         HeliumApplication.getAppComponent().inject(this);
@@ -193,9 +195,10 @@ public class EpitomeEntryFragment extends Fragment
         @Override
         public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
-                        .inflate(R.layout.card_epitome_entry, parent, false);
-                convertView.setTag(new ViewHolder());
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                CardEpitomeEntryBinding binding = DataBindingUtil
+                        .inflate(inflater, R.layout.card_epitome_entry, parent, false);
+                convertView = binding.getRoot();
             }
 
             EpitomeEntry entry = getItem(position);
@@ -211,16 +214,14 @@ public class EpitomeEntryFragment extends Fragment
         }
 
         void setupSchemaGists(View view, EpitomeEntry entry) {
+            CardEpitomeEntryBinding binding = DataBindingUtil.getBinding(view);
 
-            ViewHolder viewHolder = (ViewHolder) view.getTag();
-            ButterKnife.inject(viewHolder, view);
+            binding.title.setText(entry.title);
+            binding.views.setText("閲覧数: " + Integer.toString(entry.views));
+            binding.publishedDate.setText("投稿日: " + ISODateTimeFormat.date().print(entry.getTimestamp()));
+            binding.originalUrl.setText(entry.upstreamUrl);
 
-            viewHolder.title.setText(entry.title);
-            viewHolder.views.setText("閲覧数: " + Integer.toString(entry.views));
-            viewHolder.date.setText("投稿日: " + ISODateTimeFormat.date().print(entry.getTimestamp()));
-            viewHolder.originalUrl.setText(entry.upstreamUrl);
-
-            fillGists(viewHolder.gists, entry.gists);
+            fillGists(binding.gists, entry.gists);
         }
 
         void fillGists(LinearLayout layout, List<EpitomeEntry.Gist> gists) {
@@ -229,43 +230,13 @@ public class EpitomeEntryFragment extends Fragment
             layout.removeAllViews();
 
             for (int i = 0; i < gists.size(); i++) {
-                View view = inflater.inflate(R.layout.item_epitome_gist, layout, false);
+                ItemEpitomeGistBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_epitome_gist, layout, false);
 
-                GistViewHolder vh = new GistViewHolder();
-                ButterKnife.inject(vh, view);
+                binding.gistPoint.setText(Integer.toString(i + 1));
+                binding.gistText.setText(gists.get(i).content);
 
-                vh.point.setText(Integer.toString(i + 1));
-                vh.text.setText(gists.get(i).content);
-
-                layout.addView(view);
+                layout.addView(binding.getRoot());
             }
         }
-
-        static class ViewHolder {
-
-            @InjectView(R.id.title)
-            TextView title;
-
-            @InjectView(R.id.original_url)
-            TextView originalUrl;
-
-            @InjectView(R.id.views)
-            TextView views;
-
-            @InjectView(R.id.published_date)
-            TextView date;
-
-            @InjectView(R.id.gists)
-            LinearLayout gists;
-        }
-    }
-
-    static class GistViewHolder {
-
-        @InjectView(R.id.gist_point)
-        TextView point;
-
-        @InjectView(R.id.gist_text)
-        TextView text;
     }
 }
