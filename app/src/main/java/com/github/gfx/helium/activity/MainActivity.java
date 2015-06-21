@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class MainTabsAdapter extends FragmentStatePagerAdapter {
+    static class MainTabsAdapter extends FragmentStatePagerAdapter {
 
         final List<EntryTab> tabs;
 
