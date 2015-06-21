@@ -6,12 +6,14 @@ import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
 
 import org.joda.time.format.ISODateTimeFormat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Collections;
@@ -51,7 +52,7 @@ public class HatebuEntryFragment extends Fragment
 
     static final String kCategory = "category";
 
-    @InjectView(android.R.id.list)
+    @InjectView(R.id.list)
     AbsListView listView;
 
     @InjectView(R.id.swipe_refresh)
@@ -196,24 +197,23 @@ public class HatebuEntryFragment extends Fragment
         @Override
         public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity())
-                        .inflate(R.layout.card_hatebu_entry, parent, false);
-                convertView.setTag(new ViewHolder());
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                CardHatebuEntryBinding binding = DataBindingUtil.inflate(inflater, R.layout.card_hatebu_entry, parent, false);
+                convertView = binding.getRoot();
             }
 
-            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-            ButterKnife.inject(viewHolder, convertView);
+            CardHatebuEntryBinding binding = DataBindingUtil.getBinding(convertView);
 
             final HatebuEntry entry = getItem(position);
 
-            viewHolder.title.setText(entry.title);
-            viewHolder.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
-            viewHolder.subject.setText(TextUtils.join(" ", entry.subject));
-            viewHolder.bookmarkCount.setText(entry.bookmarkCount);
-            viewHolder.description.setText(entry.description);
-            viewHolder.originalUrl.setText(entry.link);
+            binding.title.setText(entry.title);
+            binding.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
+            binding.subject.setText(TextUtils.join(" ", entry.subject));
+            binding.bookmarkCount.setText(entry.bookmarkCount);
+            binding.description.setText(entry.description);
+            binding.originalUrl.setText(entry.link);
 
-            viewHolder.bookmarkCount.setOnClickListener(new View.OnClickListener() {
+            binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openUri(kHatebuEntryPrefix + entry.link, "service");
@@ -222,26 +222,5 @@ public class HatebuEntryFragment extends Fragment
 
             return convertView;
         }
-    }
-
-    class ViewHolder {
-
-        @InjectView(R.id.title)
-        TextView title;
-
-        @InjectView(R.id.description)
-        TextView description;
-
-        @InjectView(R.id.bookmark_count)
-        TextView bookmarkCount;
-
-        @InjectView(R.id.subject)
-        TextView subject;
-
-        @InjectView(R.id.date)
-        TextView date;
-
-        @InjectView(R.id.original_url)
-        TextView originalUrl;
     }
 }

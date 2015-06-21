@@ -5,20 +5,20 @@ import com.google.android.gms.analytics.Tracker;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.databinding.ActivityMainBinding;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
 import com.github.gfx.helium.fragment.HatebuEntryFragment;
 import com.github.gfx.helium.model.EntryTab;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,13 +28,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 import static com.github.gfx.helium.Constants.SITE_APP;
 import static com.github.gfx.helium.Constants.SITE_EPITOME;
 import static com.github.gfx.helium.Constants.SITE_HATEBU;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,22 +46,17 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     SharedPreferences prefs;
 
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
-
-    @InjectView(R.id.view_pager)
-    ViewPager viewPager;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long t0 = System.currentTimeMillis();
 
-        setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         HeliumApplication.getAppComponent().inject(this);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
         // TODO: make tabs customizable
         List<EntryTab> tabs = Arrays.asList(
@@ -137,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 })
         );
 
-        viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
+        binding.viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
 
         TrackingUtils.sendTiming(tracker, TAG, "onCreate", System.currentTimeMillis() - t0);
     }
@@ -145,13 +136,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        viewPager.setCurrentItem(prefs.getInt(KEY_SELECTED_TAB, DEFAULT_SELECTED_TAB));
+        binding.viewPager.setCurrentItem(prefs.getInt(KEY_SELECTED_TAB, DEFAULT_SELECTED_TAB));
     }
 
     @Override
     protected void onPause() {
         prefs.edit()
-                .putInt(KEY_SELECTED_TAB, viewPager.getCurrentItem())
+                .putInt(KEY_SELECTED_TAB, binding.viewPager.getCurrentItem())
                 .apply();
         super.onPause();
     }
