@@ -35,8 +35,8 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import rx.Observable;
 import rx.android.app.AppObservable;
 import rx.functions.Action1;
@@ -52,10 +52,10 @@ public class HatebuEntryFragment extends Fragment
 
     static final String kCategory = "category";
 
-    @InjectView(R.id.list)
+    @Bind(R.id.list)
     AbsListView listView;
 
-    @InjectView(R.id.swipe_refresh)
+    @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
@@ -96,7 +96,7 @@ public class HatebuEntryFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
