@@ -2,6 +2,9 @@ package com.github.gfx.helium.fragment;
 
 import com.google.android.gms.analytics.Tracker;
 
+import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
+import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
+import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
@@ -42,7 +45,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.android.app.AppObservable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -68,6 +70,8 @@ public class EpitomeEntryFragment extends Fragment
 
     @Inject
     Tracker tracker;
+
+    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
     public EpitomeEntryFragment() {
     }
@@ -125,7 +129,9 @@ public class EpitomeEntryFragment extends Fragment
     }
 
     Observable<?> reload() {
-        return AppObservable.bindFragment(this, feedClient.getEntries())
+        return feedClient.getEntries()
+                .observeOn(AndroidSchedulers.mainThread())
+                .lift(new OperatorAddToCompositeSubscription<List<EpitomeEntry>>(compositeSubscription))
                 .doOnNext(new Action1<List<EpitomeEntry>>() {
                     @Override
                     public void call(List<EpitomeEntry> entries) {

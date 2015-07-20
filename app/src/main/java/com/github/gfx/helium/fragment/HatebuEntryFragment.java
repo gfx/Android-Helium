@@ -2,6 +2,9 @@ package com.github.gfx.helium.fragment;
 
 import com.google.android.gms.analytics.Tracker;
 
+import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
+import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
+import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
@@ -38,7 +41,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.android.app.AppObservable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -65,6 +67,8 @@ public class HatebuEntryFragment extends Fragment
     Tracker tracker;
 
     ArrayAdapter<HatebuEntry> adapter;
+
+    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
     public HatebuEntryFragment() {
     }
@@ -138,7 +142,9 @@ public class HatebuEntryFragment extends Fragment
         } else {
             observable = feedClient.getHotentries();
         }
-        return AppObservable.bindFragment(this, observable)
+        return observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
@@ -150,7 +156,8 @@ public class HatebuEntryFragment extends Fragment
                     public List<HatebuEntry> call(Throwable throwable) {
                         Log.w(TAG, "Error while loading entries", throwable);
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), "Error while loading entries",
+                            Toast.makeText(getActivity(), "Error while loading entries\n"
+                                            + throwable.getLocalizedMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
                         return Collections.emptyList();
