@@ -126,6 +126,13 @@ public class HatebuEntryFragment extends Fragment
     }
 
     @Override
+    public void onStop() {
+        compositeSubscription.unsubscribe();
+
+        super.onStop();
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
