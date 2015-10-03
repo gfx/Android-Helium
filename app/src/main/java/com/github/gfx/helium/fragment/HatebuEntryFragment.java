@@ -10,6 +10,7 @@ import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.HatebuFeedClient;
 import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
+import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
@@ -21,12 +22,12 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,8 +41,6 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -55,11 +54,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     static final String kCategory = "category";
 
-    @Bind(R.id.list)
-    RecyclerView listView;
-
-    @Bind(R.id.swipe_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    FragmentEntryBinding binding;
 
     @Inject
     HatebuFeedClient feedClient;
@@ -100,23 +95,22 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_entry, container, false);
-        ButterKnife.bind(this, view);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
 
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
 
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(LayoutManagers.create(getActivity()));
+        binding.list.setAdapter(adapter);
+        binding.list.setLayoutManager(LayoutManagers.create(getActivity()));
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.app_primary);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 reload().subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object o) {
-                        swipeRefreshLayout.setRefreshing(false);
+                        binding.swipeRefresh.setRefreshing(false);
                     }
                 });
 
@@ -125,7 +119,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
         reload().subscribe();
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
