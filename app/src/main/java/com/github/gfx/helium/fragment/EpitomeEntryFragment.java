@@ -10,6 +10,7 @@ import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.EpitomeFeedClient;
 import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
+import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
@@ -29,13 +30,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Collections;
@@ -44,8 +43,6 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -55,14 +52,8 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
-    @Bind(R.id.list)
-    RecyclerView listView;
 
-    @Bind(R.id.swipe_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @Bind(R.id.empty)
-    TextView empty;
+    FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
 
@@ -95,23 +86,23 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_entry, container, false);
-        ButterKnife.bind(this, view);
 
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(LayoutManagers.create(getActivity()));
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
+
+        binding.list.setAdapter(adapter);
+        binding.list.setLayoutManager(LayoutManagers.create(getActivity()));
 
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.app_primary);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 reload().subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object o) {
-                        swipeRefreshLayout.setRefreshing(false);
+                        binding.swipeRefresh.setRefreshing(false);
                     }
                 });
             }
@@ -119,7 +110,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
         reload().subscribe();
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
