@@ -14,7 +14,7 @@ public class LayoutManagers {
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        int spanCount = (int) ((metrics.widthPixels / metrics.density) / ITEM_MIN_WIDTH);
+        int spanCount = Math.max((int) ((metrics.widthPixels / metrics.density) / ITEM_MIN_WIDTH), 1);
         return new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
     }
 }
