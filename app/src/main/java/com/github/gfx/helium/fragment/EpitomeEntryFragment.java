@@ -12,6 +12,11 @@ import com.github.gfx.helium.api.EpitomeFeedClient;
 import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
+import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
+import com.github.gfx.helium.widget.BindingHolder;
+import com.github.gfx.helium.widget.LayoutManagers;
+import com.github.gfx.helium.widget.OnItemClickListener;
+import com.github.gfx.helium.widget.OnItemLongClickListener;
 
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -20,23 +25,20 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -49,13 +51,12 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class EpitomeEntryFragment extends Fragment
-        implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
+public class EpitomeEntryFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
     @Bind(R.id.list)
-    AbsListView listView;
+    RecyclerView listView;
 
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -98,8 +99,10 @@ public class EpitomeEntryFragment extends Fragment
         ButterKnife.bind(this, view);
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+        listView.setLayoutManager(LayoutManagers.create(getActivity()));
+
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.app_primary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -142,8 +145,7 @@ public class EpitomeEntryFragment extends Fragment
                 .doOnNext(new Action1<List<EpitomeEntry>>() {
                     @Override
                     public void call(List<EpitomeEntry> entries) {
-                        adapter.clear();
-                        adapter.addAll(entries);
+                        adapter.reset(entries);
                     }
                 })
                 .onErrorReturn(new Func1<Throwable, List<EpitomeEntry>>() {
@@ -160,7 +162,7 @@ public class EpitomeEntryFragment extends Fragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(View item, int position) {
         EpitomeEntry entry = adapter.getItem(position);
 
         Uri uri = Uri.parse(entry.epitomeUrl);
@@ -171,7 +173,7 @@ public class EpitomeEntryFragment extends Fragment
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(View view, int position) {
         EpitomeEntry entry = adapter.getItem(position);
 
         Uri uri = Uri.parse(entry.upstreamUrl);
@@ -182,52 +184,56 @@ public class EpitomeEntryFragment extends Fragment
         return true;
     }
 
-    static class EntriesAdapter extends ArrayAdapter<EpitomeEntry> {
+    static class EntriesAdapter extends ArrayRecyclerAdapter<EpitomeEntry, BindingHolder<CardEpitomeEntryBinding>> {
 
-        public EntriesAdapter(Context context) {
-            super(context, 0);
+        EntriesAdapter(@NonNull Context context) {
+            super(context);
+        }
+
+        void reset(List<EpitomeEntry> list) {
+            list.clear();
+            for (EpitomeEntry entry : list) {
+                if (entry.hasKnownScheme()) {
+                    addItem(entry);
+                }
+            }
+            notifyDataSetChanged();
         }
 
         @Override
-        public void addAll(Collection<? extends EpitomeEntry> collection) {
-            Iterator<? extends EpitomeEntry> iterator = Observable.from(collection)
-                    .filter(new Func1<EpitomeEntry, Boolean>() {
-                        @Override
-                        public Boolean call(EpitomeEntry epitomeEntry) {
-                            return epitomeEntry.hasKnownScheme();
-                        }
-                    })
-                    .toBlocking()
-                    .getIterator();
-
-            while (iterator.hasNext()) {
-                add(iterator.next());
-            }
+        public BindingHolder<CardEpitomeEntryBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new BindingHolder<>(getContext(), parent, R.layout.card_epitome_entry);
         }
 
         @Override
-        public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                CardEpitomeEntryBinding binding = DataBindingUtil
-                        .inflate(inflater, R.layout.card_epitome_entry, parent, false);
-                convertView = binding.getRoot();
-            }
+        public void onBindViewHolder(final BindingHolder<CardEpitomeEntryBinding> holder, final int position) {
 
             EpitomeEntry entry = getItem(position);
 
+            holder.itemView.setClickable(true);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchOnItemClick(v, position);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return dispatchOnItemLongClick(v, position);
+                }
+            });
+
             if (entry.isGists()) {
-                setupSchemaGists(convertView, entry);
-                convertView.setVisibility(View.VISIBLE);
+                setupSchemaGists(holder, entry);
+                holder.itemView.setVisibility(View.VISIBLE);
             } else {
                 throw new IllegalStateException("Unknown scheme: " + entry.scheme);
             }
-
-            return convertView;
         }
 
-        void setupSchemaGists(View view, EpitomeEntry entry) {
-            CardEpitomeEntryBinding binding = DataBindingUtil.getBinding(view);
+        void setupSchemaGists(BindingHolder<CardEpitomeEntryBinding> holder, EpitomeEntry entry) {
+            CardEpitomeEntryBinding binding = holder.binding;
 
             binding.title.setText(entry.title);
             binding.views.setText("閲覧数: " + Integer.toString(entry.views));

@@ -11,25 +11,27 @@ import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.HatebuFeedClient;
 import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
+import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
+import com.github.gfx.helium.widget.BindingHolder;
+import com.github.gfx.helium.widget.LayoutManagers;
+import com.github.gfx.helium.widget.OnItemClickListener;
+import com.github.gfx.helium.widget.OnItemLongClickListener;
 
 import org.joda.time.format.ISODateTimeFormat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.util.Collections;
@@ -45,8 +47,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class HatebuEntryFragment extends Fragment
-        implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
+public class HatebuEntryFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
 
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
 
@@ -55,7 +56,7 @@ public class HatebuEntryFragment extends Fragment
     static final String kCategory = "category";
 
     @Bind(R.id.list)
-    AbsListView listView;
+    RecyclerView listView;
 
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -66,7 +67,7 @@ public class HatebuEntryFragment extends Fragment
     @Inject
     Tracker tracker;
 
-    ArrayAdapter<HatebuEntry> adapter;
+    EntriesAdapter adapter;
 
     final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
@@ -102,9 +103,11 @@ public class HatebuEntryFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
         ButterKnife.bind(this, view);
 
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
+
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+        listView.setLayoutManager(LayoutManagers.create(getActivity()));
 
         swipeRefreshLayout.setColorSchemeResources(R.color.app_primary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -155,8 +158,7 @@ public class HatebuEntryFragment extends Fragment
                 .doOnNext(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
-                        adapter.clear();
-                        adapter.addAll(items);
+                        adapter.reset(items);
                     }
                 }).onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
@@ -184,13 +186,13 @@ public class HatebuEntryFragment extends Fragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(View view, int position) {
         HatebuEntry entry = adapter.getItem(position);
         openUri(entry.link, "original");
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(View view, int position) {
         HatebuEntry entry = adapter.getItem(position);
         openUri(kHatebuEntryPrefix + entry.link, "service");
         return true;
@@ -202,23 +204,43 @@ public class HatebuEntryFragment extends Fragment
                 .sendEvent(tracker, category != null ? TAG + "-" + category : TAG, action);
     }
 
-    private class EntriesAdapter extends ArrayAdapter<HatebuEntry> {
+    private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardHatebuEntryBinding>> {
 
         public EntriesAdapter(Context context) {
-            super(context, 0);
+            super(context);
+        }
+
+        void reset(List<HatebuEntry> list) {
+            clear();
+            addAll(list);
+            notifyDataSetChanged();
         }
 
         @Override
-        public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
-            if (convertView == null) {
-                LayoutInflater inflater = LayoutInflater.from(getActivity());
-                CardHatebuEntryBinding binding = DataBindingUtil.inflate(inflater, R.layout.card_hatebu_entry, parent, false);
-                convertView = binding.getRoot();
-            }
+        public BindingHolder<CardHatebuEntryBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new BindingHolder<>(getContext(), parent, R.layout.card_hatebu_entry);
+        }
 
-            CardHatebuEntryBinding binding = DataBindingUtil.getBinding(convertView);
+        @Override
+        public void onBindViewHolder(final BindingHolder<CardHatebuEntryBinding> holder, final int position) {
+            CardHatebuEntryBinding binding = holder.binding;
 
             final HatebuEntry entry = getItem(position);
+
+            holder.itemView.setClickable(true);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchOnItemClick(v, position);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return dispatchOnItemLongClick(v, position);
+                }
+            });
+
 
             binding.title.setText(entry.title);
             binding.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
@@ -233,8 +255,6 @@ public class HatebuEntryFragment extends Fragment
                     openUri(kHatebuEntryPrefix + entry.link, "service");
                 }
             });
-
-            return convertView;
         }
     }
 }
