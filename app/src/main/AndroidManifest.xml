@@ -6,18 +6,24 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
-        android:allowBackup="true"
-        android:name=".HeliumApplication"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-        <meta-data android:name="com.google.android.gms.version"
-                   android:value="@integer/google_play_services_version" />
+            android:name=".HeliumApplication"
+            android:allowBackup="true"
+            android:fullBackupContent="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            >
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"
+                />
 
         <activity
-            android:name="com.github.gfx.helium.activity.MainActivity"
-            android:label="@string/app_name">
+                android:name="com.github.gfx.helium.activity.MainActivity"
+                android:label="@string/app_name"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
