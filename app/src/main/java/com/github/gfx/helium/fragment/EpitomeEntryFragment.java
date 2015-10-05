@@ -216,14 +216,14 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
             });
 
             if (entry.isGists()) {
-                setupSchemaGists(holder, entry);
+                populateGists(holder, entry);
                 holder.itemView.setVisibility(View.VISIBLE);
             } else {
                 throw new IllegalStateException("Unknown scheme: " + entry.scheme);
             }
         }
 
-        void setupSchemaGists(BindingHolder<CardEpitomeEntryBinding> holder, EpitomeEntry entry) {
+        void populateGists(BindingHolder<CardEpitomeEntryBinding> holder, EpitomeEntry entry) {
             CardEpitomeEntryBinding binding = holder.binding;
 
             binding.title.setText(entry.title);
