@@ -182,7 +182,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         }
 
         void reset(List<EpitomeEntry> list) {
-            list.clear();
+            clear();
             for (EpitomeEntry entry : list) {
                 if (entry.hasKnownScheme()) {
                     addItem(entry);
