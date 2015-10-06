@@ -8,7 +8,7 @@
     <string name="placeholder_title">Hateblet+LinkBubbleの組み合わせが便利すぎる！</string>
     <string name="placeholder_description">1. blah blah blah\n2. blah blah blah\n3. blah blah blah\n4. blah blah blah</string>
     <string name="placeholder_subject">テクノロジー</string>
-    <string name="placeholder_date">2015-03-01T09:13:13+09:00</string>
+    <string name="placeholder_date">2時間前</string>
     <string name="placeholder_url">http://example.com/path/to/article</string>
 
     <string name="hello_world">Hello world!</string>

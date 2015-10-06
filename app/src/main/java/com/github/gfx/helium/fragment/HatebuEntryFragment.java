@@ -18,8 +18,6 @@ import com.github.gfx.helium.widget.LayoutManagers;
 import com.github.gfx.helium.widget.OnItemClickListener;
 import com.github.gfx.helium.widget.OnItemLongClickListener;
 
-import org.joda.time.format.ISODateTimeFormat;
-
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -49,8 +47,6 @@ import rx.functions.Func1;
 public class HatebuEntryFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
 
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
-
-    static final String kHatebuEntryPrefix = "http://b.hatena.ne.jp/entry/";
 
     static final String kCategory = "category";
 
@@ -173,29 +169,29 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
         return getArguments() != null ? getArguments().getString(kCategory) : null;
     }
 
-    void openUri(String uri, String action) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+    void openUri(Uri uri, String action) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
         trackOpenUri(action);
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        HatebuEntry entry = adapter.getItem(position);
-        openUri(entry.link, "original");
-    }
-
-    @Override
-    public boolean onItemLongClick(View view, int position) {
-        HatebuEntry entry = adapter.getItem(position);
-        openUri(kHatebuEntryPrefix + entry.link, "service");
-        return true;
     }
 
     void trackOpenUri(String action) {
         String category = getCategory();
         TrackingUtils
                 .sendEvent(tracker, category != null ? TAG + "-" + category : TAG, action);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        HatebuEntry entry = adapter.getItem(position);
+        openUri(Uri.parse(entry.link), "original");
+    }
+
+    @Override
+    public boolean onItemLongClick(View view, int position) {
+        HatebuEntry entry = adapter.getItem(position);
+        openUri(feedClient.buildHatebuEntryUri(entry.link), "service");
+        return true;
     }
 
     private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardHatebuEntryBinding>> {
@@ -237,7 +233,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
 
             binding.title.setText(entry.title);
-            binding.date.setText(ISODateTimeFormat.date().print(entry.getTimestamp()));
+            binding.date.setText(entry.getTimestamp());
             binding.subject.setText(TextUtils.join(" ", entry.subject));
             binding.bookmarkCount.setText(entry.bookmarkCount);
             binding.description.setText(entry.description);
@@ -246,7 +242,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openUri(kHatebuEntryPrefix + entry.link, "service");
+                    openUri(feedClient.buildHatebuEntryUri(entry.link), "service");
                 }
             });
         }

@@ -8,6 +8,7 @@ import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.databinding.ActivityMainBinding;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
 import com.github.gfx.helium.fragment.HatebuEntryFragment;
+import com.github.gfx.helium.fragment.TimelineFragment;
 import com.github.gfx.helium.model.EntryTab;
 
 import android.content.Intent;
@@ -64,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public Fragment createFragment() {
                         return EpitomeEntryFragment.newInstance();
+                    }
+                }),
+                new EntryTab("タイムライン", new EntryTab.FragmentFactory() {
+                    @Override
+                    public Fragment createFragment() {
+                        return TimelineFragment.newInstance();
                     }
                 }),
                 new EntryTab("総合", new EntryTab.FragmentFactory() {

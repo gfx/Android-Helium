@@ -4,6 +4,9 @@ import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.model.HatebuFeed;
 
+import android.net.Uri;
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,6 +26,10 @@ public class HatebuFeedClient {
     public static final String FEEDBURNER_ENDPOINT = "http://feeds.feedburner.com/";
 
     public static final String HATEBU_ENDPOINT = "http://b.hatena.ne.jp/";
+
+    public static final Uri HATEBU_ENTRY = Uri.parse("http://b.hatena.ne.jp/entry/");
+
+    public static final String HATEBU_ICON = "http://cdn1.www.st-hatena.com/users/{user_prefix}/{user}/profile.gif";
 
     private static final String TAG = HatebuFeedClient.class.getSimpleName();
 
@@ -53,6 +60,21 @@ public class HatebuFeedClient {
                 .setRequestInterceptor(requestIntercepter)
                 .setLogLevel(
                         BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE);
+    }
+
+    @NonNull
+    public Uri buildHatebuEntryUri(String path) {
+        return HATEBU_ENTRY.buildUpon()
+                .appendPath(path)
+                .build();
+    }
+
+    @NonNull
+    public Uri buildHatebuIconUri(String username) {
+        String uri = HATEBU_ICON
+                .replace("{user_prefix}", username.substring(0, 2))
+                .replace("{user}", username);
+        return Uri.parse(uri);
     }
 
     public Observable<List<HatebuEntry>> getHotentries() {
