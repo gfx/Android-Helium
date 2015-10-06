@@ -164,18 +164,30 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_view_hatebu) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_HATEBU));
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_view_epitome) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_EPITOME));
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_view_about) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
-            startActivity(intent);
-            return true;
+        switch (id) {
+            case R.id.action_configure_username: {
+                Intent intent = LoginActivity.createIntent(this);
+                startActivity(intent);
+                return true;
+            }
+            case R.id.action_view_hatebu: {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_HATEBU));
+                startActivity(intent);
+                return true;
+
+            }
+            case R.id.action_view_epitome: {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_EPITOME));
+                startActivity(intent);
+                return true;
+
+            }
+            case R.id.action_view_about: {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
+                startActivity(intent);
+                return true;
+
+            }
         }
 
         return super.onOptionsItemSelected(item);

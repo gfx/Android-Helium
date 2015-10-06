@@ -21,6 +21,7 @@ import com.github.gfx.helium.widget.OnItemLongClickListener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,11 +60,14 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     @Inject
     Tracker tracker;
 
+    @Inject
+    SharedPreferences prefs;
+
     FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
 
-    String user = "gfx";
+    String username;
 
     final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
@@ -82,6 +86,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         HeliumApplication.getAppComponent().inject(this);
 
         adapter = new EntriesAdapter(getActivity());
+        username = prefs.getString("hatena.username", "gfx");
     }
 
     @Nullable
@@ -134,7 +139,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     Observable<?> reload() {
-        Observable<List<HatebuEntry>> observable = feedClient.getFavotites(user);
+        Observable<List<HatebuEntry>> observable = feedClient.getFavotites(username);
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
