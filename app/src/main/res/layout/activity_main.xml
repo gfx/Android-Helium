@@ -27,7 +27,6 @@
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     />
 
-
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.view.ViewPager
@@ -37,12 +36,13 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 >
 
-            <android.support.v4.view.PagerTabStrip
+            <android.support.v4.view.PagerTabStripV22
                     android:id="@+id/pager_tap_strip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/app_primary"
                     android:elevation="4dp"
+                    android:paddingBottom="4dp"
                     android:textAppearance="@android:style/TextAppearance.Holo.Small.Inverse"
                     />
 
