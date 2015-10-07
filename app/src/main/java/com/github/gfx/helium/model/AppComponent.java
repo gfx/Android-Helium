@@ -1,7 +1,7 @@
 package com.github.gfx.helium.model;
 
 import com.github.gfx.helium.StethoDelegator;
-import com.github.gfx.helium.activity.LoginActivity;
+import com.github.gfx.helium.activity.SettingsActivity;
 import com.github.gfx.helium.activity.MainActivity;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
 import com.github.gfx.helium.fragment.HatebuEntryFragment;
@@ -25,5 +25,5 @@ public interface AppComponent {
 
     void inject(MainActivity activity);
 
-    void inject(LoginActivity activity);
+    void inject(SettingsActivity activity);
 }

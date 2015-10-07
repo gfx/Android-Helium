@@ -26,10 +26,10 @@ import android.view.View.OnClickListener;
 
 import javax.inject.Inject;
 
-public class LoginActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     public static Intent createIntent(@NonNull Context context) {
-        return new Intent(context, LoginActivity.class);
+        return new Intent(context, SettingsActivity.class);
     }
 
     @Inject

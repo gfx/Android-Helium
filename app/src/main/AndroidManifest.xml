@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-                android:name=".activity.LoginActivity"
+                android:name=".activity.SettingsActivity"
                 android:label="@string/action_view_configure_username"
                 />
 

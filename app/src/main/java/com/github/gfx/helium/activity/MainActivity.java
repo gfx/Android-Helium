@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_configure_username: {
-                Intent intent = LoginActivity.createIntent(this);
+                Intent intent = SettingsActivity.createIntent(this);
                 startActivityForResult(intent, REQUEST_CONFIGURE);
                 return true;
             }
