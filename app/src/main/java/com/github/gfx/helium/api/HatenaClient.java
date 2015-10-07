@@ -21,7 +21,7 @@ import rx.Observable;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class HatebuFeedClient {
+public class HatenaClient {
 
     public static final String FEEDBURNER_ENDPOINT = "http://feeds.feedburner.com/";
 
@@ -31,7 +31,7 @@ public class HatebuFeedClient {
 
     public static final String HATEBU_ICON = "http://cdn1.www.st-hatena.com/users/{user_prefix}/{user}/profile.gif";
 
-    private static final String TAG = HatebuFeedClient.class.getSimpleName();
+    private static final String TAG = HatenaClient.class.getSimpleName();
 
     final RestAdapter feedburnerAdapter;
 
@@ -41,7 +41,7 @@ public class HatebuFeedClient {
 
     final HatebuService hatebuService;
 
-    public HatebuFeedClient(Client client, RequestInterceptor requestInterceptor) {
+    public HatenaClient(Client client, RequestInterceptor requestInterceptor) {
         feedburnerAdapter = createCommonBuilder(client, requestInterceptor)
                 .setEndpoint(FEEDBURNER_ENDPOINT)
                 .build();

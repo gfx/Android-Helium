@@ -8,7 +8,7 @@ import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
-import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
@@ -53,7 +53,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     FragmentEntryBinding binding;
 
     @Inject
-    HatebuFeedClient feedClient;
+    HatenaClient hatenaClient;
 
     @Inject
     Tracker tracker;
@@ -138,9 +138,9 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     Observable<?> reload() {
         Observable<List<HatebuEntry>> observable;
         if (getCategory() != null) {
-            observable = feedClient.getHotentries(getCategory());
+            observable = hatenaClient.getHotentries(getCategory());
         } else {
-            observable = feedClient.getHotentries();
+            observable = hatenaClient.getHotentries();
         }
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
@@ -190,7 +190,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     @Override
     public boolean onItemLongClick(View view, int position) {
         HatebuEntry entry = adapter.getItem(position);
-        openUri(feedClient.buildHatebuEntryUri(entry.link), "service");
+        openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
         return true;
     }
 
@@ -242,7 +242,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openUri(feedClient.buildHatebuEntryUri(entry.link), "service");
+                    openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
                 }
             });
         }

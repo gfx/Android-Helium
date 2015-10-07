@@ -19,7 +19,7 @@ import rx.Observable;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class EpitomeFeedClient {
+public class EpitomeClient {
 
     static final String ENDPOINT = "https://ja.epitomeup.com/";
 
@@ -27,7 +27,7 @@ public class EpitomeFeedClient {
 
     final EpitomeService service;
 
-    public EpitomeFeedClient(Client client, RequestInterceptor requestInterceptor) {
+    public EpitomeClient(Client client, RequestInterceptor requestInterceptor) {
         adapter = new RestAdapter.Builder()
                 .setEndpoint(ENDPOINT)
                 .setClient(client)

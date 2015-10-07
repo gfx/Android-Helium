@@ -9,7 +9,7 @@ import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
-import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
@@ -55,7 +55,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     static final String TAG = TimelineFragment.class.getSimpleName();
 
     @Inject
-    HatebuFeedClient feedClient;
+    HatenaClient hatenaClient;
 
     @Inject
     Tracker tracker;
@@ -139,7 +139,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     Observable<?> reload() {
-        Observable<List<HatebuEntry>> observable = feedClient.getFavotites(username);
+        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username);
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
@@ -172,7 +172,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     @Override
     public boolean onItemLongClick(View view, int position) {
         HatebuEntry entry = adapter.getItem(position);
-        openUri(feedClient.buildHatebuEntryUri(entry.link), "service");
+        openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
         return true;
     }
 
@@ -225,7 +225,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             });
 
             Glide.with(getContext())
-                    .load(feedClient.buildHatebuIconUri(entry.creator))
+                    .load(hatenaClient.buildHatebuIconUri(entry.creator))
                     .into(binding.author);
 
             binding.title.setText(entry.title);
@@ -244,7 +244,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openUri(feedClient.buildHatebuEntryUri(entry.link), "service");
+                    openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
                 }
             });
 

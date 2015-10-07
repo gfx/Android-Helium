@@ -8,7 +8,7 @@ import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
-import com.github.gfx.helium.api.EpitomeFeedClient;
+import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
@@ -58,7 +58,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     EntriesAdapter adapter;
 
     @Inject
-    EpitomeFeedClient feedClient;
+    EpitomeClient epitomeClient;
 
     @Inject
     Tracker tracker;
@@ -130,7 +130,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     }
 
     Observable<?> reload() {
-        return feedClient.getEntries()
+        return epitomeClient.getEntries()
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<EpitomeEntry>>(compositeSubscription))
                 .doOnNext(new Action1<List<EpitomeEntry>>() {

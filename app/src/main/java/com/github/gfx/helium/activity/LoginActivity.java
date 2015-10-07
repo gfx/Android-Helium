@@ -5,7 +5,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivityLoginBinding;
 
 import android.animation.Animator;
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Inject
-    HatebuFeedClient hatebuClient;
+    HatenaClient hatenaClient;
 
     @Inject
     Tracker tracker;
