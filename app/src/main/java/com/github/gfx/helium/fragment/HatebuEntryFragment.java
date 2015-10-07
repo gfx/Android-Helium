@@ -50,6 +50,8 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     static final String kCategory = "category";
 
+    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
+
     FragmentEntryBinding binding;
 
     @Inject
@@ -59,8 +61,6 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     Tracker tracker;
 
     EntriesAdapter adapter;
-
-    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
     public HatebuEntryFragment() {
     }
@@ -230,7 +230,6 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
                     return dispatchOnItemLongClick(v, position);
                 }
             });
-
 
             binding.title.setText(entry.title);
             binding.date.setText(entry.getTimestamp());

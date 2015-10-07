@@ -9,6 +9,7 @@ import android.content.Context;
 import javax.inject.Inject;
 
 public class StethoDelegator {
+
     @Inject
     Context context;
 

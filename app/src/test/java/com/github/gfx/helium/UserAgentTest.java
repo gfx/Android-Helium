@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, manifest = Config.NONE)
 public class UserAgentTest {
+
     @Test
     public void testUserAgent() {
         assertThat(UserAgent.build(), startsWith(BuildConfig.APPLICATION_ID));

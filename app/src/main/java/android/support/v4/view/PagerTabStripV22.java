@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 /**
  * Since v23 of the support library contain a layout bug we include the v22 of these files.
  * https://code.google.com/p/android/issues/detail?id=184715&
@@ -46,37 +45,53 @@ import android.view.ViewConfiguration;
  * <p>For a non-interactive indicator, see {@link PagerTitleStripV22}.</p>
  */
 public class PagerTabStripV22 extends PagerTitleStripV22 {
+
     private static final String TAG = "PagerTabStrip";
 
     private static final int INDICATOR_HEIGHT = 3; // dp
+
     private static final int MIN_PADDING_BOTTOM = INDICATOR_HEIGHT + 3; // dp
+
     private static final int TAB_PADDING = 16; // dp
+
     private static final int TAB_SPACING = 32; // dp
+
     private static final int MIN_TEXT_SPACING = TAB_SPACING + TAB_PADDING * 2; // dp
+
     private static final int FULL_UNDERLINE_HEIGHT = 1; // dp
+
     private static final int MIN_STRIP_HEIGHT = 32; // dp
 
+    private final Paint mTabPaint = new Paint();
+
+    private final Rect mTempRect = new Rect();
+
     private int mIndicatorColor;
+
     private int mIndicatorHeight;
 
     private int mMinPaddingBottom;
+
     private int mMinTextSpacing;
+
     private int mMinStripHeight;
 
     private int mTabPadding;
 
-    private final Paint mTabPaint = new Paint();
-    private final Rect mTempRect = new Rect();
-
     private int mTabAlpha = 0xFF;
 
     private boolean mDrawFullUnderline = false;
+
     private boolean mDrawFullUnderlineSet = false;
+
     private int mFullUnderlineHeight;
 
     private boolean mIgnoreTap;
+
     private float mInitialMotionX;
+
     private float mInitialMotionY;
+
     private int mTouchSlop;
 
     public PagerTabStripV22(Context context) {
@@ -128,17 +143,6 @@ public class PagerTabStripV22 extends PagerTitleStripV22 {
     }
 
     /**
-     * Set the color of the tab indicator bar.
-     *
-     * @param color Color to set as an 0xRRGGBB value. The high byte (alpha) is ignored.
-     */
-    public void setTabIndicatorColor(int color) {
-        mIndicatorColor = color;
-        mTabPaint.setColor(mIndicatorColor);
-        invalidate();
-    }
-
-    /**
      * Set the color of the tab indicator bar from a color resource.
      *
      * @param resId Resource ID of a color resource to load
@@ -152,6 +156,17 @@ public class PagerTabStripV22 extends PagerTitleStripV22 {
      */
     public int getTabIndicatorColor() {
         return mIndicatorColor;
+    }
+
+    /**
+     * Set the color of the tab indicator bar.
+     *
+     * @param color Color to set as an 0xRRGGBB value. The high byte (alpha) is ignored.
+     */
+    public void setTabIndicatorColor(int color) {
+        mIndicatorColor = color;
+        mTabPaint.setColor(mIndicatorColor);
+        invalidate();
     }
 
     @Override
@@ -195,6 +210,17 @@ public class PagerTabStripV22 extends PagerTitleStripV22 {
     }
 
     /**
+     * Return whether or not this tab strip will draw a full-width underline.
+     * This defaults to true if no background is set.
+     *
+     * @return true if this tab strip will draw a full-width underline in the
+     * current tab indicator color.
+     */
+    public boolean getDrawFullUnderline() {
+        return mDrawFullUnderline;
+    }
+
+    /**
      * Set whether this tab strip should draw a full-width underline in the
      * current tab indicator color.
      *
@@ -204,17 +230,6 @@ public class PagerTabStripV22 extends PagerTitleStripV22 {
         mDrawFullUnderline = drawFull;
         mDrawFullUnderlineSet = true;
         invalidate();
-    }
-
-    /**
-     * Return whether or not this tab strip will draw a full-width underline.
-     * This defaults to true if no background is set.
-     *
-     * @return true if this tab strip will draw a full-width underline in the
-     * current tab indicator color.
-     */
-    public boolean getDrawFullUnderline() {
-        return mDrawFullUnderline;
     }
 
     @Override

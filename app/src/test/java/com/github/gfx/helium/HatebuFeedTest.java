@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, manifest = Config.NONE)
 public class HatebuFeedTest {
+
     @Test
     public void parseHatebuHotentryFeed() throws Exception {
         Serializer serializer = new Persister();

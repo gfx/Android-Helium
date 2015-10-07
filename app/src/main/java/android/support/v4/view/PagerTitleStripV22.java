@@ -48,59 +48,26 @@ import java.lang.ref.WeakReference;
  * https://code.google.com/p/android/issues/detail?id=184715
  */
 public class PagerTitleStripV22 extends ViewGroup implements ViewPager.Decor {
+
     private static final String TAG = "PagerTitleStrip";
 
-    ViewPager mPager;
-    TextView mPrevText;
-    TextView mCurrText;
-    TextView mNextText;
-
-    private int mLastKnownCurrentPage = -1;
-    private float mLastKnownPositionOffset = -1;
-    private int mScaledTextSpacing;
-    private int mGravity;
-
-    private boolean mUpdatingText;
-    private boolean mUpdatingPositions;
-
-    private final PageListener mPageListener = new PageListener();
-
-    private WeakReference<PagerAdapter> mWatchingAdapter;
-
-    private static final int[] ATTRS = new int[] {
+    private static final int[] ATTRS = new int[]{
             android.R.attr.textAppearance,
             android.R.attr.textSize,
             android.R.attr.textColor,
             android.R.attr.gravity
     };
 
-    private static final int[] TEXT_ATTRS = new int[] {
+    private static final int[] TEXT_ATTRS = new int[]{
             0x0101038c // android.R.attr.textAllCaps
     };
 
     private static final float SIDE_ALPHA = 0.6f;
+
     private static final int TEXT_SPACING = 16; // dip
 
-    private int mNonPrimaryAlpha;
-    int mTextColor;
-
-    interface PagerTitleStripImpl {
-        void setSingleLineAllCaps(TextView text);
-    }
-
-    static class PagerTitleStripImplBase implements PagerTitleStripImpl {
-        public void setSingleLineAllCaps(TextView text) {
-            text.setSingleLine();
-        }
-    }
-
-    static class PagerTitleStripImplIcs implements PagerTitleStripImpl {
-        public void setSingleLineAllCaps(TextView text) {
-            PagerTitleStripIcs.setSingleLineAllCaps(text);
-        }
-    }
-
     private static final PagerTitleStripImpl IMPL;
+
     static {
         if (android.os.Build.VERSION.SDK_INT >= 14) {
             IMPL = new PagerTitleStripImplIcs();
@@ -109,9 +76,33 @@ public class PagerTitleStripV22 extends ViewGroup implements ViewPager.Decor {
         }
     }
 
-    private static void setSingleLineAllCaps(TextView text) {
-        IMPL.setSingleLineAllCaps(text);
-    }
+    private final PageListener mPageListener = new PageListener();
+
+    ViewPager mPager;
+
+    TextView mPrevText;
+
+    TextView mCurrText;
+
+    TextView mNextText;
+
+    int mTextColor;
+
+    private int mLastKnownCurrentPage = -1;
+
+    private float mLastKnownPositionOffset = -1;
+
+    private int mScaledTextSpacing;
+
+    private int mGravity;
+
+    private boolean mUpdatingText;
+
+    private boolean mUpdatingPositions;
+
+    private WeakReference<PagerAdapter> mWatchingAdapter;
+
+    private int mNonPrimaryAlpha;
 
     public PagerTitleStripV22(Context context) {
         this(context, null);
@@ -172,6 +163,17 @@ public class PagerTitleStripV22 extends ViewGroup implements ViewPager.Decor {
         mScaledTextSpacing = (int) (TEXT_SPACING * density);
     }
 
+    private static void setSingleLineAllCaps(TextView text) {
+        IMPL.setSingleLineAllCaps(text);
+    }
+
+    /**
+     * @return The required spacing between title segments in pixels
+     */
+    public int getTextSpacing() {
+        return mScaledTextSpacing;
+    }
+
     /**
      * Set the required spacing between title segments.
      *
@@ -180,13 +182,6 @@ public class PagerTitleStripV22 extends ViewGroup implements ViewPager.Decor {
     public void setTextSpacing(int spacingPixels) {
         mScaledTextSpacing = spacingPixels;
         requestLayout();
-    }
-
-    /**
-     * @return The required spacing between title segments in pixels
-     */
-    public int getTextSpacing() {
-        return mScaledTextSpacing;
     }
 
     /**
@@ -472,8 +467,28 @@ public class PagerTitleStripV22 extends ViewGroup implements ViewPager.Decor {
         return minHeight;
     }
 
+    interface PagerTitleStripImpl {
+
+        void setSingleLineAllCaps(TextView text);
+    }
+
+    static class PagerTitleStripImplBase implements PagerTitleStripImpl {
+
+        public void setSingleLineAllCaps(TextView text) {
+            text.setSingleLine();
+        }
+    }
+
+    static class PagerTitleStripImplIcs implements PagerTitleStripImpl {
+
+        public void setSingleLineAllCaps(TextView text) {
+            PagerTitleStripIcs.setSingleLineAllCaps(text);
+        }
+    }
+
     private class PageListener extends DataSetObserver implements ViewPager.OnPageChangeListener,
             ViewPager.OnAdapterChangeListener {
+
         private int mScrollState;
 
         @Override

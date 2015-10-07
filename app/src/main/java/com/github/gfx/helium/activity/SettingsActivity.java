@@ -28,9 +28,7 @@ import javax.inject.Inject;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static Intent createIntent(@NonNull Context context) {
-        return new Intent(context, SettingsActivity.class);
-    }
+    final AndroidCompositeSubscription subscriptions = new AndroidCompositeSubscription();
 
     @Inject
     HatenaClient hatenaClient;
@@ -43,7 +41,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     ActivityLoginBinding binding;
 
-    final AndroidCompositeSubscription subscriptions = new AndroidCompositeSubscription();
+    public static Intent createIntent(@NonNull Context context) {
+        return new Intent(context, SettingsActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

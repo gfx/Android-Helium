@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
     static final String TAG = MainActivity.class.getSimpleName();
 
+    static final int REQUEST_CONFIGURE = 1;
+
     static String KEY_SELECTED_TAB = "activity_main_selected_tab";
 
     static int DEFAULT_SELECTED_TAB = 1;
-
-    static final int REQUEST_CONFIGURE = 1;
 
     @Inject
     Tracker tracker;

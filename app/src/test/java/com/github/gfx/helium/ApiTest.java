@@ -37,6 +37,46 @@ public class ApiTest {
         return RuntimeEnvironment.application;
     }
 
+    @Test
+    public void testRequestHotentries() throws Exception {
+        HatenaClient feedClient = new HatenaClient(
+                new MockClient("/hatena/b/hotentry", "hotentries.rss", "application/xml"),
+                new MockRequestInterceptor());
+
+        List<HatebuEntry> entry = feedClient.getHotentries().toBlocking().single();
+        assertThat(entry, hasSize(greaterThan(0)));
+    }
+
+    @Test
+    public void testRequestHotentriesWithCategory() throws Exception {
+        HatenaClient feedClient = new HatenaClient(
+                new MockClient("/hotentry/it.rss", "hotentries.rss", "application/xml"),
+                new MockRequestInterceptor());
+
+        List<HatebuEntry> entry = feedClient.getHotentries("it").toBlocking().single();
+        assertThat(entry, hasSize(greaterThan(0)));
+    }
+
+    @Test
+    public void testRequestFavorites() throws Exception {
+        HatenaClient feedClient = new HatenaClient(
+                new MockClient("/gfx/favorite.rss", "favorites.rss", "application/xml"),
+                new MockRequestInterceptor());
+
+        List<HatebuEntry> entry = feedClient.getFavotites("gfx").toBlocking().single();
+        assertThat(entry, hasSize(greaterThan(0)));
+    }
+
+    @Test
+    public void testRequestEpitome() throws Exception {
+        EpitomeClient feedClient = new EpitomeClient(
+                new MockClient("/feed/beam", "epitome.json", "application/json"),
+                new MockRequestInterceptor());
+
+        List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().single();
+        assertThat(entry, hasSize(greaterThan(0)));
+    }
+
     class MockRequestInterceptor extends HeliumRequestInterceptor {
 
         public MockRequestInterceptor() {
@@ -83,46 +123,6 @@ public class ApiTest {
                     new TypedByteArray(contentType, getAssetFileInBytes(assetName)));
 
         }
-    }
-
-    @Test
-    public void testRequestHotentries() throws Exception {
-        HatenaClient feedClient = new HatenaClient(
-                new MockClient("/hatena/b/hotentry", "hotentries.rss", "application/xml"),
-                new MockRequestInterceptor());
-
-        List<HatebuEntry> entry = feedClient.getHotentries().toBlocking().single();
-        assertThat(entry, hasSize(greaterThan(0)));
-    }
-
-    @Test
-    public void testRequestHotentriesWithCategory() throws Exception {
-        HatenaClient feedClient = new HatenaClient(
-                new MockClient("/hotentry/it.rss", "hotentries.rss", "application/xml"),
-                new MockRequestInterceptor());
-
-        List<HatebuEntry> entry = feedClient.getHotentries("it").toBlocking().single();
-        assertThat(entry, hasSize(greaterThan(0)));
-    }
-
-    @Test
-    public void testRequestFavorites() throws Exception {
-        HatenaClient feedClient = new HatenaClient(
-                new MockClient("/gfx/favorite.rss", "favorites.rss", "application/xml"),
-                new MockRequestInterceptor());
-
-        List<HatebuEntry> entry = feedClient.getFavotites("gfx").toBlocking().single();
-        assertThat(entry, hasSize(greaterThan(0)));
-    }
-
-    @Test
-    public void testRequestEpitome() throws Exception {
-        EpitomeClient feedClient = new EpitomeClient(
-                new MockClient("/feed/beam", "epitome.json", "application/json"),
-                new MockRequestInterceptor());
-
-        List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().single();
-        assertThat(entry, hasSize(greaterThan(0)));
     }
 
 }

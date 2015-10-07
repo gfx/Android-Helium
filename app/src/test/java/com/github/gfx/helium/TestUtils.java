@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class TestUtils {
+
     public static File getAssetFile(String name) throws FileNotFoundException {
         String[] appDirs = {".", "app"};
         for (String appDir : appDirs) {

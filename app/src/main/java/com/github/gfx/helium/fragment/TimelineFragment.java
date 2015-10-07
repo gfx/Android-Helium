@@ -55,6 +55,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     static final String kUsername = "username";
 
+    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
+
     @Inject
     HatenaClient hatenaClient;
 
@@ -67,7 +69,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     String username;
 
-    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
+    public TimelineFragment() {
+    }
 
     public static TimelineFragment newInstance(String username) {
         TimelineFragment fragment = new TimelineFragment();
@@ -75,9 +78,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         args.putString(kUsername, username);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public TimelineFragment() {
     }
 
     @Override
