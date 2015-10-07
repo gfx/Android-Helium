@@ -21,7 +21,6 @@ import com.github.gfx.helium.widget.OnItemLongClickListener;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,14 +53,13 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     static final String TAG = TimelineFragment.class.getSimpleName();
 
+    static final String kUsername = "username";
+
     @Inject
     HatenaClient hatenaClient;
 
     @Inject
     Tracker tracker;
-
-    @Inject
-    SharedPreferences prefs;
 
     FragmentEntryBinding binding;
 
@@ -71,9 +69,11 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
-    public static TimelineFragment newInstance() {
+    public static TimelineFragment newInstance(String username) {
         TimelineFragment fragment = new TimelineFragment();
-        fragment.setArguments(new Bundle());
+        Bundle args = new Bundle();
+        args.putString(kUsername, username);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -86,7 +86,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         HeliumApplication.getAppComponent().inject(this);
 
         adapter = new EntriesAdapter(getActivity());
-        username = prefs.getString("hatena.username", "gfx");
+        username = getArguments().getString(kUsername);
     }
 
     @Nullable

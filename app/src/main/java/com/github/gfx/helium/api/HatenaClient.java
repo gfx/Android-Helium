@@ -31,6 +31,8 @@ public class HatenaClient {
 
     public static final String HATEBU_ICON = "http://cdn1.www.st-hatena.com/users/{user_prefix}/{user}/profile.gif";
 
+    public static final String KEY_USERNAME = "hatena_username";
+
     private static final String TAG = HatenaClient.class.getSimpleName();
 
     final RestAdapter feedburnerAdapter;

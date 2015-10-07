@@ -62,6 +62,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (prefs.contains(HatenaClient.KEY_USERNAME)) {
+            binding.username.setText(prefs.getString(HatenaClient.KEY_USERNAME, null));
+        }
+    }
+
+    @Override
     protected void onStop() {
         subscriptions.unsubscribe();
 
@@ -161,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 return false;
             }
@@ -176,9 +185,10 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 prefs.edit()
-                        .putString("hatena.username", username)
-                .apply();
+                        .putString(HatenaClient.KEY_USERNAME, username)
+                        .apply();
 
+                setResult(RESULT_OK);
                 finish();
             } else {
                 binding.username.setError(getString(R.string.error_invalid_username));
