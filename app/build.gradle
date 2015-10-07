@@ -10,17 +10,15 @@ apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/b
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "com.github.gfx.helium"
         minSdkVersion 16
         targetSdkVersion 23
-
         def version = readVersion(rootProject.file("VERSION"))
-        versionCode version.toVersionCode()
         versionName version.toVersionName()
+        versionCode version.toVersionCode()
+        testInstrumentationRunner 'org.robolectric.RobolectricGradleTestRunner'
     }
-
     signingConfigs {
         release {
             if (project.ext.has('ReleaseStoreFile')) {
@@ -31,7 +29,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -57,7 +54,6 @@ android {
                     "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
         }
     }
-
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -90,12 +86,13 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.1'
     apt 'com.google.dagger:dagger-compiler:2.0.1'
     provided 'javax.annotation:jsr250-api:1.0'
+    // explicitly depends on databinding compiler to avoid APT issues
     apt 'com.android.databinding:compiler:1.0-rc2'
-    // avoid APT issue
     debugCompile 'com.facebook.stetho:stetho:1.1.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp:1.1.1'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.apache.maven:maven-ant-tasks:2.1.3'
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'com.google.guava:guava:18.0'
 }
