@@ -231,7 +231,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             binding.title.setText(entry.title);
             binding.date.setText(entry.getTimestamp());
 
-            binding.subject.setText(TextUtils.join(" ", Observable.from(entry.subject).map(new Func1<String, String>() {
+            binding.tags.setText(TextUtils.join(" ", Observable.from(entry.subject).map(new Func1<String, String>() {
                 @Override
                 public String call(String s) {
                     return "#" + s;
