@@ -4,8 +4,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
 import com.github.gfx.helium.BuildConfig;
-import com.github.gfx.helium.api.EpitomeFeedClient;
-import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.EpitomeClient;
+import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
@@ -76,16 +76,16 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public HatebuFeedClient provideHatebuFeedClient(Client client,
+    public HatenaClient provideHatebuFeedClient(Client client,
             RequestInterceptor requestInterceptor) {
-        return new HatebuFeedClient(client, requestInterceptor);
+        return new HatenaClient(client, requestInterceptor);
     }
 
     @Singleton
     @Provides
-    public EpitomeFeedClient provideEpitomeFeedClient(Client client,
+    public EpitomeClient provideEpitomeFeedClient(Client client,
             RequestInterceptor requestInterceptor) {
-        return new EpitomeFeedClient(client, requestInterceptor);
+        return new EpitomeClient(client, requestInterceptor);
     }
 
     @Provides

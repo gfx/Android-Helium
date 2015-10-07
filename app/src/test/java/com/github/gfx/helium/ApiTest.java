@@ -1,14 +1,18 @@
 package com.github.gfx.helium;
 
-import com.github.gfx.helium.api.EpitomeFeedClient;
-import com.github.gfx.helium.api.HatebuFeedClient;
+import com.github.gfx.helium.api.EpitomeClient;
+import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.github.gfx.helium.model.EpitomeEntry;
 import com.github.gfx.helium.model.HatebuEntry;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
-import android.test.mock.MockContext;
+import android.content.Context;
 
 import java.io.IOException;
 import java.net.URI;
@@ -22,24 +26,21 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 import static com.github.gfx.helium.TestUtils.getAssetFileInBytes;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, manifest = Config.NONE)
 public class ApiTest {
 
-    class MockContextWithSystemService extends MockContext {
-
-        @Override
-        public Object getSystemService(String name) {
-            return null;
-        }
+    Context getContext() {
+        return RuntimeEnvironment.application;
     }
 
     class MockRequestInterceptor extends HeliumRequestInterceptor {
 
         public MockRequestInterceptor() {
-            super(new MockContextWithSystemService());
+            super(getContext());
         }
 
         @Override
@@ -86,7 +87,7 @@ public class ApiTest {
 
     @Test
     public void testRequestHotentries() throws Exception {
-        HatebuFeedClient feedClient = new HatebuFeedClient(
+        HatenaClient feedClient = new HatenaClient(
                 new MockClient("/hatena/b/hotentry", "hotentries.rss", "application/xml"),
                 new MockRequestInterceptor());
 
@@ -96,7 +97,7 @@ public class ApiTest {
 
     @Test
     public void testRequestHotentriesWithCategory() throws Exception {
-        HatebuFeedClient feedClient = new HatebuFeedClient(
+        HatenaClient feedClient = new HatenaClient(
                 new MockClient("/hotentry/it.rss", "hotentries.rss", "application/xml"),
                 new MockRequestInterceptor());
 
@@ -106,7 +107,7 @@ public class ApiTest {
 
     @Test
     public void testRequestFavorites() throws Exception {
-        HatebuFeedClient feedClient = new HatebuFeedClient(
+        HatenaClient feedClient = new HatenaClient(
                 new MockClient("/gfx/favorite.rss", "favorites.rss", "application/xml"),
                 new MockRequestInterceptor());
 
@@ -116,7 +117,7 @@ public class ApiTest {
 
     @Test
     public void testRequestEpitome() throws Exception {
-        EpitomeFeedClient feedClient = new EpitomeFeedClient(
+        EpitomeClient feedClient = new EpitomeClient(
                 new MockClient("/feed/beam", "epitome.json", "application/json"),
                 new MockRequestInterceptor());
 

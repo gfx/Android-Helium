@@ -7,6 +7,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 
+import android.text.format.DateUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +40,15 @@ public class HatebuEntry {
     @Element(name = "creator", required = false)
     public String creator;
 
-    public DateTime getTimestamp() {
+    public DateTime getTimestampDateTime() {
         return ISODateTimeFormat.dateTimeParser().parseDateTime(date);
+    }
+
+    public CharSequence getTimestamp() {
+        return DateUtils
+                .getRelativeTimeSpanString(getTimestampDateTime().getMillis(), System.currentTimeMillis(),
+                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_NUMERIC_DATE);
+
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.github.gfx.helium.fragment;
 
 import com.google.android.gms.analytics.Tracker;
 
+import com.bumptech.glide.Glide;
 import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
@@ -9,7 +10,7 @@ import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
 import com.github.gfx.helium.api.HatenaClient;
-import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
+import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
@@ -23,6 +24,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,14 +45,15 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+/**
+ * The timeline that shows what you like.
+ */
 @ParametersAreNonnullByDefault
-public class HatebuEntryFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
+public class TimelineFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
 
-    static final String TAG = HatebuEntryFragment.class.getSimpleName();
+    static final String TAG = TimelineFragment.class.getSimpleName();
 
-    static final String kCategory = "category";
-
-    FragmentEntryBinding binding;
+    static final String kUsername = "username";
 
     @Inject
     HatenaClient hatenaClient;
@@ -58,40 +61,40 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     @Inject
     Tracker tracker;
 
+    FragmentEntryBinding binding;
+
     EntriesAdapter adapter;
+
+    String username;
 
     final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
 
-    public HatebuEntryFragment() {
-    }
-
-    public static HatebuEntryFragment newInstance() {
-        HatebuEntryFragment fragment = new HatebuEntryFragment();
-        fragment.setArguments(new Bundle());
-        return fragment;
-    }
-
-    public static HatebuEntryFragment newInstance(String category) {
-        HatebuEntryFragment fragment = new HatebuEntryFragment();
+    public static TimelineFragment newInstance(String username) {
+        TimelineFragment fragment = new TimelineFragment();
         Bundle args = new Bundle();
-        args.putString(kCategory, category);
+        args.putString(kUsername, username);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public TimelineFragment() {
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         HeliumApplication.getAppComponent().inject(this);
 
         adapter = new EntriesAdapter(getActivity());
+        username = getArguments().getString(kUsername);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
+
+        binding.list.setAdapter(adapter);
 
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
@@ -125,23 +128,18 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
         super.onStop();
     }
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            String category = getCategory();
-            TrackingUtils.sendScreenView(tracker, category != null ? TAG + "-" + category : TAG);
+            TrackingUtils.sendScreenView(tracker, TAG);
         }
     }
 
     Observable<?> reload() {
-        Observable<List<HatebuEntry>> observable;
-        if (getCategory() != null) {
-            observable = hatenaClient.getHotentries(getCategory());
-        } else {
-            observable = hatenaClient.getHotentries();
-        }
+        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username);
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
@@ -164,22 +162,6 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
                 });
     }
 
-    @Nullable
-    String getCategory() {
-        return getArguments() != null ? getArguments().getString(kCategory) : null;
-    }
-
-    void openUri(Uri uri, String action) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-        trackOpenUri(action);
-    }
-
-    void trackOpenUri(String action) {
-        String category = getCategory();
-        TrackingUtils
-                .sendEvent(tracker, category != null ? TAG + "-" + category : TAG, action);
-    }
 
     @Override
     public void onItemClick(View view, int position) {
@@ -194,9 +176,20 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
         return true;
     }
 
-    private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardHatebuEntryBinding>> {
+    void openUri(Uri uri, String action) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+        trackOpenUri(action);
+    }
 
-        public EntriesAdapter(Context context) {
+    void trackOpenUri(String action) {
+        TrackingUtils.sendEvent(tracker, TAG, action);
+    }
+
+
+    private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardTimelineEntryBinding>> {
+
+        public EntriesAdapter(@NonNull Context context) {
             super(context);
         }
 
@@ -207,13 +200,13 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
         }
 
         @Override
-        public BindingHolder<CardHatebuEntryBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new BindingHolder<>(getContext(), parent, R.layout.card_hatebu_entry);
+        public BindingHolder<CardTimelineEntryBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new BindingHolder<>(getContext(), parent, R.layout.card_timeline_entry);
         }
 
         @Override
-        public void onBindViewHolder(final BindingHolder<CardHatebuEntryBinding> holder, final int position) {
-            CardHatebuEntryBinding binding = holder.binding;
+        public void onBindViewHolder(BindingHolder<CardTimelineEntryBinding> holder, final int position) {
+            CardTimelineEntryBinding binding = holder.binding;
 
             final HatebuEntry entry = getItem(position);
 
@@ -231,10 +224,19 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
                 }
             });
 
+            Glide.with(getContext())
+                    .load(hatenaClient.buildHatebuIconUri(entry.creator))
+                    .into(binding.author);
 
             binding.title.setText(entry.title);
             binding.date.setText(entry.getTimestamp());
-            binding.subject.setText(TextUtils.join(" ", entry.subject));
+
+            binding.tags.setText(TextUtils.join(" ", Observable.from(entry.subject).map(new Func1<String, String>() {
+                @Override
+                public String call(String s) {
+                    return "#" + s;
+                }
+            }).toList().toBlocking().first()));
             binding.bookmarkCount.setText(entry.bookmarkCount);
             binding.description.setText(entry.description);
             binding.originalUrl.setText(entry.link);
@@ -245,6 +247,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
                     openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
                 }
             });
+
         }
     }
 }

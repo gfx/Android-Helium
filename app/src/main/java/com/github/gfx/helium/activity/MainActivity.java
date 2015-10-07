@@ -5,9 +5,11 @@ import com.google.android.gms.analytics.Tracker;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivityMainBinding;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
 import com.github.gfx.helium.fragment.HatebuEntryFragment;
+import com.github.gfx.helium.fragment.TimelineFragment;
 import com.github.gfx.helium.model.EntryTab;
 
 import android.content.Intent;
@@ -19,10 +21,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,11 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     static int DEFAULT_SELECTED_TAB = 1;
 
+    static final int REQUEST_CONFIGURE = 1;
+
     @Inject
     Tracker tracker;
 
     @Inject
     SharedPreferences prefs;
+
+    String hatenaUsername;
 
     ActivityMainBinding binding;
 
@@ -58,14 +66,33 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        binding.viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), buildTabs()));
+
+        TrackingUtils.sendTiming(tracker, TAG, "onCreate", System.currentTimeMillis() - t0);
+    }
+
+    List<EntryTab> buildTabs() {
         // TODO: make tabs customizable
-        List<EntryTab> tabs = Arrays.asList(
-                new EntryTab("Epitome", new EntryTab.FragmentFactory() {
-                    @Override
-                    public Fragment createFragment() {
-                        return EpitomeEntryFragment.newInstance();
-                    }
-                }),
+        List<EntryTab> tabs = new ArrayList<>();
+
+        tabs.add(new EntryTab("Epitome", new EntryTab.FragmentFactory() {
+            @Override
+            public Fragment createFragment() {
+                return EpitomeEntryFragment.newInstance();
+            }
+        }));
+
+        if (prefs.contains(HatenaClient.KEY_USERNAME)) {
+            hatenaUsername = prefs.getString(HatenaClient.KEY_USERNAME, null);
+            tabs.add(new EntryTab(hatenaUsername + "のお気に入り", new EntryTab.FragmentFactory() {
+                @Override
+                public Fragment createFragment() {
+                    return TimelineFragment.newInstance(hatenaUsername);
+                }
+            }));
+        }
+
+        tabs.addAll(Arrays.asList(
                 new EntryTab("総合", new EntryTab.FragmentFactory() {
                     @Override
                     public Fragment createFragment() {
@@ -125,12 +152,8 @@ public class MainActivity extends AppCompatActivity {
                     public Fragment createFragment() {
                         return HatebuEntryFragment.newInstance("game");
                     }
-                })
-        );
-
-        binding.viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), tabs));
-
-        TrackingUtils.sendTiming(tracker, TAG, "onCreate", System.currentTimeMillis() - t0);
+                })));
+        return tabs;
     }
 
     @Override
@@ -157,21 +180,51 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_view_hatebu) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_HATEBU));
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_view_epitome) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_EPITOME));
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_view_about) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
-            startActivity(intent);
-            return true;
+        switch (id) {
+            case R.id.action_configure_username: {
+                Intent intent = SettingsActivity.createIntent(this);
+                startActivityForResult(intent, REQUEST_CONFIGURE);
+                return true;
+            }
+            case R.id.action_view_hatebu: {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_HATEBU));
+                startActivity(intent);
+                return true;
+
+            }
+            case R.id.action_view_epitome: {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_EPITOME));
+                startActivity(intent);
+                return true;
+
+            }
+            case R.id.action_view_about: {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
+                startActivity(intent);
+                return true;
+
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult with " + requestCode + " " + resultCode);
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_CONFIGURE:
+                recreate();
+                break;
+            default:
+                Log.w(TAG, "unknown result code: " + resultCode);
+        }
     }
 
     static class MainTabsAdapter extends FragmentStatePagerAdapter {

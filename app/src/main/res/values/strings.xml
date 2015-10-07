@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Helium</string>
 
+    <string name="action_view_configure_username">ユーザー名を設定する</string>
     <string name="action_view_hatebu">はてなブックマークを開く</string>
     <string name="action_view_epitome">Epitomeを開く</string>
     <string name="action_view_about">このアプリについて</string>
@@ -8,10 +9,17 @@
     <string name="placeholder_title">Hateblet+LinkBubbleの組み合わせが便利すぎる！</string>
     <string name="placeholder_description">1. blah blah blah\n2. blah blah blah\n3. blah blah blah\n4. blah blah blah</string>
     <string name="placeholder_subject">テクノロジー</string>
-    <string name="placeholder_date">2015-03-01T09:13:13+09:00</string>
+    <string name="placeholder_date">2時間前</string>
     <string name="placeholder_url">http://example.com/path/to/article</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="placeholder_point">1</string>
     <string name="placeholder_gist">epitomeはギリシャ語で「要約」といった意味</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">はてなユーザー名</string>
+    <string name="action_sign_in">設定</string>
+    <string name="action_sign_in_short">設定</string>
+    <string name="error_invalid_username">はてなユーザー名が正しくありません</string>
+    <string name="error_field_required">この項目は必須です</string>
 </resources>
