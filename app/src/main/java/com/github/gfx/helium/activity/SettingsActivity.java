@@ -7,7 +7,7 @@ import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivitySettingsBinding;
-import com.github.gfx.helium.util.ViewUtil;
+import com.github.gfx.helium.util.ViewSwitcher;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +35,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Inject
     SharedPreferences prefs;
+
+    @Inject
+    ViewSwitcher viewSwitcher;
 
     ActivitySettingsBinding binding;
 
@@ -118,9 +121,9 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private void showProgress(final boolean show) {
         if (show) {
-            ViewUtil.switchViewsWithAnimation(this, binding.loginProgress, binding.loginForm);
+            viewSwitcher.switchViewsWithAnimation(binding.loginProgress, binding.loginForm);
         } else {
-            ViewUtil.switchViewsWithAnimation(this, binding.loginForm, binding.loginProgress);
+            viewSwitcher.switchViewsWithAnimation(binding.loginForm, binding.loginProgress);
         }
     }
 

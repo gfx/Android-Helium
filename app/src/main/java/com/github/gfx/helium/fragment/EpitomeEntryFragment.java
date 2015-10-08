@@ -13,7 +13,7 @@ import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
-import com.github.gfx.helium.util.ViewUtil;
+import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
 import com.github.gfx.helium.widget.LayoutManagers;
@@ -31,6 +31,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,9 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     @Inject
     AndroidCompositeSubscription compositeSubscription;
 
+    @Inject
+    ViewSwitcher viewSwitcher;
+
     public EpitomeEntryFragment() {
     }
 
@@ -95,6 +99,12 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                hideProgress();
+            }
+        });
 
         binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -121,10 +131,11 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     }
 
     void showProgress() {
-        ViewUtil.switchViewsWithAnimation(getContext(), binding.progress, binding.list);
+        viewSwitcher.switchViewsWithAnimation(binding.progress, binding.list);
     }
+
     void hideProgress() {
-        ViewUtil.switchViewsWithAnimation(getContext(), binding.list, binding.progress);
+        viewSwitcher.switchViewsWithAnimation(binding.list, binding.progress);
     }
 
     @Override

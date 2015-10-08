@@ -13,7 +13,7 @@ import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
-import com.github.gfx.helium.util.ViewUtil;
+import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
 import com.github.gfx.helium.widget.LayoutManagers;
@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,6 +66,9 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     @Inject
     AndroidCompositeSubscription compositeSubscription;
 
+    @Inject
+    ViewSwitcher viewSwitcher;
+
     FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
@@ -100,6 +104,12 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                hideProgress();
+            }
+        });
 
         binding.list.setAdapter(adapter);
         binding.list.setLayoutManager(LayoutManagers.create(getActivity()));
@@ -108,6 +118,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                binding.progress.setVisibility(View.GONE);
                 reload().subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object o) {
@@ -130,10 +141,11 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     void showProgress() {
-        ViewUtil.switchViewsWithAnimation(getContext(), binding.progress, binding.list);
+        viewSwitcher.switchViewsWithAnimation(binding.progress, binding.list);
     }
+
     void hideProgress() {
-        ViewUtil.switchViewsWithAnimation(getContext(), binding.list, binding.progress);
+        viewSwitcher.switchViewsWithAnimation(binding.list, binding.progress);
     }
 
     @Override

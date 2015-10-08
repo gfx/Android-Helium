@@ -8,14 +8,18 @@ import android.view.View;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ViewUtil {
+public class ViewSwitcher {
 
-    public static void switchViewsWithAnimation(Context context, View toShow, final View toHide) {
-        int animTime = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+    final int animationTime;
 
+    public ViewSwitcher(Context context) {
+        animationTime = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+    }
+
+    public void switchViewsWithAnimation(View toShow, final View toHide) {
         toHide.setVisibility(View.VISIBLE);
         toHide.animate()
-                .setDuration(animTime)
+                .setDuration(animationTime)
                 .alpha(0)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -26,7 +30,7 @@ public class ViewUtil {
 
         toShow.setVisibility(View.VISIBLE);
         toShow.animate()
-                .setDuration(animTime)
+                .setDuration(animationTime)
                 .alpha(1)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override

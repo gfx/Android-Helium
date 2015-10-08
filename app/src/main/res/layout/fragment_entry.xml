@@ -10,7 +10,7 @@
             android:layout_height="match_parent"
             >
 
-        <FrameLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
@@ -20,6 +20,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="4dp"
+                    android:layout_alignParentTop="true"
                     />
 
             <ProgressBar
@@ -27,10 +28,10 @@
                     style="?android:attr/progressBarStyleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
                     android:visibility="gone"
                     />
-        </FrameLayout>
+        </RelativeLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </layout>
