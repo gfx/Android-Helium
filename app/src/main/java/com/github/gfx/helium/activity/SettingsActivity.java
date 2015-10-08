@@ -6,17 +6,15 @@ import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
-import com.github.gfx.helium.databinding.ActivityLoginBinding;
+import com.github.gfx.helium.databinding.ActivitySettingsBinding;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Inject
     SharedPreferences prefs;
 
-    ActivityLoginBinding binding;
+    ActivitySettingsBinding binding;
 
     public static Intent createIntent(@NonNull Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -49,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
 
         HeliumApplication.getAppComponent().inject(this);
 
@@ -119,37 +117,26 @@ public class SettingsActivity extends AppCompatActivity {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            binding.loginForm.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        binding.loginForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            binding.loginProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        binding.loginProgress.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     /**
