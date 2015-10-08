@@ -7,9 +7,8 @@ import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivitySettingsBinding;
+import com.github.gfx.helium.util.ViewUtil;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -118,25 +117,11 @@ public class SettingsActivity extends AppCompatActivity {
      * Shows the progress UI and hides the login form.
      */
     private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        binding.loginForm.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                binding.loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        binding.loginProgress.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+        if (show) {
+            ViewUtil.switchViewsWithAnimation(this, binding.loginProgress, binding.loginForm);
+        } else {
+            ViewUtil.switchViewsWithAnimation(this, binding.loginForm, binding.loginProgress);
+        }
     }
 
     /**
