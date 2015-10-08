@@ -13,6 +13,7 @@ import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
+import com.github.gfx.helium.util.ViewUtil;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
 import com.github.gfx.helium.widget.LayoutManagers;
@@ -108,9 +109,22 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
             }
         });
 
-        reload().subscribe();
+        showProgress();
+        reload().subscribe(new Action1<Object>() {
+            @Override
+            public void call(Object o) {
+                hideProgress();
+            }
+        });
 
         return binding.getRoot();
+    }
+
+    void showProgress() {
+        ViewUtil.switchViewsWithAnimation(getContext(), binding.progress, binding.list);
+    }
+    void hideProgress() {
+        ViewUtil.switchViewsWithAnimation(getContext(), binding.list, binding.progress);
     }
 
     @Override

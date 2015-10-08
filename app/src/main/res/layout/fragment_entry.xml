@@ -10,19 +10,29 @@
             android:layout_height="match_parent"
             >
 
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/list"
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="4dp"
-                />
+                >
 
-        <TextView
-                android:id="@+id/empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                />
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="4dp"
+                    />
+
+            <ProgressBar
+                    android:id="@+id/progress"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    />
+
+
+        </RelativeLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </layout>
