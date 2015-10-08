@@ -52,8 +52,6 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
-    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
-
     FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
@@ -63,6 +61,9 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
     @Inject
     Tracker tracker;
+
+    @Inject
+    AndroidCompositeSubscription compositeSubscription;
 
     public EpitomeEntryFragment() {
     }

@@ -3,6 +3,7 @@ package com.github.gfx.helium.model;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
+import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.api.HatenaClient;
@@ -91,5 +92,10 @@ public class AppModule {
     @Provides
     public SharedPreferences provideSharedPreferences(Context context) {
         return context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    @Provides
+    public AndroidCompositeSubscription provideAndroidCompositeSubscription() {
+        return new AndroidCompositeSubscription();
     }
 }

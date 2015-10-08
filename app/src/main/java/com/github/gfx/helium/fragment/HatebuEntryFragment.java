@@ -50,8 +50,6 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     static final String kCategory = "category";
 
-    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
-
     FragmentEntryBinding binding;
 
     @Inject
@@ -59,6 +57,9 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     @Inject
     Tracker tracker;
+
+    @Inject
+    AndroidCompositeSubscription compositeSubscription;
 
     EntriesAdapter adapter;
 

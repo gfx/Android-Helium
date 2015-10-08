@@ -55,13 +55,14 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     static final String kUsername = "username";
 
-    final AndroidCompositeSubscription compositeSubscription = new AndroidCompositeSubscription();
-
     @Inject
     HatenaClient hatenaClient;
 
     @Inject
     Tracker tracker;
+
+    @Inject
+    AndroidCompositeSubscription compositeSubscription;
 
     FragmentEntryBinding binding;
 
