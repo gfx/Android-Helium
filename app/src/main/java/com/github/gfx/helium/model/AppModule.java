@@ -8,6 +8,7 @@ import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
+import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
@@ -103,5 +104,10 @@ public class AppModule {
     @Provides
     public ViewSwitcher provideViewSwitcher(Context context) {
         return new ViewSwitcher(context);
+    }
+
+    @Provides
+    public LoadingAnimation provideLoadingAnimations() {
+        return new LoadingAnimation();
     }
 }

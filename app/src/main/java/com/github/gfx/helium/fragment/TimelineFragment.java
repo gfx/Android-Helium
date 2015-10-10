@@ -13,6 +13,7 @@ import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
+import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
@@ -67,6 +68,9 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     @Inject
     ViewSwitcher viewSwitcher;
+
+    @Inject
+    LoadingAnimation loadingAnimation;
 
     LayoutManagers layoutManagers;
 
@@ -211,17 +215,17 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         }
 
         @Override
-        public void onBindViewHolder(BindingHolder<CardTimelineEntryBinding> holder, final int position) {
+        public void onBindViewHolder(final BindingHolder<CardTimelineEntryBinding> holder, final int position) {
             CardTimelineEntryBinding binding = holder.binding;
 
             final HatebuEntry entry = getItem(position);
 
             if (entry == emptyEntry) {
-                // TODO set loading views
+                loadingAnimation.start(binding.getRoot());
                 return;
             }
+            loadingAnimation.cancel(binding.getRoot());
 
-            holder.itemView.setClickable(true);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -260,5 +264,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             });
 
         }
+
     }
 }

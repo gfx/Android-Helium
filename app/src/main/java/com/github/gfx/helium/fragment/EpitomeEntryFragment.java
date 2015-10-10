@@ -13,6 +13,7 @@ import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
+import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
@@ -69,6 +70,9 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
     @Inject
     ViewSwitcher viewSwitcher;
+
+    @Inject
+    LoadingAnimation loadingAnimation;
 
     LayoutManagers layoutManagers;
 
@@ -207,11 +211,15 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
         @Override
         public void onBindViewHolder(final BindingHolder<CardEpitomeEntryBinding> holder, final int position) {
+            CardEpitomeEntryBinding binding = holder.binding;
+
             EpitomeEntry entry = getItem(position);
+
             if (entry == emptyEntry) {
-                // TODO loading views
+                loadingAnimation.start(binding.getRoot());
                 return;
             }
+            loadingAnimation.cancel(binding.getRoot());
 
             holder.itemView.setClickable(true);
             holder.itemView.setOnClickListener(new View.OnClickListener() {

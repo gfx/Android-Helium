@@ -12,6 +12,7 @@ import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
+import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
@@ -64,6 +65,9 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     @Inject
     ViewSwitcher viewSwitcher;
+
+    @Inject
+    LoadingAnimation loadingAnimation;
 
     LayoutManagers layoutManagers;
 
@@ -223,9 +227,10 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
             final HatebuEntry entry = getItem(position);
             if (entry == emptyEntry) {
-                // TODO loading views
+                loadingAnimation.start(binding.getRoot());
                 return;
             }
+            loadingAnimation.cancel(binding.getRoot());
 
             holder.itemView.setClickable(true);
             holder.itemView.setOnClickListener(new View.OnClickListener() {

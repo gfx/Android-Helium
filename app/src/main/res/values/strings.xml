@@ -16,7 +16,6 @@
     <string name="placeholder_point">1</string>
     <string name="placeholder_gist">epitomeはギリシャ語で「要約」といった意味</string>
 
-    <!-- Strings related to login -->
     <string name="prompt_username">はてなユーザー名</string>
     <string name="action_sign_in">設定</string>
     <string name="action_sign_in_short">設定</string>
