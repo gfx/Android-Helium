@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,7 +65,11 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     @Inject
     ViewSwitcher viewSwitcher;
 
+    LayoutManagers layoutManagers;
+
     EntriesAdapter adapter;
+
+    final HatebuEntry emptyEntry = new HatebuEntry();
 
     public HatebuEntryFragment() {
     }
@@ -91,7 +94,13 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
         HeliumApplication.getAppComponent().inject(this);
 
+        layoutManagers = new LayoutManagers(getActivity());
         adapter = new EntriesAdapter(getActivity());
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
+        for (int i = 0, max = layoutManagers.getSpanCount(); i < max; i++) {
+            adapter.addItem(emptyEntry);
+        }
     }
 
     @Override
@@ -99,23 +108,13 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
 
-        adapter.setOnItemClickListener(this);
-        adapter.setOnItemLongClickListener(this);
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                hideProgress();
-            }
-        });
-
         binding.list.setAdapter(adapter);
-        binding.list.setLayoutManager(LayoutManagers.create(getActivity()));
+        binding.list.setLayoutManager(layoutManagers.create());
 
         binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                binding.progress.setVisibility(View.GONE);
                 reload().subscribe(new Action1<Object>() {
                     @Override
                     public void call(Object o) {
@@ -126,24 +125,9 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             }
         });
 
-        showProgress();
-        reload().subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                hideProgress();
-            }
-        });
+        reload().subscribe();
 
         return binding.getRoot();
-    }
-
-
-    void showProgress() {
-        viewSwitcher.switchViewsWithAnimation(binding.progress, binding.list);
-    }
-
-    void hideProgress() {
-        viewSwitcher.switchViewsWithAnimation(binding.list, binding.progress);
     }
 
     @Override
@@ -228,12 +212,6 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             super(context);
         }
 
-        void reset(List<HatebuEntry> list) {
-            clear();
-            addAll(list);
-            notifyDataSetChanged();
-        }
-
         @Override
         public BindingHolder<CardHatebuEntryBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
             return new BindingHolder<>(getContext(), parent, R.layout.card_hatebu_entry);
@@ -244,6 +222,10 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             CardHatebuEntryBinding binding = holder.binding;
 
             final HatebuEntry entry = getItem(position);
+            if (entry == emptyEntry) {
+                // TODO loading views
+                return;
+            }
 
             holder.itemView.setClickable(true);
             holder.itemView.setOnClickListener(new View.OnClickListener() {

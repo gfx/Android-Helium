@@ -10,11 +10,20 @@ public class LayoutManagers {
 
     static final int ITEM_MIN_WIDTH = 280;
 
-    public static RecyclerView.LayoutManager create(@NonNull Activity activity) {
+    final int spanCount;
+
+    public LayoutManagers(@NonNull Activity activity) {
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        int spanCount = Math.max((int) ((metrics.widthPixels / metrics.density) / ITEM_MIN_WIDTH), 1);
-        return new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
+        spanCount = Math.max((int) ((metrics.widthPixels / metrics.density) / ITEM_MIN_WIDTH), 1);
+    }
+
+    public int getSpanCount() {
+        return spanCount;
+    }
+
+    public  RecyclerView.LayoutManager create() {
+        return new StaggeredGridLayoutManager(getSpanCount(), StaggeredGridLayoutManager.VERTICAL);
     }
 }

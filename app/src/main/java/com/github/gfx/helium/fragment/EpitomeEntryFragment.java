@@ -31,7 +31,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,6 +70,10 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     @Inject
     ViewSwitcher viewSwitcher;
 
+    LayoutManagers layoutManagers;
+
+    EpitomeEntry emptyEntry = new EpitomeEntry();
+
     public EpitomeEntryFragment() {
     }
 
@@ -84,8 +88,14 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         super.onCreate(savedInstanceState);
 
         HeliumApplication.getAppComponent().inject(this);
+        layoutManagers = new LayoutManagers(getActivity());
 
         adapter = new EntriesAdapter(getActivity());
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
+        for (int i = 0, max = layoutManagers.getSpanCount(); i < max; i++) {
+            adapter.addItem(emptyEntry);
+        }
     }
 
     @Override
@@ -95,16 +105,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
 
         binding.list.setAdapter(adapter);
-        binding.list.setLayoutManager(LayoutManagers.create(getActivity()));
-
-        adapter.setOnItemClickListener(this);
-        adapter.setOnItemLongClickListener(this);
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                hideProgress();
-            }
-        });
+        binding.list.setLayoutManager(layoutManagers.create());
 
         binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -119,23 +120,9 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
             }
         });
 
-        showProgress();
-        reload().subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                hideProgress();
-            }
-        });
+        reload().subscribe();
 
         return binding.getRoot();
-    }
-
-    void showProgress() {
-        viewSwitcher.switchViewsWithAnimation(binding.progress, binding.list);
-    }
-
-    void hideProgress() {
-        viewSwitcher.switchViewsWithAnimation(binding.list, binding.progress);
     }
 
     @Override
@@ -161,7 +148,14 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
                 .doOnNext(new Action1<List<EpitomeEntry>>() {
                     @Override
                     public void call(List<EpitomeEntry> entries) {
-                        adapter.reset(entries);
+                        List<EpitomeEntry> entriesWithKnownScheme = new ArrayList<EpitomeEntry>(entries.size());
+                        for (EpitomeEntry entry : entries) {
+                            if (entry.hasKnownScheme()) {
+                                entriesWithKnownScheme.add(entry);
+                            }
+                        }
+
+                        adapter.reset(entriesWithKnownScheme);
                     }
                 })
                 .onErrorReturn(new Func1<Throwable, List<EpitomeEntry>>() {
@@ -200,20 +194,10 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         return true;
     }
 
-    private static class EntriesAdapter extends ArrayRecyclerAdapter<EpitomeEntry, BindingHolder<CardEpitomeEntryBinding>> {
+    private class EntriesAdapter extends ArrayRecyclerAdapter<EpitomeEntry, BindingHolder<CardEpitomeEntryBinding>> {
 
         EntriesAdapter(@NonNull Context context) {
             super(context);
-        }
-
-        void reset(List<EpitomeEntry> list) {
-            clear();
-            for (EpitomeEntry entry : list) {
-                if (entry.hasKnownScheme()) {
-                    addItem(entry);
-                }
-            }
-            notifyDataSetChanged();
         }
 
         @Override
@@ -223,8 +207,11 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
         @Override
         public void onBindViewHolder(final BindingHolder<CardEpitomeEntryBinding> holder, final int position) {
-
             EpitomeEntry entry = getItem(position);
+            if (entry == emptyEntry) {
+                // TODO loading views
+                return;
+            }
 
             holder.itemView.setClickable(true);
             holder.itemView.setOnClickListener(new View.OnClickListener() {

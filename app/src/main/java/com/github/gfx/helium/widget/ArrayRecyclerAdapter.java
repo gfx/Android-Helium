@@ -28,6 +28,12 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
         return list.size();
     }
 
+    public void reset(Collection<T> items) {
+        clear();
+        addAll(items);
+        notifyDataSetChanged();
+    }
+
     public T getItem(int position) {
         return list.get(position);
     }
