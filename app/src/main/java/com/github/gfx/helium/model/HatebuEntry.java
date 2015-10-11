@@ -1,11 +1,10 @@
 package com.github.gfx.helium.model;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
+import org.threeten.bp.ZonedDateTime;
 
 import android.text.format.DateUtils;
 
@@ -40,13 +39,14 @@ public class HatebuEntry {
     @Element(name = "creator", required = false)
     public String creator;
 
-    public DateTime getTimestampDateTime() {
-        return ISODateTimeFormat.dateTimeParser().parseDateTime(date);
+    public ZonedDateTime getTimestampDateTime() {
+        return ZonedDateTime.parse(date);
     }
 
     public CharSequence getTimestamp() {
+        long millis = getTimestampDateTime().toInstant().toEpochMilli();
         return DateUtils
-                .getRelativeTimeSpanString(getTimestampDateTime().getMillis(), System.currentTimeMillis(),
+                .getRelativeTimeSpanString(millis, System.currentTimeMillis(),
                         DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_NUMERIC_DATE);
 
     }
