@@ -21,11 +21,7 @@ public class StethoDelegator {
     }
 
     public void setup() {
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(context)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(context))
-                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
-                        .build());
+        Stetho.initializeWithDefaults(context);
 
         httpClient.networkInterceptors()
                 .add(new StethoInterceptor());
