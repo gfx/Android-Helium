@@ -63,7 +63,7 @@ public class ApiTest {
                 new MockClient("/gfx/favorite.rss", "favorites.rss", "application/xml"),
                 new MockRequestInterceptor());
 
-        List<HatebuEntry> entry = feedClient.getFavotites("gfx").toBlocking().single();
+        List<HatebuEntry> entry = feedClient.getFavotites("gfx", 1).toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
     }
 

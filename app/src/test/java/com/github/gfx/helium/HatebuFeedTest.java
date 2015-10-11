@@ -43,7 +43,7 @@ public class HatebuFeedTest {
     }
 
     @Test
-    public void parseHatebuFavoriteFee() throws Exception {
+    public void parseHatebuFavoriteFeed() throws Exception {
         Serializer serializer = new Persister();
         File rss = getAssetFile("favorites.rss");
 
