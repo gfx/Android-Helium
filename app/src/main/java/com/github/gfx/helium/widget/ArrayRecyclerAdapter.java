@@ -46,6 +46,12 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
         list.addAll(items);
     }
 
+    public void addAllWithNotification(Collection<T> items) {
+        int position = getItemCount();
+        addAll(items);
+        notifyItemInserted(position);
+    }
+
     public void clear() {
         list.clear();
     }

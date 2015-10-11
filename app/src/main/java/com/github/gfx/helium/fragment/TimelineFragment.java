@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -79,6 +81,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     EntriesAdapter adapter;
 
     String username;
+
+    int currentPage;
 
     final HatebuEntry emptyEntry = new HatebuEntry();
 
@@ -117,6 +121,14 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
         binding.list.setAdapter(adapter);
         binding.list.setLayoutManager(layoutManagers.create());
+        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMore();
+                }
+            }
+        });
 
         binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -161,24 +173,51 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     Observable<List<HatebuEntry>> reload() {
-        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username);
+        currentPage = 1;
+        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username, currentPage);
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
-                    public List<HatebuEntry> call(Throwable throwable) {
-                        Log.w(TAG, "Error while loading entries", throwable);
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), "Error while loading entries\n"
-                                            + throwable.getLocalizedMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
+                    public List<HatebuEntry> call(Throwable e) {
+                        reportError(e);
                         return Collections.emptyList();
                     }
                 });
     }
 
+
+    void loadMore() {
+        hatenaClient.getFavotites(username, ++currentPage)
+        .observeOn(AndroidSchedulers.mainThread())
+                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
+        .subscribe(new Subscriber<List<HatebuEntry>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                reportError(e);
+            }
+
+            @Override
+            public void onNext(List<HatebuEntry> items) {
+                adapter.addAllWithNotification(items);
+            }
+        });
+    }
+
+    void reportError(Throwable e) {
+        Log.w(TAG, "Error while loading entries", e);
+        if (getActivity() != null) {
+            Toast.makeText(getActivity(), "Error while loading entries\n"
+                            + e.getLocalizedMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public void onItemClick(View view, int position) {
