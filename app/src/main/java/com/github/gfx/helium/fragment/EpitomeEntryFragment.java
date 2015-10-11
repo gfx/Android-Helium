@@ -5,12 +5,12 @@ import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
@@ -18,8 +18,6 @@ import com.github.gfx.helium.widget.BindingHolder;
 import com.github.gfx.helium.widget.LayoutManagers;
 import com.github.gfx.helium.widget.OnItemClickListener;
 import com.github.gfx.helium.widget.OnItemLongClickListener;
-
-import org.joda.time.format.ISODateTimeFormat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -251,7 +249,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
             binding.title.setText(entry.title);
             binding.views.setText("閲覧数: " + Integer.toString(entry.views));
-            binding.publishedDate.setText("投稿日: " + ISODateTimeFormat.date().print(entry.getTimestamp()));
+            binding.publishedDate.setText("投稿日: " + entry.getTimestamp().toLocalDate());
             binding.originalUrl.setText(entry.upstreamUrl);
 
             fillGists(binding.gists, entry.gists);

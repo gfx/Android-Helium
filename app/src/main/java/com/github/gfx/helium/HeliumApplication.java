@@ -3,8 +3,7 @@ package com.github.gfx.helium;
 import com.github.gfx.helium.model.AppComponent;
 import com.github.gfx.helium.model.AppModule;
 import com.github.gfx.helium.model.DaggerAppComponent;
-
-import net.danlew.android.joda.JodaTimeAndroid;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
@@ -27,6 +26,6 @@ public class HeliumApplication extends Application {
                 .build();
         new StethoDelegator().setup();
 
-        JodaTimeAndroid.init(this);
+        AndroidThreeTen.init(this);
     }
 }
