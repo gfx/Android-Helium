@@ -55,10 +55,6 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
-    FragmentEntryBinding binding;
-
-    EntriesAdapter adapter;
-
     @Inject
     EpitomeClient epitomeClient;
 
@@ -73,6 +69,10 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
 
     @Inject
     LoadingAnimation loadingAnimation;
+
+    FragmentEntryBinding binding;
+
+    EntriesAdapter adapter;
 
     LayoutManagers layoutManagers;
 
@@ -115,16 +115,22 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reload().subscribe(new Action1<Object>() {
+                reload().subscribe(new Action1<List<EpitomeEntry>>() {
                     @Override
-                    public void call(Object o) {
+                    public void call(List<EpitomeEntry> items) {
+                        adapter.reset(items);
                         binding.swipeRefresh.setRefreshing(false);
                     }
                 });
             }
         });
 
-        reload().subscribe();
+        reload().subscribe(new Action1<List<EpitomeEntry>>() {
+            @Override
+            public void call(List<EpitomeEntry> items) {
+                adapter.reset(items);
+            }
+        });
 
         return binding.getRoot();
     }
@@ -145,21 +151,20 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         }
     }
 
-    Observable<?> reload() {
+    Observable<List<EpitomeEntry>> reload() {
         return epitomeClient.getEntries()
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<EpitomeEntry>>(compositeSubscription))
-                .doOnNext(new Action1<List<EpitomeEntry>>() {
+                .map(new Func1<List<EpitomeEntry>, List<EpitomeEntry>>() {
                     @Override
-                    public void call(List<EpitomeEntry> entries) {
-                        List<EpitomeEntry> entriesWithKnownScheme = new ArrayList<EpitomeEntry>(entries.size());
-                        for (EpitomeEntry entry : entries) {
+                    public List<EpitomeEntry> call(List<EpitomeEntry> items) {
+                        List<EpitomeEntry> entriesWithKnownScheme = new ArrayList<>(items.size());
+                        for (EpitomeEntry entry : items) {
                             if (entry.hasKnownScheme()) {
                                 entriesWithKnownScheme.add(entry);
                             }
                         }
-
-                        adapter.reset(entriesWithKnownScheme);
+                        return entriesWithKnownScheme;
                     }
                 })
                 .onErrorReturn(new Func1<Throwable, List<EpitomeEntry>>() {

@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        hatenaUsername = prefs.getString(HatenaClient.KEY_USERNAME, null);
+
         binding.viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), buildTabs()));
 
         TrackingUtils.sendTiming(tracker, TAG, "onCreate", System.currentTimeMillis() - t0);
@@ -82,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
-        if (prefs.contains(HatenaClient.KEY_USERNAME)) {
-            hatenaUsername = prefs.getString(HatenaClient.KEY_USERNAME, null);
+        if (hatenaUsername != null) {
             tabs.add(new EntryTab(hatenaUsername + "のお気に入り", new EntryTab.FragmentFactory() {
                 @Override
                 public Fragment createFragment() {

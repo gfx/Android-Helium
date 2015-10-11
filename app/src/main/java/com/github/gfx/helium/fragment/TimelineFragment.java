@@ -122,9 +122,10 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reload().subscribe(new Action1<Object>() {
+                reload().subscribe(new Action1<List<HatebuEntry>>() {
                     @Override
-                    public void call(Object o) {
+                    public void call(List<HatebuEntry> items) {
+                        adapter.reset(items);
                         binding.swipeRefresh.setRefreshing(false);
                     }
                 });
@@ -132,7 +133,12 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             }
         });
 
-        reload().subscribe();
+        reload().subscribe(new Action1<List<HatebuEntry>>() {
+            @Override
+            public void call(List<HatebuEntry> items) {
+                adapter.reset(items);
+            }
+        });
 
         return binding.getRoot();
     }
@@ -154,17 +160,12 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         }
     }
 
-    Observable<?> reload() {
+    Observable<List<HatebuEntry>> reload() {
         Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username);
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
-                .doOnNext(new Action1<List<HatebuEntry>>() {
-                    @Override
-                    public void call(List<HatebuEntry> items) {
-                        adapter.reset(items);
-                    }
-                }).onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
+                .onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
                     public List<HatebuEntry> call(Throwable throwable) {
                         Log.w(TAG, "Error while loading entries", throwable);
