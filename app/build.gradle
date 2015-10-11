@@ -88,8 +88,9 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     // explicitly depends on databinding compiler to avoid APT issues
     apt 'com.android.databinding:compiler:1.0-rc2'
-    debugCompile 'com.facebook.stetho:stetho:1.1.1'
-    debugCompile 'com.facebook.stetho:stetho-okhttp:1.1.1'
+    debugCompile 'com.facebook.stetho:stetho:1.2.0'
+    debugCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
+    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.2.0'
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.apache.maven:maven-ant-tasks:2.1.3'
     testCompile 'junit:junit:4.12'
