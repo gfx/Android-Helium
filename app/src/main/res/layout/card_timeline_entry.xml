@@ -38,28 +38,33 @@
                         tools:src="@mipmap/ic_launcher"
                         />
 
-                <TextView
-                        android:id="@+id/description"
+                <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="8dp"
-                        android:maxWidth="220dp"
-                        android:textAppearance="@android:style/TextAppearance.Holo.Small"
-                        tools:text="blah blah blah blah blah blah blah blah blah"
-                        />
+                        android:orientation="vertical"
+                        >
 
+                    <TextView
+                            android:id="@+id/description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                            tools:text="blah blah blah blah blah blah blah blah blah"
+                            android:visibility="gone"
+                            />
 
-                <TextView
-                        android:id="@+id/tags"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="8dp"
-                        android:textAppearance="@android:style/TextAppearance.Holo.Small"
-                        tools:text="#Android #Java"
-                        />
-
+                    <TextView
+                            android:id="@+id/tags"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                            tools:text="#Android #Java"
+                            />
+                </LinearLayout>
             </LinearLayout>
 
             <View

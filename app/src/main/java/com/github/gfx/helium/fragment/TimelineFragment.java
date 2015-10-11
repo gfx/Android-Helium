@@ -244,15 +244,27 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
                     .load(hatenaClient.buildHatebuIconUri(entry.creator))
                     .into(binding.author);
 
-            binding.title.setText(entry.title);
-            binding.date.setText(entry.getTimestamp());
 
-            binding.tags.setText(TextUtils.join(" ", Observable.from(entry.subject).map(new Func1<String, String>() {
-                @Override
-                public String call(String s) {
-                    return "#" + s;
-                }
-            }).toList().toBlocking().first()));
+            if (!TextUtils.isEmpty(entry.title)) {
+                binding.title.setText(entry.title);
+                binding.title.setVisibility(View.VISIBLE);
+            } else {
+                binding.title.setVisibility(View.GONE);
+            }
+
+            if (!entry.subject.isEmpty()) {
+                binding.tags.setText(TextUtils.join(" ", Observable.from(entry.subject).map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        return "#" + s;
+                    }
+                }).toList().toBlocking().first()));
+                binding.tags.setVisibility(View.VISIBLE);
+            } else {
+                binding.tags.setVisibility(View.GONE);
+            }
+
+            binding.date.setText(entry.getTimestamp());
             binding.bookmarkCount.setText(entry.bookmarkCount);
             binding.description.setText(entry.description);
             binding.originalUrl.setText(entry.link);
