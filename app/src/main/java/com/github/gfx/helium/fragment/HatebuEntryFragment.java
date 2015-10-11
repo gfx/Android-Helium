@@ -1,13 +1,11 @@
 package com.github.gfx.helium.fragment;
 
-import com.google.android.gms.analytics.Tracker;
-
 import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardHatebuEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
@@ -52,11 +50,13 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     static final String kCategory = "category";
 
+    final HatebuEntry emptyEntry = new HatebuEntry();
+
     @Inject
     HatenaClient hatenaClient;
 
     @Inject
-    Tracker tracker;
+    AppTracker tracker;
 
     @Inject
     AndroidCompositeSubscription compositeSubscription;
@@ -72,8 +72,6 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
-
-    final HatebuEntry emptyEntry = new HatebuEntry();
 
     public HatebuEntryFragment() {
     }
@@ -153,7 +151,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
         if (isVisibleToUser) {
             String category = getCategory();
-            TrackingUtils.sendScreenView(tracker, category != null ? TAG + "-" + category : TAG);
+            tracker.sendScreenView(category != null ? TAG + "-" + category : TAG);
         }
     }
 
@@ -194,8 +192,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
 
     void trackOpenUri(String action) {
         String category = getCategory();
-        TrackingUtils
-                .sendEvent(tracker, category != null ? TAG + "-" + category : TAG, action);
+        tracker.sendEvent(category != null ? TAG + "-" + category : TAG, action);
     }
 
     @Override

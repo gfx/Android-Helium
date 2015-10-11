@@ -23,7 +23,7 @@ public class LayoutManagers {
         return spanCount;
     }
 
-    public  RecyclerView.LayoutManager create() {
+    public RecyclerView.LayoutManager create() {
         return new StaggeredGridLayoutManager(getSpanCount(), StaggeredGridLayoutManager.VERTICAL);
     }
 }

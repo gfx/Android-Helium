@@ -1,4 +1,4 @@
-package com.github.gfx.helium.analytics;
+package com.github.gfx.helium.util;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -10,9 +10,19 @@ import android.util.Log;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public final class TrackingUtils {
+public final class AppTracker {
 
-    public static void sendScreenView(Tracker tracker, String screenName) {
+    final Tracker tracker;
+
+    public AppTracker(Tracker tracker) {
+        this.tracker = tracker;
+    }
+
+    public Tracker getTracker() {
+        return tracker;
+    }
+
+    public void sendScreenView(String screenName) {
         if (BuildConfig.DEBUG) {
             Log.d("TrackingUtils", screenName);
         }
@@ -20,14 +30,14 @@ public final class TrackingUtils {
         tracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    public static void sendEvent(Tracker tracker, String category, String action) {
+    public void sendEvent(String category, String action) {
         if (BuildConfig.DEBUG) {
             Log.d("TrackingUtils", category + "." + action);
         }
         tracker.send(new HitBuilders.EventBuilder(category, action).build());
     }
 
-    public static void sendTiming(Tracker tracker, String category, String variable, long timing) {
+    public void sendTiming(String category, String variable, long timing) {
         if (BuildConfig.DEBUG) {
             Log.d("TrackingUtils", category + "; timing=" + timing);
         }

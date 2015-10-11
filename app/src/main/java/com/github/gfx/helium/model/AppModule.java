@@ -5,6 +5,7 @@ import com.google.android.gms.analytics.Tracker;
 
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
@@ -54,6 +55,12 @@ public class AppModule {
         Tracker tracker = ga.newTracker(BuildConfig.GA_TRACKING_ID);
         tracker.enableExceptionReporting(true);
         return tracker;
+    }
+
+    @Singleton
+    @Provides
+    public AppTracker getAppTracker(Tracker tracker) {
+        return new AppTracker(tracker);
     }
 
     @Provides

@@ -1,10 +1,8 @@
 package com.github.gfx.helium.activity;
 
-import com.google.android.gms.analytics.Tracker;
-
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivityMainBinding;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     static int DEFAULT_SELECTED_TAB = 1;
 
     @Inject
-    Tracker tracker;
+    AppTracker tracker;
 
     @Inject
     SharedPreferences prefs;
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.viewPager.setAdapter(new MainTabsAdapter(getSupportFragmentManager(), buildTabs()));
 
-        TrackingUtils.sendTiming(tracker, TAG, "onCreate", System.currentTimeMillis() - t0);
+        tracker.sendTiming(TAG, "onCreate", System.currentTimeMillis() - t0);
     }
 
     List<EntryTab> buildTabs() {

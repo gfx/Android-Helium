@@ -1,10 +1,9 @@
 package com.github.gfx.helium.activity;
 
-import com.google.android.gms.analytics.Tracker;
-
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivitySettingsBinding;
 import com.github.gfx.helium.util.ViewSwitcher;
@@ -25,13 +24,15 @@ import javax.inject.Inject;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    static final String TAG = SettingsActivity.class.getSimpleName();
+
     final AndroidCompositeSubscription subscriptions = new AndroidCompositeSubscription();
 
     @Inject
     HatenaClient hatenaClient;
 
     @Inject
-    Tracker tracker;
+    AppTracker tracker;
 
     @Inject
     SharedPreferences prefs;
@@ -59,6 +60,8 @@ public class SettingsActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
+
+        tracker.sendScreenView(TAG);
     }
 
     @Override

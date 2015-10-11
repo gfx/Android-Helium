@@ -1,13 +1,11 @@
 package com.github.gfx.helium.fragment;
 
-import com.google.android.gms.analytics.Tracker;
-
 import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
@@ -59,7 +57,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     EpitomeClient epitomeClient;
 
     @Inject
-    Tracker tracker;
+    AppTracker tracker;
 
     @Inject
     AndroidCompositeSubscription compositeSubscription;
@@ -147,7 +145,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            TrackingUtils.sendScreenView(tracker, TAG);
+            tracker.sendScreenView(TAG);
         }
     }
 
@@ -188,7 +186,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 
-        TrackingUtils.sendEvent(tracker, TAG, "service");
+        tracker.sendEvent(TAG, "service");
     }
 
     @Override
@@ -199,7 +197,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 
-        TrackingUtils.sendEvent(tracker, TAG, "original");
+        tracker.sendEvent(TAG, "original");
         return true;
     }
 

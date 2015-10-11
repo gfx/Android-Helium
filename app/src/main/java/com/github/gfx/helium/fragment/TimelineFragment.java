@@ -1,14 +1,12 @@
 package com.github.gfx.helium.fragment;
 
-import com.google.android.gms.analytics.Tracker;
-
 import com.bumptech.glide.Glide;
 import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.analytics.TrackingUtils;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
@@ -59,11 +57,13 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     static final String kUsername = "username";
 
+    final HatebuEntry emptyEntry = new HatebuEntry();
+
     @Inject
     HatenaClient hatenaClient;
 
     @Inject
-    Tracker tracker;
+    AppTracker tracker;
 
     @Inject
     AndroidCompositeSubscription compositeSubscription;
@@ -83,8 +83,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     String username;
 
     int currentPage;
-
-    final HatebuEntry emptyEntry = new HatebuEntry();
 
     public TimelineFragment() {
     }
@@ -168,7 +166,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            TrackingUtils.sendScreenView(tracker, TAG);
+            tracker.sendScreenView(TAG);
         }
     }
 
@@ -190,24 +188,24 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     void loadMore() {
         hatenaClient.getFavotites(username, ++currentPage)
-        .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
-        .subscribe(new Subscriber<List<HatebuEntry>>() {
-            @Override
-            public void onCompleted() {
+                .subscribe(new Subscriber<List<HatebuEntry>>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                reportError(e);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        reportError(e);
+                    }
 
-            @Override
-            public void onNext(List<HatebuEntry> items) {
-                adapter.addAllWithNotification(items);
-            }
-        });
+                    @Override
+                    public void onNext(List<HatebuEntry> items) {
+                        adapter.addAllWithNotification(items);
+                    }
+                });
     }
 
     void reportError(Throwable e) {
@@ -239,9 +237,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     void trackOpenUri(String action) {
-        TrackingUtils.sendEvent(tracker, TAG, action);
+        tracker.sendEvent(TAG, action);
     }
-
 
     private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardTimelineEntryBinding>> {
 
@@ -282,7 +279,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             Glide.with(getContext())
                     .load(hatenaClient.buildHatebuIconUri(entry.creator))
                     .into(binding.author);
-
 
             if (!TextUtils.isEmpty(entry.title)) {
                 binding.title.setText(entry.title);

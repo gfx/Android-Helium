@@ -6,6 +6,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class LoadingAnimation {
+
     static long DURATION = 1000;
 
     public void start(final View view) {
