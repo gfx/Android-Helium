@@ -219,7 +219,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         public void onBindViewHolder(final BindingHolder<CardTimelineEntryBinding> holder, final int position) {
             CardTimelineEntryBinding binding = holder.binding;
 
-            final HatebuEntry entry = getItem(position);
+            HatebuEntry entry = getItem(position);
 
             if (entry == emptyEntry) {
                 loadingAnimation.start(binding.getRoot());
@@ -272,11 +272,9 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
+                    dispatchOnItemLongClick(v, position);
                 }
             });
-
         }
-
     }
 }
