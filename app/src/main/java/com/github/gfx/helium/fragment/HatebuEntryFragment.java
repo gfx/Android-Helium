@@ -226,7 +226,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
         public void onBindViewHolder(final BindingHolder<CardHatebuEntryBinding> holder, final int position) {
             CardHatebuEntryBinding binding = holder.binding;
 
-            final HatebuEntry entry = getItem(position);
+            HatebuEntry entry = getItem(position);
             if (entry == emptyEntry) {
                 loadingAnimation.start(binding.getRoot());
                 return;
@@ -257,7 +257,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
+                    dispatchOnItemLongClick(v, position);
                 }
             });
         }

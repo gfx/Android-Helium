@@ -17,6 +17,7 @@ import retrofit.client.Client;
 import retrofit.converter.SimpleXMLConverter;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -97,8 +98,8 @@ public class HatenaClient {
         });
     }
 
-    public Observable<List<HatebuEntry>> getFavotites(final String user) {
-        return hatebuService.getFavorites(user).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
+    public Observable<List<HatebuEntry>> getFavotites(final String user, final int of) {
+        return hatebuService.getFavorites(user, of).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
             @Override
             public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
                 return hatebuFeed.items;
@@ -119,6 +120,6 @@ public class HatenaClient {
         Observable<HatebuFeed> getHotentries(@Path("category") String category);
 
         @GET("/{user}/favorite.rss")
-        Observable<HatebuFeed> getFavorites(@Path("user") String user);
+        Observable<HatebuFeed> getFavorites(@Path("user") String user, @Query("of") int of);
     }
 }
