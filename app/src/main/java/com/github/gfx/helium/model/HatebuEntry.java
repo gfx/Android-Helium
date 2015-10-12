@@ -1,5 +1,7 @@
 package com.github.gfx.helium.model;
 
+import com.github.gfx.helium.util.HatebuSnippetParser;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Namespace;
@@ -39,6 +41,10 @@ public class HatebuEntry {
     @Element(name = "creator", required = false)
     public String creator;
 
+    @Namespace(prefix = "content")
+    @Element(name = "encoded", required = false)
+    public String snippet;
+
     public ZonedDateTime getTimestampDateTime() {
         return ZonedDateTime.parse(date);
     }
@@ -49,6 +55,14 @@ public class HatebuEntry {
                 .getRelativeTimeSpanString(millis, System.currentTimeMillis(),
                         DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_NUMERIC_DATE);
 
+    }
+
+    public CharSequence getSummary() {
+        return new HatebuSnippetParser(snippet).extractSummary();
+    }
+
+    public boolean looksLikeImageUrl() {
+        return link.matches("https?://.*\\.(?:png|jpe?g|gif|webp)");
     }
 
     @Override
