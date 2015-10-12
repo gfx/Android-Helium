@@ -82,7 +82,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     String username;
 
-    int currentPage;
+    int currentEntries;
 
     public TimelineFragment() {
     }
@@ -171,8 +171,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     Observable<List<HatebuEntry>> reload() {
-        currentPage = 1;
-        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username, currentPage);
+        currentEntries = 0;
+        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username, currentEntries);
         return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
@@ -187,7 +187,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
 
     void loadMore() {
-        hatenaClient.getFavotites(username, ++currentPage)
+        currentEntries += adapter.getItemCount();
+        hatenaClient.getFavotites(username, currentEntries)
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .subscribe(new Subscriber<List<HatebuEntry>>() {
