@@ -11,10 +11,18 @@ Helium (He), which comes from "**H**atebu" + "**E**pitome", is a Hatebu reader f
 
 ## Libraries Used
 
+This project is intended to employ modern Android libraries, such as:
+
+* Android Support Libraries
+  * CardView
+  * Design
+  * RecyclerView
 * OkHttp
 * Retrofit
-* RxJava
+* RxJava / RxT4A
 * Google Dagger
+* ThreeTenABP
+* Glide
 
 ## Build
 
@@ -25,8 +33,15 @@ In your local machine:
 ./gradlew installDebug
 ```
 
-To test it with Docker (what circleci.yml does):
-```
+## Test
+
+This project uses [JVM unit testing](http://tools.android.com/tech-docs/unit-testing-support) with [Robolectric](http://robolectric.org/).
+
+To test it, just type `./gradlew check`.
+
+If you want to use Docker, type the following commands, which is what circleci.yml does:
+
+```sh
 docker build -t android_helium .
 docker run -it android_helium
 ```
