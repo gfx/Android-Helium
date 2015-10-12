@@ -2,13 +2,13 @@ package com.github.gfx.helium.activity;
 
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivityMainBinding;
 import com.github.gfx.helium.fragment.EpitomeEntryFragment;
 import com.github.gfx.helium.fragment.HatebuEntryFragment;
 import com.github.gfx.helium.fragment.TimelineFragment;
 import com.github.gfx.helium.model.EntryTab;
+import com.github.gfx.helium.util.AppTracker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

@@ -5,10 +5,10 @@ import com.google.android.gms.analytics.Tracker;
 
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
-import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.squareup.okhttp.Cache;

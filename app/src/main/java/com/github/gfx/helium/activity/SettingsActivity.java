@@ -3,9 +3,9 @@ package com.github.gfx.helium.activity;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivitySettingsBinding;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.ViewSwitcher;
 
 import android.content.Context;
