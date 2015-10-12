@@ -3,7 +3,10 @@ package com.github.gfx.helium.util;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -39,5 +42,14 @@ public class ViewSwitcher {
                     }
                 });
 
+    }
+
+    public void setTextOrGone(TextView view, @Nullable CharSequence text) {
+        if (TextUtils.isEmpty(text)) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+            view.setText(text);
+        }
     }
 }

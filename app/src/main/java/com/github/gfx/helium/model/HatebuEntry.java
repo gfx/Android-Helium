@@ -8,6 +8,8 @@ import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 import org.threeten.bp.ZonedDateTime;
 
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import java.util.ArrayList;
@@ -45,10 +47,12 @@ public class HatebuEntry {
     @Element(name = "encoded", required = false)
     public String snippet;
 
+    @NonNull
     public ZonedDateTime getTimestampDateTime() {
         return ZonedDateTime.parse(date);
     }
 
+    @NonNull
     public CharSequence getTimestamp() {
         long millis = getTimestampDateTime().toInstant().toEpochMilli();
         return DateUtils
@@ -57,12 +61,25 @@ public class HatebuEntry {
 
     }
 
+    @NonNull
     public CharSequence getSummary() {
         return new HatebuSnippetParser(snippet).extractSummary();
     }
 
     public boolean looksLikeImageUrl() {
         return link.matches("https?://.*\\.(?:png|jpe?g|gif|webp)");
+    }
+
+    @NonNull
+    public CharSequence getTags() {
+        if (subject.isEmpty()) {
+            return "";
+        }
+        List<String> tags = new ArrayList<>(subject.size());
+        for (String tag : subject) {
+            tags.add("#" + tag);
+        }
+        return TextUtils.join(" ", tags);
     }
 
     @Override

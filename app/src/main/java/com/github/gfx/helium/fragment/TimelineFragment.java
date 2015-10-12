@@ -277,32 +277,24 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
                 }
             });
 
+            binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchOnItemLongClick(v, position);
+                }
+            });
+
             Glide.with(getContext())
                     .load(hatenaClient.buildHatebuIconUri(entry.creator))
                     .into(binding.author);
 
-            if (!TextUtils.isEmpty(entry.title)) {
-                binding.title.setText(entry.title);
-                binding.title.setVisibility(View.VISIBLE);
-            } else {
-                binding.title.setVisibility(View.GONE);
-            }
+            binding.title.setText(entry.title);
 
-            if (!entry.subject.isEmpty()) {
-                binding.tags.setText(TextUtils.join(" ", Observable.from(entry.subject).map(new Func1<String, String>() {
-                    @Override
-                    public String call(String s) {
-                        return "#" + s;
-                    }
-                }).toList().toBlocking().first()));
-                binding.tags.setVisibility(View.VISIBLE);
-            } else {
-                binding.tags.setVisibility(View.GONE);
-            }
+            viewSwitcher.setTextOrGone(binding.tags, entry.getTags());
+            viewSwitcher.setTextOrGone(binding.comment, entry.description);
 
             binding.date.setText(entry.getTimestamp());
             binding.bookmarkCount.setText(entry.bookmarkCount);
-            binding.comment.setText(entry.description);
             binding.originalUrl.setText(entry.link);
 
             CharSequence summary = entry.getSummary();
@@ -321,13 +313,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             } else {
                 binding.layoutSummary.setVisibility(View.GONE);
             }
-
-            binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dispatchOnItemLongClick(v, position);
-                }
-            });
         }
     }
 }
