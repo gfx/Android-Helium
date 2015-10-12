@@ -6,11 +6,11 @@ import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
-import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
+import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
@@ -302,8 +302,25 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
             binding.date.setText(entry.getTimestamp());
             binding.bookmarkCount.setText(entry.bookmarkCount);
-            binding.description.setText(entry.description);
+            binding.comment.setText(entry.description);
             binding.originalUrl.setText(entry.link);
+
+            CharSequence summary = entry.getSummary();
+            if (!TextUtils.isEmpty(summary)) {
+                binding.textSummary.setText(entry.getSummary());
+                binding.layoutSummary.setVisibility(View.VISIBLE);
+                binding.textSummary.setVisibility(View.VISIBLE);
+                binding.imageSummary.setVisibility(View.GONE);
+            } else if (entry.looksLikeImageUrl()) {
+                Glide.with(getContext())
+                        .load(entry.link)
+                        .into(binding.imageSummary);
+                binding.layoutSummary.setVisibility(View.VISIBLE);
+                binding.textSummary.setVisibility(View.GONE);
+                binding.imageSummary.setVisibility(View.VISIBLE);
+            } else {
+                binding.layoutSummary.setVisibility(View.GONE);
+            }
 
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
