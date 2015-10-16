@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".MainActivity"
+        tools:context=".activity.MainActivity"
         >
 
     <android.support.design.widget.CoordinatorLayout
@@ -43,7 +43,7 @@
                     android:background="@color/app_primary"
                     android:elevation="4dp"
                     android:paddingBottom="4dp"
-                    android:textAppearance="@android:style/TextAppearance.Holo.Small.Inverse"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
                     />
 
         </android.support.v4.view.ViewPager>

@@ -51,7 +51,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             tools:text="blah blah blah blah blah blah blah blah blah"
                             />
 
@@ -60,7 +60,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             tools:text="#Android #Java"
                             />
                 </LinearLayout>
@@ -86,8 +86,7 @@
                         android:layout_marginRight="4dp"
                         android:clickable="true"
                         android:gravity="center"
-                        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-                        android:textColor="@color/bookmark_count"
+                        android:textAppearance="@style/BookmarkCount"
                         tools:text="@string/placeholder_count"
                         />
 
@@ -101,18 +100,16 @@
                             android:id="@+id/title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+                            android:textAppearance="@style/BookmarkTitle"
                             tools:text="@string/placeholder_title"
                             />
 
                     <TextView
                             android:id="@+id/original_url"
+                            style="@style/BookmarkUrl"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:lines="1"
                             android:paddingBottom="4dp"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
                             tools:text="@string/placeholder_url"
                             />
 
@@ -122,7 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             tools:text="@string/placeholder_date"
                             />
 

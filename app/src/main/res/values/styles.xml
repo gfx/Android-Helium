@@ -1,9 +1,22 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/app_primary</item>
         <item name="colorPrimaryDark">@color/app_primary_dark</item>
         <item name="colorAccent">@color/app_accent</item>
+    </style>
+
+    <style name="BookmarkCount" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bookmark_count</item>
+    </style>
+
+    <style name="BookmarkTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="BookmarkUrl" parent="TextAppearance.AppCompat.Small">
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
     </style>
 
 </resources>
