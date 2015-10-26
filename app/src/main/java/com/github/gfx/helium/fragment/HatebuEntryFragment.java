@@ -20,7 +20,6 @@ import com.github.gfx.helium.widget.OnItemLongClickListener;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -108,7 +107,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
+        binding = FragmentEntryBinding.inflate(inflater, container, false);
 
         binding.list.setAdapter(adapter);
         binding.list.setLayoutManager(layoutManagers.create());

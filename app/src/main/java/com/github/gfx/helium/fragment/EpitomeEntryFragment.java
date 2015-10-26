@@ -21,7 +21,6 @@ import com.github.gfx.helium.widget.OnItemLongClickListener;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -102,7 +101,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_entry, container, false);
+        binding = FragmentEntryBinding.inflate(inflater, container, false);
 
         binding.list.setAdapter(adapter);
         binding.list.setLayoutManager(layoutManagers.create());
@@ -261,7 +260,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
             layout.removeAllViews();
 
             for (int i = 0; i < gists.size(); i++) {
-                ItemEpitomeGistBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_epitome_gist, layout, false);
+                ItemEpitomeGistBinding binding = ItemEpitomeGistBinding.inflate(inflater, layout, false);
 
                 binding.gistPoint.setText(Integer.toString(i + 1));
                 binding.gistText.setText(gists.get(i).content);
