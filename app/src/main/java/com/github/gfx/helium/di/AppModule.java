@@ -1,4 +1,4 @@
-package com.github.gfx.helium.model;
+package com.github.gfx.helium.di;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;

@@ -65,11 +65,15 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     @Inject
     LoadingAnimation loadingAnimation;
 
+    @Inject
+    LayoutManagers layoutManagers;
+
+    @Inject
+    LayoutInflater inflater;
+
     FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
-
-    LayoutManagers layoutManagers;
 
     EpitomeEntry emptyEntry = new EpitomeEntry();
 
@@ -83,11 +87,15 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        HeliumApplication.getComponent(this).inject(this);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        HeliumApplication.getAppComponent().inject(this);
-        layoutManagers = new LayoutManagers(getActivity());
 
         adapter = new EntriesAdapter(getActivity());
         adapter.setOnItemClickListener(this);
@@ -255,8 +263,6 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         }
 
         void fillGists(LinearLayout layout, List<EpitomeEntry.Gist> gists) {
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-
             layout.removeAllViews();
 
             for (int i = 0; i < gists.size(); i++) {

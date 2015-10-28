@@ -16,8 +16,8 @@ public class StethoDelegator {
     @Inject
     OkHttpClient httpClient;
 
-    public StethoDelegator() {
-        HeliumApplication.getAppComponent().inject(this);
+    public StethoDelegator(HeliumApplication application) {
+        application.getComponent().inject(this);
     }
 
     public void setup() {
