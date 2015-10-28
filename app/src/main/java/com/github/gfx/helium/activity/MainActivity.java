@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         long t0 = System.currentTimeMillis();
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        HeliumApplication.getAppComponent().inject(this);
+        HeliumApplication.getComponent(this).inject(this);
 
         setSupportActionBar(binding.toolbar);
 

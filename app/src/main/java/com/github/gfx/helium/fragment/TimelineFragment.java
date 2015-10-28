@@ -73,6 +73,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     @Inject
     LoadingAnimation loadingAnimation;
 
+    @Inject
     LayoutManagers layoutManagers;
 
     FragmentEntryBinding binding;
@@ -95,11 +96,15 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        HeliumApplication.getComponent(this).inject(this);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HeliumApplication.getAppComponent().inject(this);
-
-        layoutManagers = new LayoutManagers(getActivity());
 
         adapter = new EntriesAdapter(getActivity());
         adapter.setOnItemClickListener(this);

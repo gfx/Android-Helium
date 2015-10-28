@@ -6,12 +6,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
 
+import javax.inject.Inject;
+
 public class LayoutManagers {
 
     static final int ITEM_MIN_WIDTH = 280;
 
     final int spanCount;
 
+    @Inject
     public LayoutManagers(@NonNull Activity activity) {
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);

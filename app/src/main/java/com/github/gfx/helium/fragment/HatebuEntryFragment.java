@@ -66,6 +66,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     @Inject
     LoadingAnimation loadingAnimation;
 
+    @Inject
     LayoutManagers layoutManagers;
 
     FragmentEntryBinding binding;
@@ -90,12 +91,16 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        HeliumApplication.getComponent(this).inject(this);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        HeliumApplication.getAppComponent().inject(this);
-
-        layoutManagers = new LayoutManagers(getActivity());
         adapter = new EntriesAdapter(getActivity());
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);

@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings);
 
-        HeliumApplication.getAppComponent().inject(this);
+        HeliumApplication.getComponent(this).inject(this);
 
         binding.buttonSignIn.setOnClickListener(new OnClickListener() {
             @Override
