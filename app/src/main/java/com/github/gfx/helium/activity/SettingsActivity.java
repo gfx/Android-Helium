@@ -54,6 +54,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         HeliumApplication.getComponent(this).inject(this);
 
+        setSupportActionBar(binding.toolbar);
+
         binding.buttonSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
