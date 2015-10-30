@@ -1,5 +1,6 @@
 package com.github.gfx.helium.activity;
 
+import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
@@ -115,12 +116,11 @@ public class SettingsActivity extends AppCompatActivity {
         startProgress();
 
         checkHatenaId(username)
+                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(subscriptions))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<HatebuEntry>>() {
                     @Override
                     public void onCompleted() {
-                        finishProgress();
-
                         setResult(RESULT_OK);
                         finish();
                     }

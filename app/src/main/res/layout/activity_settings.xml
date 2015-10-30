@@ -53,32 +53,15 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <LinearLayout
+                <Button
+                        android:id="@+id/button_sign_in"
+                        style="@style/TextAppearance.AppCompat.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
-
-                    <ProgressBar
-                            android:id="@+id/login_progress"
-                            style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:visibility="gone"
-                            />
-
-                    <Button
-                            android:id="@+id/button_sign_in"
-                            style="@style/TextAppearance.AppCompat.Button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/action_sign_in"
-                            android:textStyle="bold"
-                            />
-
-                </LinearLayout>
+                        android:layout_marginTop="16dp"
+                        android:text="@string/action_sign_in"
+                        android:textStyle="bold"
+                        />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
