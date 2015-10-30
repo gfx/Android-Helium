@@ -20,5 +20,6 @@
     <string name="action_sign_in">設定</string>
     <string name="action_sign_in_short">設定</string>
     <string name="error_invalid_username">はてなユーザー名が正しくありません</string>
+    <string name="error_network">はてなに接続できませんでした。もう一度お試しください</string>
     <string name="error_field_required">この項目は必須です</string>
 </resources>

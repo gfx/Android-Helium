@@ -10,7 +10,6 @@ import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
-import com.github.gfx.helium.util.ViewSwitcher;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -106,11 +105,6 @@ public class AppModule {
     @Provides
     public AndroidCompositeSubscription provideAndroidCompositeSubscription() {
         return new AndroidCompositeSubscription();
-    }
-
-    @Provides
-    public ViewSwitcher provideViewSwitcher(Context context) {
-        return new ViewSwitcher(context);
     }
 
     @Provides

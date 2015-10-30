@@ -1,10 +1,12 @@
 package com.github.gfx.helium.activity;
 
+import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivitySettingsBinding;
+import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.ViewSwitcher;
 
@@ -12,15 +14,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import java.util.List;
+
 import javax.inject.Inject;
+
+import retrofit.RetrofitError;
+import rx.Observable;
+import rx.Subscriber;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -83,103 +91,78 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     void attemptLogin() {
-        // Reset errors.
         binding.username.setError(null);
 
-        // Store values at the time of the login attempt.
-        String email = binding.username.getText().toString();
+        final String username = binding.username.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(username)) {
             binding.username.setError(getString(R.string.error_field_required));
             focusView = binding.username;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isValidUsername(username)) {
             binding.username.setError(getString(R.string.error_invalid_username));
             focusView = binding.username;
             cancel = true;
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-
-            // TODO: validate username with Hatena API
-            new UserLoginTask(email).execute();
+            return;
         }
+        startProgress();
+
+        checkHatenaId(username)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<HatebuEntry>>() {
+                    @Override
+                    public void onCompleted() {
+                        finishProgress();
+
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(final Throwable e) {
+                        finishProgress();
+
+                        RetrofitError retrofitError = (RetrofitError) e;
+                        if (retrofitError.getResponse().getStatus() == 404) {
+                            binding.username.setError(getString(R.string.error_invalid_username));
+                            binding.username.requestFocus();
+
+                        } else {
+                            Log.w(TAG, "errors on " + Thread.currentThread(), e);
+                            binding.username.setError(getString(R.string.error_network));
+                        }
+                    }
+
+                    @Override
+                    public void onNext(List<HatebuEntry> hatebuEntries) {
+                        prefs.edit()
+                                .putString(HatenaClient.KEY_USERNAME, username)
+                                .apply();
+                    }
+                });
     }
 
-    private boolean isEmailValid(String email) {
-        return email.matches("^[a-zA-Z0-9_]+$");
+    private boolean isValidUsername(String username) {
+        return username.matches("^[a-zA-Z0-9_]+$");
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    private void showProgress(final boolean show) {
-        if (show) {
-            viewSwitcher.switchViewsWithAnimation(binding.loginProgress, binding.loginForm);
-        } else {
-            viewSwitcher.switchViewsWithAnimation(binding.loginForm, binding.loginProgress);
-        }
+    private void startProgress() {
+        binding.buttonSignIn.setEnabled(false);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    private void finishProgress() {
+        binding.buttonSignIn.setEnabled(true);
+    }
 
-        String username;
-
-        UserLoginTask(String username) {
-            this.username = username;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            showProgress(false);
-
-            if (success) {
-                prefs.edit()
-                        .putString(HatenaClient.KEY_USERNAME, username)
-                        .apply();
-
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                binding.username.setError(getString(R.string.error_invalid_username));
-                binding.username.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            showProgress(false);
-        }
+    private Observable<List<HatebuEntry>> checkHatenaId(String username) {
+        return hatenaClient.getBookmark(username, 0);
     }
 }
 
