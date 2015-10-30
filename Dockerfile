@@ -9,7 +9,7 @@ WORKDIR $PROJECT
 
 ADD . $PROJECT
 
-RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
-RUN ./gradlew --stacktrace androidDependencies
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties && \
+    ./gradlew --stacktrace app:dependencies
 
-CMD ./gradlew --stacktrace test build
+CMD ./gradlew --stacktrace check
