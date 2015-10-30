@@ -107,6 +107,14 @@ public class HatenaClient {
         });
     }
 
+    public Observable<List<HatebuEntry>> getBookmark(final String user, final int of) {
+        return hatebuService.getBookmark(user, of).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
+            @Override
+            public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
+                return hatebuFeed.items;
+            }
+        });
+    }
 
     interface FeedburnerService {
 
@@ -121,5 +129,8 @@ public class HatenaClient {
 
         @GET("/{user}/favorite.rss")
         Observable<HatebuFeed> getFavorites(@Path("user") String user, @Query("of") int of);
+
+        @GET("/{user}/bookmark.rss")
+        Observable<HatebuFeed> getBookmark(@Path("user") String user, @Query("of") int of);
     }
 }
