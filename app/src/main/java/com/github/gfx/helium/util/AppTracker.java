@@ -32,7 +32,7 @@ public final class AppTracker {
 
     public void sendEvent(String category, String action) {
         if (BuildConfig.DEBUG) {
-            Log.d("TrackingUtils", category + "." + action);
+            Log.d("TrackingUtils", category + "/" + action);
         }
         tracker.send(new HitBuilders.EventBuilder(category, action).build());
     }

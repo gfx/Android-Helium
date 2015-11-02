@@ -8,6 +8,7 @@ import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
+import com.github.gfx.helium.model.UsernameChangedEvent;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.squareup.okhttp.Cache;
@@ -26,6 +27,7 @@ import dagger.Provides;
 import retrofit.RequestInterceptor;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
+import rx.subjects.PublishSubject;
 
 @Module
 public class AppModule {
@@ -110,5 +112,11 @@ public class AppModule {
     @Provides
     public LoadingAnimation provideLoadingAnimations() {
         return new LoadingAnimation();
+    }
+
+    @Singleton
+    @Provides
+    public PublishSubject<UsernameChangedEvent> provideUsernameChangedEventSubject() {
+        return PublishSubject.create();
     }
 }
