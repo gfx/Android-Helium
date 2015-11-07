@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -22,6 +24,7 @@ import rx.Observable;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
+@Singleton
 public class HatenaClient {
 
     public static final String FEEDBURNER_ENDPOINT = "http://feeds.feedburner.com/";
@@ -34,8 +37,6 @@ public class HatenaClient {
 
     public static final String KEY_USERNAME = "hatena_username";
 
-    private static final String TAG = HatenaClient.class.getSimpleName();
-
     final RestAdapter feedburnerAdapter;
 
     final FeedburnerService feedburnerService;
@@ -44,6 +45,7 @@ public class HatenaClient {
 
     final HatebuService hatebuService;
 
+    @Inject
     public HatenaClient(Client client, RequestInterceptor requestInterceptor) {
         feedburnerAdapter = createCommonBuilder(client, requestInterceptor)
                 .setEndpoint(FEEDBURNER_ENDPOINT)

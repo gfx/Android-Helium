@@ -1,9 +1,8 @@
 package com.github.gfx.helium.di;
 
-import com.github.gfx.helium.di.scope.FragmentScope;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,10 +16,13 @@ public class FragmentModule {
         this.fragment = fragment;
     }
 
-    @FragmentScope
     @Provides
     public Context context() {
         return fragment.getContext();
     }
 
+    @Provides
+    public FragmentManager provideFragmentManager() {
+        return fragment.getFragmentManager();
+    }
 }

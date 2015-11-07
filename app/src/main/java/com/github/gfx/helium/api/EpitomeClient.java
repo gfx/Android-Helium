@@ -9,6 +9,8 @@ import com.github.gfx.helium.model.EpitomeEntry;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -19,6 +21,7 @@ import rx.Observable;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
+@Singleton
 public class EpitomeClient {
 
     static final String ENDPOINT = "https://ja.epitomeup.com/";
@@ -27,6 +30,7 @@ public class EpitomeClient {
 
     final EpitomeService service;
 
+    @Inject
     public EpitomeClient(Client client, RequestInterceptor requestInterceptor) {
         adapter = new RestAdapter.Builder()
                 .setEndpoint(ENDPOINT)

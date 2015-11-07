@@ -3,11 +3,16 @@ package com.github.gfx.helium.util;
 import android.view.View;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
 
 @ParametersAreNonnullByDefault
 public class LoadingAnimation {
 
     static long DURATION = 1000;
+
+    @Inject
+    public LoadingAnimation() {
+    }
 
     public void start(final View view) {
         view.animate()

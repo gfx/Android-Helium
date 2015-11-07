@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -80,7 +81,7 @@ public class ApiTest {
     class MockRequestInterceptor extends HeliumRequestInterceptor {
 
         public MockRequestInterceptor() {
-            super(getContext());
+            super((ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE));
         }
 
         @Override

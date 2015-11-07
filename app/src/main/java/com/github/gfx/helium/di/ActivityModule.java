@@ -1,7 +1,5 @@
 package com.github.gfx.helium.di;
 
-import com.github.gfx.helium.di.scope.ActivityScope;
-
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -19,19 +17,16 @@ public class ActivityModule {
         this.activity = activity;
     }
 
-    @ActivityScope
     @Provides
     public Activity activity() {
         return activity;
     }
 
-    @ActivityScope
     @Provides
     public Context context() {
         return activity;
     }
 
-    @ActivityScope
     @Provides
     LayoutInflater layoutInflater() {
         return activity.getLayoutInflater();

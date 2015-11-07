@@ -2,24 +2,26 @@ package com.github.gfx.helium.api;
 
 import com.github.gfx.helium.util.UserAgent;
 
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import retrofit.RequestInterceptor;
 
 @ParametersAreNonnullByDefault
+@Singleton
 public class HeliumRequestInterceptor implements RequestInterceptor {
 
     final ConnectivityManager connectivityManager;
 
     final String userAgent;
 
-    public HeliumRequestInterceptor(Context context) {
-        connectivityManager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+    @Inject
+    public HeliumRequestInterceptor(ConnectivityManager connectivityManager) {
+        this.connectivityManager = connectivityManager;
 
         userAgent = UserAgent.build();
     }

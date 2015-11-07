@@ -5,18 +5,15 @@ import com.google.android.gms.analytics.Tracker;
 
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
-import com.github.gfx.helium.api.EpitomeClient;
-import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.github.gfx.helium.model.UsernameChangedEvent;
-import com.github.gfx.helium.util.AppTracker;
-import com.github.gfx.helium.util.LoadingAnimation;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 
 import java.io.File;
 
@@ -58,15 +55,9 @@ public class AppModule {
         return tracker;
     }
 
-    @Singleton
     @Provides
-    public AppTracker getAppTracker(Tracker tracker) {
-        return new AppTracker(tracker);
-    }
-
-    @Provides
-    public RequestInterceptor provideRequestInterceptor(Context context) {
-        return new HeliumRequestInterceptor(context);
+    public ConnectivityManager provideConnectivityManager(Context context) {
+        return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Singleton
@@ -85,18 +76,9 @@ public class AppModule {
         return new OkClient(httpClient);
     }
 
-    @Singleton
     @Provides
-    public HatenaClient provideHatebuFeedClient(Client client,
-            RequestInterceptor requestInterceptor) {
-        return new HatenaClient(client, requestInterceptor);
-    }
-
-    @Singleton
-    @Provides
-    public EpitomeClient provideEpitomeFeedClient(Client client,
-            RequestInterceptor requestInterceptor) {
-        return new EpitomeClient(client, requestInterceptor);
+    public RequestInterceptor provideRequestInterceptor(ConnectivityManager connectivityManager) {
+        return new HeliumRequestInterceptor(connectivityManager);
     }
 
     @Provides
@@ -107,11 +89,6 @@ public class AppModule {
     @Provides
     public AndroidCompositeSubscription provideAndroidCompositeSubscription() {
         return new AndroidCompositeSubscription();
-    }
-
-    @Provides
-    public LoadingAnimation provideLoadingAnimations() {
-        return new LoadingAnimation();
     }
 
     @Singleton

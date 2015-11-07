@@ -8,12 +8,14 @@ import com.github.gfx.helium.BuildConfig;
 import android.util.Log;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.inject.Inject;
 
 @ParametersAreNonnullByDefault
 public final class AppTracker {
 
     final Tracker tracker;
 
+    @Inject
     public AppTracker(Tracker tracker) {
         this.tracker = tracker;
     }
