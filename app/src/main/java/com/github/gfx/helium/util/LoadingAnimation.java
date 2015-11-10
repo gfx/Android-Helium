@@ -38,6 +38,5 @@ public class LoadingAnimation {
 
     public void cancel(final View view) {
         view.clearAnimation();
-
     }
 }

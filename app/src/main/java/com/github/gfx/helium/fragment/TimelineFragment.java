@@ -16,6 +16,7 @@ import com.github.gfx.helium.util.ViewSwitcher;
 import com.github.gfx.helium.widget.ArrayRecyclerAdapter;
 import com.github.gfx.helium.widget.BindingHolder;
 import com.github.gfx.helium.widget.LayoutManagers;
+import com.github.gfx.helium.widget.LoadingIndicatorViewHolder;
 import com.github.gfx.helium.widget.OnItemClickListener;
 import com.github.gfx.helium.widget.OnItemLongClickListener;
 
@@ -123,14 +124,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
         binding.list.setAdapter(adapter);
         binding.list.setLayoutManager(layoutManagers.create());
-        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (!recyclerView.canScrollVertically(1)) {
-                    loadMore();
-                }
-            }
-        });
 
         binding.swipeRefresh.setColorSchemeResources(R.color.app_primary);
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -151,6 +144,15 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             @Override
             public void call(List<HatebuEntry> items) {
                 adapter.reset(items);
+
+                binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        if (!recyclerView.canScrollVertically(1)) {
+                            loadMore();
+                        }
+                    }
+                });
             }
         });
 
@@ -188,7 +190,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
                     }
                 });
     }
-
 
     void loadMore() {
         currentEntries += adapter.getItemCount();
@@ -247,13 +248,28 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardTimelineEntryBinding>> {
 
+        static final int TYPE_LOADING = 0;
+        static final int TYPE_NORMAL = 1;
+
         public EntriesAdapter(@NonNull Context context) {
             super(context);
         }
 
         @Override
+        public int getItemViewType(int position) {
+            HatebuEntry entry = getItem(position);
+            return entry == emptyEntry ? TYPE_LOADING : TYPE_NORMAL;
+        }
+
+        @Override
         public BindingHolder<CardTimelineEntryBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new BindingHolder<>(getContext(), parent, R.layout.card_timeline_entry);
+            switch (viewType) {
+                case TYPE_LOADING:
+                    return new LoadingIndicatorViewHolder<>(getContext(), parent, R.layout.card_timeline_entry);
+                case TYPE_NORMAL:
+                    return new BindingHolder<>(getContext(), parent, R.layout.card_timeline_entry);
+            }
+            throw new AssertionError("not reached");
         }
 
         @Override
@@ -263,10 +279,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             HatebuEntry entry = getItem(position);
 
             if (entry == emptyEntry) {
-                loadingAnimation.start(binding.getRoot());
                 return;
             }
-            loadingAnimation.cancel(binding.getRoot());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
