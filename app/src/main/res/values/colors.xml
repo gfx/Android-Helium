@@ -7,4 +7,8 @@
     <color name="bookmark_count">#5DACF2</color>
 
     <color name="gist_point">#f64747</color>
+
+    <color name="card_divider">#DDDDDD</color>
+
+    <color name="app_background">#F0F0F0</color>
 </resources>
