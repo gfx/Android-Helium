@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         }));
 
         if (hatenaUsername != null) {
-            tabs.add(new EntryTab(hatenaUsername + "のお気に入り", new EntryTab.FragmentFactory() {
+            tabs.add(new EntryTab(hatenaUsername + "のタイムライン", new EntryTab.FragmentFactory() {
                 @Override
                 public Fragment createFragment() {
                     return TimelineFragment.newInstance(hatenaUsername);
