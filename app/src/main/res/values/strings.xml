@@ -12,7 +12,6 @@
     <string name="placeholder_date">2時間前</string>
     <string name="placeholder_url">http://example.com/path/to/article</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="placeholder_point">1</string>
     <string name="placeholder_gist">epitomeはギリシャ語で「要約」といった意味</string>
 
@@ -22,7 +21,4 @@
     <string name="error_invalid_username">はてなユーザー名が正しくありません</string>
     <string name="error_network">はてなに接続できませんでした。もう一度お試しください</string>
     <string name="error_field_required">この項目は必須です</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
