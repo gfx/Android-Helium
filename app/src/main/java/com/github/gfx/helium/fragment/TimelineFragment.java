@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -186,35 +187,38 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     void mergeItemsAndCache(final List<HatebuEntry> newItems) {
-        int i, j = 0;
-        FIND: for (i = 0; i < adapter.getItemCount(); i++) {
-            HatebuEntry cache = adapter.getItem(i);
-
-            for (j = 0; j < newItems.size(); j++) {
-                HatebuEntry newItem = newItems.get(j);
-
+        int i;
+        FIND: for (i = 0; i < newItems.size(); i++) {
+            HatebuEntry newItem = newItems.get(i);
+            for (HatebuEntry cache : adapter) {
                 if (newItem.link.equals(cache.link) && newItem.creator.equals(cache.creator)) {
                     break FIND;
                 }
             }
         }
 
-        if (j == 0) {
+        if (i == 0) {
             return; // nothing to do
         }
 
-        final List<HatebuEntry> items = newItems.subList(0, j);
+        final List<HatebuEntry> items = newItems.subList(0, i);
 
         orma.transactionAsync(new TransactionTask() {
             @Override
             public void execute() throws Exception {
+                List<HatebuEntry> reversedItems = new ArrayList<>(items);
+                Collections.reverse(reversedItems);
                 orma.prepareInsertIntoHatebuEntry()
-                        .executeAll(items);
+                        .executeAll(reversedItems);
             }
         });
 
-        adapter.addAll(0, items);
-        adapter.notifyItemRangeInserted(0, items.size());
+        if (cachedEntries.isEmpty()) {
+            adapter.addAllWithNotification(items);
+        } else {
+            adapter.addAll(0, items);
+            adapter.notifyItemRangeInserted(0, items.size());
+        }
     }
 
     @Override
