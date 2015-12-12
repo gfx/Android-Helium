@@ -29,5 +29,11 @@
             android:title="@string/action_view_about"
             app:showAsAction="never"
             />
+    <item
+            android:id="@+id/action_view_setting"
+            android:orderInCategory="100"
+            android:title="@string/action_view_setting"
+            app:showAsAction="never"
+            />
 
 </menu>
