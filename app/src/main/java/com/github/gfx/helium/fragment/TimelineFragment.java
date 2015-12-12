@@ -4,12 +4,14 @@ import com.bumptech.glide.Glide;
 import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
+import com.github.gfx.android.orma.TransactionTask;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
+import com.github.gfx.helium.model.OrmaDatabase;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
@@ -57,6 +59,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
     static final String kUsername = "username";
 
+    static final int CACHED_ENTRY_SIZE = 100;
+
     final HatebuEntry emptyEntry = new HatebuEntry();
 
     @Inject
@@ -77,6 +81,9 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     @Inject
     LayoutManagers layoutManagers;
 
+    @Inject
+    OrmaDatabase orma;
+
     FragmentEntryBinding binding;
 
     EntriesAdapter adapter;
@@ -84,6 +91,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     String username;
 
     int currentEntries;
+
+    private List<HatebuEntry> cachedEntries = Collections.emptyList();
 
     public TimelineFragment() {
     }
@@ -110,9 +119,6 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         adapter = new EntriesAdapter(getActivity());
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
-        for (int i = 0, max = layoutManagers.getSpanCount(); i < max; i++) {
-            adapter.addItem(emptyEntry);
-        }
 
         username = getArguments().getString(kUsername);
     }
@@ -121,6 +127,8 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentEntryBinding.inflate(inflater, container, false);
+
+        loadCachedEntries();
 
         binding.list.setAdapter(adapter);
         binding.list.setLayoutManager(layoutManagers.create());
@@ -132,7 +140,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
                 reload().subscribe(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
-                        adapter.reset(items);
+                        mergeItemsAndCache(items);
                         binding.swipeRefresh.setRefreshing(false);
                     }
                 });
@@ -143,7 +151,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         reload().subscribe(new Action1<List<HatebuEntry>>() {
             @Override
             public void call(List<HatebuEntry> items) {
-                adapter.reset(items);
+                mergeItemsAndCache(items);
 
                 binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -163,9 +171,51 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     public void onStop() {
         compositeSubscription.unsubscribe();
 
+        truncateCache();
+
         super.onStop();
     }
 
+    void truncateCache() {
+        if (!cachedEntries.isEmpty()) {
+            HatebuEntry oldestCache = cachedEntries.get(cachedEntries.size() - 1);
+            orma.deleteFromHatebuEntry()
+                    .where("cacheId < ?", oldestCache.cacheId)
+                    .execute();
+        }
+    }
+
+    void mergeItemsAndCache(final List<HatebuEntry> newItems) {
+        int i, j = 0;
+        FIND: for (i = 0; i < adapter.getItemCount(); i++) {
+            HatebuEntry cache = adapter.getItem(i);
+
+            for (j = 0; j < newItems.size(); j++) {
+                HatebuEntry newItem = newItems.get(j);
+
+                if (newItem.link.equals(cache.link) && newItem.creator.equals(cache.creator)) {
+                    break FIND;
+                }
+            }
+        }
+
+        if (j == 0) {
+            return; // nothing to do
+        }
+
+        final List<HatebuEntry> items = newItems.subList(0, j);
+
+        orma.transactionAsync(new TransactionTask() {
+            @Override
+            public void execute() throws Exception {
+                orma.prepareInsertIntoHatebuEntry()
+                        .executeAll(items);
+            }
+        });
+
+        adapter.addAll(0, items);
+        adapter.notifyItemRangeInserted(0, items.size());
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -173,6 +223,21 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
 
         if (isVisibleToUser) {
             tracker.sendScreenView(TAG);
+        }
+    }
+
+    void loadCachedEntries() {
+        cachedEntries = orma.selectFromHatebuEntry()
+                .orderByCacheIdDesc()
+                .limit(CACHED_ENTRY_SIZE)
+                .toList();
+
+        if (cachedEntries.isEmpty()) {
+            for (int i = 0, max = layoutManagers.getSpanCount(); i < max; i++) {
+                adapter.addItem(emptyEntry);
+            }
+        } else {
+            adapter.addAll(cachedEntries);
         }
     }
 
@@ -249,6 +314,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     private class EntriesAdapter extends ArrayRecyclerAdapter<HatebuEntry, BindingHolder<CardTimelineEntryBinding>> {
 
         static final int TYPE_LOADING = 0;
+
         static final int TYPE_NORMAL = 1;
 
         public EntriesAdapter(@NonNull Context context) {

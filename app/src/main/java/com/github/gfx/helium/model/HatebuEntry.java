@@ -1,5 +1,8 @@
 package com.github.gfx.helium.model;
 
+import com.github.gfx.android.orma.annotation.Column;
+import com.github.gfx.android.orma.annotation.PrimaryKey;
+import com.github.gfx.android.orma.annotation.Table;
 import com.github.gfx.helium.util.HatebuSnippetParser;
 
 import org.simpleframework.xml.Element;
@@ -15,34 +18,46 @@ import android.text.format.DateUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(constraints = "UNIQUE (link, creator)")
 @Root(name = "item", strict = false)
 public class HatebuEntry {
 
+    @PrimaryKey(autoincrement = true)
+    public long cacheId;
+
+    @Column
     @Element(name = "title")
     public String title;
 
+    @Column
     @Element(name = "link")
     public String link;
 
+    @Column
     @Element(name = "description", required = false)
     public String description = "";
 
+    @Column
     @Namespace(prefix = "dc")
     @Element(name = "date")
     public String date;
 
+    @Column
     @Namespace(prefix = "dc")
     @ElementList(entry = "subject", inline = true, required = false)
     public List<String> subject = new ArrayList<>();
 
+    @Column
     @Namespace(prefix = "hatena")
     @Element(name = "bookmarkcount")
     public String bookmarkCount;
 
+    @Column
     @Namespace(prefix = "dc")
     @Element(name = "creator", required = false)
     public String creator;
 
+    @Column
     @Namespace(prefix = "content")
     @Element(name = "encoded", required = false)
     public String snippet;

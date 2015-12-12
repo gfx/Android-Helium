@@ -6,6 +6,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
+import com.github.gfx.helium.model.OrmaDatabase;
 import com.github.gfx.helium.model.UsernameChangedEvent;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
@@ -95,5 +96,12 @@ public class AppModule {
     @Provides
     public PublishSubject<UsernameChangedEvent> provideUsernameChangedEventSubject() {
         return PublishSubject.create();
+    }
+
+    @Singleton
+    @Provides
+    public OrmaDatabase provideOrmaDatabase(Context context) {
+        return OrmaDatabase.builder(context)
+                .build();
     }
 }
