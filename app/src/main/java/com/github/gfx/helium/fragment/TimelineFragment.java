@@ -181,7 +181,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         if (!cachedEntries.isEmpty()) {
             HatebuEntry oldestCache = cachedEntries.get(cachedEntries.size() - 1);
             orma.deleteFromHatebuEntry()
-                    .where("cacheId < ?", oldestCache.cacheId)
+                    .cacheIdLt(oldestCache.cacheId)
                     .execute();
         }
     }
