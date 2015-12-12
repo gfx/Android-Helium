@@ -21,4 +21,5 @@
     <string name="error_invalid_username">はてなユーザー名が正しくありません</string>
     <string name="error_network">はてなに接続できませんでした。もう一度お試しください</string>
     <string name="error_field_required">この項目は必須です</string>
+    <string name="action_view_setting">アプリの管理</string>
 </resources>

@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -199,6 +200,14 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.action_view_about: {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(SITE_APP));
+                startActivity(intent);
+                return true;
+
+            }
+            case R.id.action_view_setting: {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
 

@@ -214,7 +214,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         });
 
         if (cachedEntries.isEmpty()) {
-            adapter.addAllWithNotification(items);
+            adapter.reset(items);
         } else {
             adapter.addAll(0, items);
             adapter.notifyItemRangeInserted(0, items.size());
