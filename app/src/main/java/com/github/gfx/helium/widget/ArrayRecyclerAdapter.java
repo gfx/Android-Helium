@@ -2,13 +2,16 @@ package com.github.gfx.helium.widget;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
-public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder>
+        extends RecyclerView.Adapter<VH> implements Iterable<T> {
 
     final Context context;
 
@@ -28,6 +31,7 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
         return list.size();
     }
 
+    @UiThread
     public void reset(Collection<T> items) {
         clear();
         addAll(items);
@@ -46,6 +50,11 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
         list.addAll(items);
     }
 
+    public void addAll(int position, Collection<T> items) {
+        list.addAll(position, items);
+    }
+
+    @UiThread
     public void addAllWithNotification(Collection<T> items) {
         int position = getItemCount();
         addAll(items);
@@ -76,5 +85,10 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
     public boolean dispatchOnItemLongClick(View item, int position) {
         assert itemLongClickListener != null;
         return itemLongClickListener.onItemLongClick(item, position);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return list.iterator();
     }
 }
