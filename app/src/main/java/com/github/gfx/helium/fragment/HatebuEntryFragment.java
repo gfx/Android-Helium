@@ -43,7 +43,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class HatebuEntryFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
+public class HatebuEntryFragment extends Fragment
+        implements OnItemClickListener<HatebuEntry>, OnItemLongClickListener<HatebuEntry> {
 
     static final String TAG = HatebuEntryFragment.class.getSimpleName();
 
@@ -200,14 +201,12 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        HatebuEntry entry = adapter.getItem(position);
+    public void onItemClick(View view, HatebuEntry entry) {
         openUri(Uri.parse(entry.link), "original");
     }
 
     @Override
-    public boolean onItemLongClick(View view, int position) {
-        HatebuEntry entry = adapter.getItem(position);
+    public boolean onItemLongClick(View view, HatebuEntry entry) {
         openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
         return true;
     }
@@ -227,7 +226,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
         public void onBindViewHolder(final BindingHolder<CardHatebuEntryBinding> holder, final int position) {
             CardHatebuEntryBinding binding = holder.binding;
 
-            HatebuEntry entry = getItem(position);
+            final HatebuEntry entry = getItem(position);
             if (entry == emptyEntry) {
                 loadingAnimation.start(binding.getRoot());
                 return;
@@ -238,13 +237,13 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dispatchOnItemClick(v, position);
+                    dispatchOnItemClick(v, entry);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    return dispatchOnItemLongClick(v, position);
+                    return dispatchOnItemLongClick(v, entry);
                 }
             });
 
@@ -258,7 +257,7 @@ public class HatebuEntryFragment extends Fragment implements OnItemClickListener
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dispatchOnItemLongClick(v, position);
+                    dispatchOnItemLongClick(v, entry);
                 }
             });
         }

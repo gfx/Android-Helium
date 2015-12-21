@@ -10,6 +10,7 @@ import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
+import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
@@ -46,7 +47,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
-public class EpitomeEntryFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
+public class EpitomeEntryFragment extends Fragment
+        implements OnItemClickListener<EpitomeEntry>, OnItemLongClickListener<EpitomeEntry> {
 
     static final String TAG = EpitomeEntryFragment.class.getSimpleName();
 
@@ -184,9 +186,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     }
 
     @Override
-    public void onItemClick(View item, int position) {
-        EpitomeEntry entry = adapter.getItem(position);
-
+    public void onItemClick(View item, EpitomeEntry entry) {
         Uri uri = Uri.parse(entry.epitomeUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
@@ -195,9 +195,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
     }
 
     @Override
-    public boolean onItemLongClick(View view, int position) {
-        EpitomeEntry entry = adapter.getItem(position);
-
+    public boolean onItemLongClick(View view, EpitomeEntry entry) {
         Uri uri = Uri.parse(entry.upstreamUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
@@ -221,7 +219,7 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
         public void onBindViewHolder(final BindingHolder<CardEpitomeEntryBinding> holder, final int position) {
             CardEpitomeEntryBinding binding = holder.binding;
 
-            EpitomeEntry entry = getItem(position);
+            final EpitomeEntry entry = getItem(position);
 
             if (entry == emptyEntry) {
                 loadingAnimation.start(binding.getRoot());
@@ -233,13 +231,13 @@ public class EpitomeEntryFragment extends Fragment implements OnItemClickListene
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dispatchOnItemClick(v, position);
+                    dispatchOnItemClick(v, entry);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    return dispatchOnItemLongClick(v, position);
+                    return dispatchOnItemLongClick(v, entry);
                 }
             });
 

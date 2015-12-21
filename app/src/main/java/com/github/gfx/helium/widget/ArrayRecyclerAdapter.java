@@ -17,9 +17,9 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
 
     final ArrayList<T> list;
 
-    OnItemClickListener itemClickListener;
+    OnItemClickListener<T> itemClickListener;
 
-    OnItemLongClickListener itemLongClickListener;
+    OnItemLongClickListener<T> itemLongClickListener;
 
     public ArrayRecyclerAdapter(@NonNull Context context) {
         this.context = context;
@@ -69,22 +69,22 @@ public abstract class ArrayRecyclerAdapter<T, VH extends RecyclerView.ViewHolder
         return context;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener<T> listener) {
         itemClickListener = listener;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(OnItemLongClickListener<T> listener) {
         itemLongClickListener = listener;
     }
 
-    public void dispatchOnItemClick(View item, int position) {
+    public void dispatchOnItemClick(View view, T item) {
         assert itemClickListener != null;
-        itemClickListener.onItemClick(item, position);
+        itemClickListener.onItemClick(view, item);
     }
 
-    public boolean dispatchOnItemLongClick(View item, int position) {
+    public boolean dispatchOnItemLongClick(View view, T item) {
         assert itemLongClickListener != null;
-        return itemLongClickListener.onItemLongClick(item, position);
+        return itemLongClickListener.onItemLongClick(view, item);
     }
 
     @Override
