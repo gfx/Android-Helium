@@ -54,7 +54,8 @@ import rx.functions.Func1;
  * The timeline that shows what you like.
  */
 @ParametersAreNonnullByDefault
-public class TimelineFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
+public class TimelineFragment extends Fragment
+        implements OnItemClickListener<HatebuEntry>, OnItemLongClickListener<HatebuEntry> {
 
     static final String TAG = TimelineFragment.class.getSimpleName();
 
@@ -293,14 +294,12 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        HatebuEntry entry = adapter.getItem(position);
+    public void onItemClick(@NonNull View view, @NonNull HatebuEntry entry) {
         openUri(Uri.parse(entry.link), "original");
     }
 
     @Override
-    public boolean onItemLongClick(View view, int position) {
-        HatebuEntry entry = adapter.getItem(position);
+    public boolean onItemLongClick(@NonNull View view, @NonNull HatebuEntry entry) {
         openUri(hatenaClient.buildHatebuEntryUri(entry.link), "service");
         return true;
     }
@@ -346,7 +345,7 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
         public void onBindViewHolder(final BindingHolder<CardTimelineEntryBinding> holder, final int position) {
             CardTimelineEntryBinding binding = holder.binding;
 
-            HatebuEntry entry = getItem(position);
+            final HatebuEntry entry = getItem(position);
 
             if (entry == emptyEntry) {
                 return;
@@ -355,20 +354,20 @@ public class TimelineFragment extends Fragment implements OnItemClickListener, O
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dispatchOnItemClick(v, position);
+                    dispatchOnItemClick(v, entry);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    return dispatchOnItemLongClick(v, position);
+                    return dispatchOnItemLongClick(v, entry);
                 }
             });
 
             binding.bookmarkCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dispatchOnItemLongClick(v, position);
+                    dispatchOnItemLongClick(v, entry);
                 }
             });
 
