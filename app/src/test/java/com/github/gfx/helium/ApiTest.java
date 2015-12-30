@@ -8,12 +8,11 @@ import com.github.gfx.helium.model.HatebuEntry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
 import java.io.IOException;
 import java.net.URI;
@@ -30,12 +29,11 @@ import static com.github.gfx.helium.TestUtils.getAssetFileInBytes;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, manifest = Config.NONE)
+@RunWith(AndroidJUnit4.class)
 public class ApiTest {
 
     Context getContext() {
-        return RuntimeEnvironment.application;
+        return InstrumentationRegistry.getTargetContext();
     }
 
     @Test
