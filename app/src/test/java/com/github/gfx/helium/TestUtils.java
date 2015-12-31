@@ -1,25 +1,19 @@
 package com.github.gfx.helium;
 
-import com.google.common.io.Files;
+import com.google.common.io.ByteStreams;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import android.support.test.InstrumentationRegistry;
+
 import java.io.IOException;
+import java.io.InputStream;
 
 public class TestUtils {
 
-    public static File getAssetFile(String name) throws FileNotFoundException {
-        String[] appDirs = {".", "app"};
-        for (String appDir : appDirs) {
-            File file = new File(appDir, "src/test/assets/" + name);
-            if (file.exists()) {
-                return file;
-            }
-        }
-        throw new FileNotFoundException("No resource file: " + name);
+    public static InputStream openAsset(String name) throws IOException {
+        return InstrumentationRegistry.getContext().getAssets().open(name);
     }
 
     public static byte[] getAssetFileInBytes(String name) throws IOException {
-        return Files.toByteArray(getAssetFile(name));
+        return ByteStreams.toByteArray(openAsset(name));
     }
 }
