@@ -52,6 +52,7 @@ public class AppModule {
     public Tracker providesGoogleAnalyticsTracker(Context context) {
         GoogleAnalytics ga = GoogleAnalytics.getInstance(context);
         Tracker tracker = ga.newTracker(BuildConfig.GA_TRACKING_ID);
+        tracker.enableAdvertisingIdCollection(true);
         tracker.enableExceptionReporting(true);
         return tracker;
     }
