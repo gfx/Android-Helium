@@ -11,6 +11,7 @@ import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.CardTimelineEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.model.HatebuEntry;
+import com.github.gfx.helium.model.HatebuEntry_Relation;
 import com.github.gfx.helium.model.OrmaDatabase;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
@@ -49,6 +50,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * The timeline that shows what you like.
@@ -180,10 +182,9 @@ public class TimelineFragment extends Fragment
 
     void truncateCache() {
         if (!cachedEntries.isEmpty()) {
-            HatebuEntry oldestCache = cachedEntries.get(cachedEntries.size() - 1);
-            orma.deleteFromHatebuEntry()
-                    .cacheIdLt(oldestCache.cacheId)
-                    .execute();
+            relation().truncateWithTransactionAsObservable(CACHED_ENTRY_SIZE)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe();
         }
     }
 
@@ -209,7 +210,7 @@ public class TimelineFragment extends Fragment
             public void execute() throws Exception {
                 List<HatebuEntry> reversedItems = new ArrayList<>(items);
                 Collections.reverse(reversedItems);
-                orma.prepareInsertIntoHatebuEntry()
+                relation().inserter()
                         .executeAll(reversedItems);
             }
         });
@@ -231,11 +232,13 @@ public class TimelineFragment extends Fragment
         }
     }
 
+    HatebuEntry_Relation relation() {
+        return orma.relationOfHatebuEntry()
+                .orderByCacheIdDesc();
+    }
+
     void loadCachedEntries() {
-        cachedEntries = orma.selectFromHatebuEntry()
-                .orderByCacheIdDesc()
-                .limit(CACHED_ENTRY_SIZE)
-                .toList();
+        cachedEntries = relation().selector().toList();
 
         if (cachedEntries.isEmpty()) {
             for (int i = 0, max = layoutManagers.getSpanCount(); i < max; i++) {
