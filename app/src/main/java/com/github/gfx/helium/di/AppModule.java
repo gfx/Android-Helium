@@ -8,8 +8,6 @@ import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.github.gfx.helium.model.OrmaDatabase;
 import com.github.gfx.helium.model.UsernameChangedEvent;
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
 
 import android.app.Application;
 import android.content.Context;
@@ -22,9 +20,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.RequestInterceptor;
-import retrofit.client.Client;
-import retrofit.client.OkClient;
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import rx.subjects.PublishSubject;
 
 @Module
@@ -64,22 +63,21 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public OkHttpClient provideHttpClient(Context context) {
+    public OkHttpClient provideHttpClient(Context context, Interceptor interceptor) {
         File cacheDir = new File(context.getCacheDir(), CACHE_FILE_NAME);
         Cache cache = new Cache(cacheDir, MAX_CACHE_SIZE);
 
-        OkHttpClient httpClient = new OkHttpClient();
-        httpClient.setCache(cache);
-        return httpClient;
+        OkHttpClient.Builder c = new OkHttpClient.Builder()
+                .cache(cache)
+                .addInterceptor(interceptor);
+        if (BuildConfig.DEBUG) {
+            c.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
+        }
+        return c.build();
     }
 
     @Provides
-    public Client provideRetrofitClient(OkHttpClient httpClient) {
-        return new OkClient(httpClient);
-    }
-
-    @Provides
-    public RequestInterceptor provideRequestInterceptor(ConnectivityManager connectivityManager) {
+    public Interceptor provideRequestInterceptor(ConnectivityManager connectivityManager) {
         return new HeliumRequestInterceptor(connectivityManager);
     }
 

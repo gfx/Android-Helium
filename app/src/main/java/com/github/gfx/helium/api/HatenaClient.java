@@ -1,6 +1,5 @@
 package com.github.gfx.helium.api;
 
-import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.model.HatebuFeed;
 
@@ -13,13 +12,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.converter.SimpleXMLConverter;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.SimpleXmlConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -37,34 +36,28 @@ public class HatenaClient {
 
     public static final String KEY_USERNAME = "hatena_username";
 
-    final RestAdapter feedburnerAdapter;
-
     final FeedburnerService feedburnerService;
-
-    final RestAdapter hatebuAdapter;
 
     final HatebuService hatebuService;
 
     @Inject
-    public HatenaClient(Client client, RequestInterceptor requestInterceptor) {
-        feedburnerAdapter = createCommonBuilder(client, requestInterceptor)
-                .setEndpoint(FEEDBURNER_ENDPOINT)
+    public HatenaClient(OkHttpClient client) {
+        Retrofit feedburnerRetrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(FEEDBURNER_ENDPOINT)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
-        feedburnerService = feedburnerAdapter.create(FeedburnerService.class);
+        feedburnerService = feedburnerRetrofit.create(FeedburnerService.class);
 
-        hatebuAdapter = createCommonBuilder(client, requestInterceptor)
-                .setEndpoint(HATEBU_ENDPOINT)
+        Retrofit hatebuRetrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(HATEBU_ENDPOINT)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
-        hatebuService = hatebuAdapter.create(HatebuService.class);
-    }
 
-    static RestAdapter.Builder createCommonBuilder(Client client, RequestInterceptor requestIntercepter) {
-        return new RestAdapter.Builder()
-                .setClient(client)
-                .setConverter(new SimpleXMLConverter())
-                .setRequestInterceptor(requestIntercepter)
-                .setLogLevel(
-                        BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE);
+        hatebuService = hatebuRetrofit.create(HatebuService.class);
     }
 
     @NonNull

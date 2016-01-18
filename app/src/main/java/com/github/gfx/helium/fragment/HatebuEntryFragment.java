@@ -41,6 +41,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 @ParametersAreNonnullByDefault
 public class HatebuEntryFragment extends Fragment
@@ -168,6 +169,7 @@ public class HatebuEntryFragment extends Fragment
             observable = hatenaClient.getHotentries();
         }
         return observable
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {

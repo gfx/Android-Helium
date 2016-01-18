@@ -253,6 +253,7 @@ public class TimelineFragment extends Fragment
         currentEntries = 0;
         Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username, currentEntries);
         return observable
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {

@@ -10,7 +10,6 @@ import com.github.gfx.helium.databinding.CardEpitomeEntryBinding;
 import com.github.gfx.helium.databinding.FragmentEntryBinding;
 import com.github.gfx.helium.databinding.ItemEpitomeGistBinding;
 import com.github.gfx.helium.model.EpitomeEntry;
-import com.github.gfx.helium.model.HatebuEntry;
 import com.github.gfx.helium.util.AppTracker;
 import com.github.gfx.helium.util.LoadingAnimation;
 import com.github.gfx.helium.util.ViewSwitcher;
@@ -45,6 +44,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 @ParametersAreNonnullByDefault
 public class EpitomeEntryFragment extends Fragment
@@ -158,6 +158,7 @@ public class EpitomeEntryFragment extends Fragment
 
     Observable<List<EpitomeEntry>> reload() {
         return epitomeClient.getEntries()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .lift(new OperatorAddToCompositeSubscription<List<EpitomeEntry>>(compositeSubscription))
                 .map(new Func1<List<EpitomeEntry>, List<EpitomeEntry>>() {
