@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
@@ -168,8 +169,8 @@ public class SettingsFragment extends Fragment {
 
     @MainThread
     void showError(Throwable e) {
-        Log.d("XXX", "" + e);
-        if (true) {
+        HttpException httpException = (HttpException)e;
+        if (httpException.code() == 404) {
             binding.username.setError(getString(R.string.error_invalid_username));
             binding.username.requestFocus();
 
