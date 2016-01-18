@@ -1,8 +1,5 @@
 package com.github.gfx.helium.api;
 
-import com.google.gson.Gson;
-
-import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.model.EpitomeBeam;
 import com.github.gfx.helium.model.EpitomeEntry;
 
@@ -12,11 +9,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.converter.GsonConverter;
-import retrofit.http.GET;
+import okhttp3.OkHttpClient;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.http.GET;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -26,23 +23,18 @@ public class EpitomeClient {
 
     static final String ENDPOINT = "https://ja.epitomeup.com/";
 
-    final RestAdapter adapter;
-
     final EpitomeService service;
 
     @Inject
-    public EpitomeClient(Client client, RequestInterceptor requestInterceptor) {
-        adapter = new RestAdapter.Builder()
-                .setEndpoint(ENDPOINT)
-                .setClient(client)
-                .setConverter(new GsonConverter(new Gson()))
-                .setRequestInterceptor(requestInterceptor)
-                .setLogLevel(
-                        BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.NONE)
-
+    public EpitomeClient(OkHttpClient client) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ENDPOINT)
+                .client(client)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        service = adapter.create(EpitomeService.class);
+        service = retrofit.create(EpitomeService.class);
     }
 
     public Observable<List<EpitomeEntry>> getEntries() {

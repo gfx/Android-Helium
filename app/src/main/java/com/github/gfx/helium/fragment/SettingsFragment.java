@@ -27,9 +27,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.RetrofitError;
 import rx.Observable;
 import rx.Subscriber;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 public class SettingsFragment extends Fragment {
@@ -115,8 +115,9 @@ public class SettingsFragment extends Fragment {
         startProgress();
 
         checkHatenaId(username)
-                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(subscriptions))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(subscriptions))
                 .subscribe(new Subscriber<List<HatebuEntry>>() {
                     @Override
                     public void onCompleted() {
@@ -167,8 +168,8 @@ public class SettingsFragment extends Fragment {
 
     @MainThread
     void showError(Throwable e) {
-        RetrofitError retrofitError = (RetrofitError) e;
-        if (retrofitError.getResponse().getStatus() == 404) {
+        Log.d("XXX", "" + e);
+        if (true) {
             binding.username.setError(getString(R.string.error_invalid_username));
             binding.username.requestFocus();
 
