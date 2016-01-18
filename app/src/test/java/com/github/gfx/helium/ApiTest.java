@@ -15,15 +15,16 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.client.Client;
-import retrofit.client.Header;
-import retrofit.client.Request;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static com.github.gfx.helium.TestUtils.getAssetFileInBytes;
 import static org.hamcrest.MatcherAssert.*;
@@ -36,11 +37,17 @@ public class ApiTest {
         return InstrumentationRegistry.getTargetContext();
     }
 
+    // FIXME: use dependency injection
+    OkHttpClient.Builder createClientBuilder() {
+        return new OkHttpClient.Builder();
+    }
+
     @Test
     public void testRequestHotentries() throws Exception {
         HatenaClient feedClient = new HatenaClient(
-                new MockClient("/hatena/b/hotentry", "hotentries.rss", "application/xml"),
-                new MockRequestInterceptor());
+                createClientBuilder()
+                        .addInterceptor(new MockInterceptor("/hatena/b/hotentry", "hotentries.rss", "application/xml"))
+                        .build());
 
         List<HatebuEntry> entry = feedClient.getHotentries().toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -49,8 +56,9 @@ public class ApiTest {
     @Test
     public void testRequestHotentriesWithCategory() throws Exception {
         HatenaClient feedClient = new HatenaClient(
-                new MockClient("/hotentry/it.rss", "hotentries.rss", "application/xml"),
-                new MockRequestInterceptor());
+                createClientBuilder()
+                        .addInterceptor(new MockInterceptor("/hotentry/it.rss", "hotentries.rss", "application/xml"))
+                        .build());
 
         List<HatebuEntry> entry = feedClient.getHotentries("it").toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -59,8 +67,9 @@ public class ApiTest {
     @Test
     public void testRequestFavorites() throws Exception {
         HatenaClient feedClient = new HatenaClient(
-                new MockClient("/gfx/favorite.rss", "favorites.rss", "application/xml"),
-                new MockRequestInterceptor());
+                createClientBuilder()
+                        .addInterceptor(new MockInterceptor("/gfx/favorite.rss", "favorites.rss", "application/xml"))
+                        .build());
 
         List<HatebuEntry> entry = feedClient.getFavotites("gfx", 1).toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -69,8 +78,9 @@ public class ApiTest {
     @Test
     public void testRequestEpitome() throws Exception {
         EpitomeClient feedClient = new EpitomeClient(
-                new MockClient("/feed/beam", "epitome.json", "application/json"),
-                new MockRequestInterceptor());
+                createClientBuilder()
+                        .addInterceptor(new MockInterceptor("/feed/beam", "epitome.json", "application/json"))
+                        .build());
 
         List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));
@@ -88,7 +98,7 @@ public class ApiTest {
         }
     }
 
-    class MockClient implements Client {
+    class MockInterceptor implements Interceptor {
 
         final String path;
 
@@ -96,31 +106,40 @@ public class ApiTest {
 
         final String contentType;
 
-        MockClient(String path, String assetName, String contentType) {
+        MockInterceptor(String path, String assetName, String contentType) {
             this.path = path;
             this.assetName = assetName;
             this.contentType = contentType;
         }
 
         @Override
-        public Response execute(Request request) throws IOException {
-            URI uri = URI.create(request.getUrl());
-            if (uri.getPath().equals(path)) {
-                return resourceFoundInXml(request.getUrl());
+        public Response intercept(Chain chain) throws IOException {
+            HttpUrl url = chain.request().url();
+            if (url.encodedPath().equals(path)) {
+                return resourceFoundInXml(chain.request());
             } else {
-                return resourceNotFound(request.getUrl());
+                return resourceNotFound(chain.request());
             }
         }
 
-        Response resourceNotFound(String uri) {
-            return new Response(uri, 404, "not found", new ArrayList<Header>(),
-                    new TypedByteArray(contentType, new byte[]{}));
+        Response resourceNotFound(Request request) {
+            return new Response.Builder()
+                    .request(request)
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(404)
+                    .message("not found")
+                    .body(ResponseBody.create(MediaType.parse(contentType), new byte[]{}))
+                    .build();
         }
 
-        Response resourceFoundInXml(String uri) throws IOException {
-            return new Response(uri, 200, "ok", new ArrayList<Header>(),
-                    new TypedByteArray(contentType, getAssetFileInBytes(assetName)));
-
+        Response resourceFoundInXml(Request request) throws IOException {
+            return new Response.Builder()
+                    .request(request)
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(200)
+                    .message("ok")
+                    .body(ResponseBody.create(MediaType.parse(contentType), getAssetFileInBytes(assetName)))
+                    .build();
         }
     }
 
