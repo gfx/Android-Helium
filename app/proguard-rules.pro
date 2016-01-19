@@ -1,17 +1,38 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /usr/local/opt/android-sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-keepattributes SourceFile,LineNumberTable,Exceptions
+-keepnames class * extends java.lang.Throwable
 
-# Add any project specific keep options here:
+# RxJava
+-dontwarn rx.internal.util.unsafe.**
+-keep class rx.schedulers.Schedulers {
+    public static <methods>;
+}
+-keep class rx.schedulers.ImmediateScheduler {
+    public <methods>;
+}
+-keep class rx.schedulers.TestScheduler {
+    public <methods>;
+}
+-keep class rx.schedulers.Schedulers {
+    public static ** test();
+}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Android Support Library
+-dontwarn android.support.**
+-keep class android.support.** { *; }
+
+# Retrofit and OkHttp
+-dontwarn com.squareup.okhttp3.**
+-dontwarn okio.**
+-dontwarn retrofit2.**
+
+# SimpleXML Framework
+-dontwarn org.simpleframework.xml.stream.**
+-keepclassmembers class * {
+    @org.simpleframework.xml.** *;
+}
+
+-keep class org.simpleframework.xml.** { *; }
+
+# Helium uses ProGuard only to shrink apk
+#-keep class com.github.gfx.android.helium.** { *; }
+-keepnames class ** { *; }
