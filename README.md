@@ -35,15 +35,16 @@ In your local machine:
 
 ## Test
 
-This project uses [JVM unit testing](http://tools.android.com/tech-docs/unit-testing-support) with [Robolectric](http://robolectric.org/).
+The tests runs both on [JVM unit testing](http://tools.android.com/tech-docs/unit-testing-support) with
+[Robolectric](http://robolectric.org/) and Android Instrumentation Tests.
 
-To test it, just type `./gradlew check`.
+To test it, type `./gradlew check` and `./gradlew connectedDebugAndroidTest`.
 
 If you want to use Docker, type the following commands, which is what circleci.yml does:
 
 ```sh
-docker build -t android_helium .
-docker run -it android_helium
+docker build -t test .
+docker run -it test
 ```
 
 ## Special Thanks
