@@ -47,7 +47,30 @@ android {
         }
     }
     buildTypes {
+        debug {
+            debuggable true
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+
+            buildConfigField("String", "GA_TRACKING_ID",
+                    "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
+        }
+
+        beta {
+            debuggable true
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "GA_TRACKING_ID",
+                    "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
+        }
+
         release {
+            debuggable false
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -62,18 +85,6 @@ android {
 
             buildConfigField("String", "GA_TRACKING_ID",
                     "\"${project.ext.has('GA_TRACKING_ID_RELEASE') ? project.ext.GA_TRACKING_ID_RELEASE : ''}\"")
-        }
-
-        debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
-
-            shrinkResources true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField("String", "GA_TRACKING_ID",
-                    "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
         }
     }
     lintOptions {
