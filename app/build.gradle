@@ -132,6 +132,8 @@ dependencies {
     //debugCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
     betaCompile 'com.facebook.stetho:stetho:1.2.0'
     //betaCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
+    // power-assert plugin depends on commons-lang3
+    betaCompile 'org.apache.commons:commons-lang3:3.4'
     testCompile 'com.github.gfx.android.robolectricinstrumentation:robolectric-instrumentation:3.0.6'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
