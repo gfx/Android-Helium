@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.HttpException;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
