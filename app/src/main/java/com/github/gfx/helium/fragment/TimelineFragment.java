@@ -182,7 +182,7 @@ public class TimelineFragment extends Fragment
 
     void truncateCache() {
         if (!cachedEntries.isEmpty()) {
-            relation().truncateWithTransactionAsObservable(CACHED_ENTRY_SIZE)
+            relation().truncateAsObservable(CACHED_ENTRY_SIZE)
                     .subscribeOn(Schedulers.io())
                     .subscribe();
         }

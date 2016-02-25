@@ -99,17 +99,27 @@ android {
     }
 }
 
+ext {
+    supportLibraryVersion = '23.1.1'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "com.android.support:support-annotations:$supportLibraryVersion"
+    }
+}
+
 dependencies {
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.android.support:support-annotations:23.1.1'
+    compile "com.android.support:support-v4:$supportLibraryVersion"
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:support-annotations:$supportLibraryVersion"
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.code.findbugs:jsr305:3.0.1'
-    compile 'com.squareup.okhttp3:okhttp:3.0.1'
+    compile 'com.squareup.okhttp3:okhttp:3.1.2'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
@@ -126,21 +136,19 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'javax.annotation:jsr250-api:1.0'
-    apt 'com.github.gfx.android.orma:orma-processor:1.1.0'
-    compile 'com.github.gfx.android.orma:orma:1.1.0'
+    apt 'com.github.gfx.android.orma:orma-processor:2.0.6'
+    compile 'com.github.gfx.android.orma:orma:2.0.6'
     debugCompile 'com.facebook.stetho:stetho:1.2.0'
     //debugCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
     betaCompile 'com.facebook.stetho:stetho:1.2.0'
     //betaCompile 'com.facebook.stetho:stetho-okhttp:1.2.0'
     // power-assert plugin depends on commons-lang3
     betaCompile 'org.apache.commons:commons-lang3:3.4'
-    testCompile 'com.github.gfx.android.robolectricinstrumentation:robolectric-instrumentation:3.0.6'
+    testCompile 'com.github.gfx.android.robolectricinstrumentation:robolectric-instrumentation:3.0.8'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'com.google.guava:guava:19.0'
-    androidTestCompile('com.android.support.test:runner:0.4.1') {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.google.guava:guava:19.0'
