@@ -36,3 +36,8 @@
 # Helium uses ProGuard only to shrink apk
 #-keep class com.github.gfx.android.helium.** { *; }
 -keepnames class ** { *; }
+
+
+# Orma (v2.1.1 will include them)
+-dontwarn org.antlr.v4.runtime.**
+-dontwarn org.abego.treelayout.**

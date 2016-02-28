@@ -37,13 +37,23 @@ android {
         resConfigs "ja"
     }
     signingConfigs {
-        debug {}
+        debug {
+            storeFile rootProject.file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
         release {
             if (project.ext.has('ReleaseStoreFile')) {
                 storeFile file(project.ext.ReleaseStoreFile.replaceAll("~", System.getenv("HOME")))
                 storePassword project.ext.ReleaseStorePassword
                 keyAlias project.ext.ReleaseKeyAlias
                 keyPassword project.ext.ReleaseKeyPassword
+            } else {
+                storeFile rootProject.file("debug.keystore")
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
             }
         }
     }
@@ -52,6 +62,7 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            signingConfig signingConfigs.debug
 
             buildConfigField("String", "GA_TRACKING_ID",
                     "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
@@ -100,7 +111,7 @@ android {
 }
 
 ext {
-    supportLibraryVersion = '23.1.1'
+    supportLibraryVersion = '23.2.0'
 }
 
 configurations.all {
