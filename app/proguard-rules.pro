@@ -6,7 +6,7 @@
 -keep class rx.schedulers.Schedulers {
     public static <methods>;
 }
--keep class rx.schedulers.ImmediateScheduler {
+-keep class rx.schedulers.ImmediateSAcheduler {
     public <methods>;
 }
 -keep class rx.schedulers.TestScheduler {
