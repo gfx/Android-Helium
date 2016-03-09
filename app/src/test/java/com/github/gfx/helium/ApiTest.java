@@ -3,12 +3,15 @@ package com.github.gfx.helium;
 import com.github.gfx.helium.api.EpitomeClient;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
+import com.github.gfx.helium.di.AppModule;
 import com.github.gfx.helium.model.EpitomeEntry;
 import com.github.gfx.helium.model.HatebuEntry;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.support.test.InstrumentationRegistry;
@@ -37,9 +40,16 @@ public class ApiTest {
         return InstrumentationRegistry.getTargetContext();
     }
 
+    AppModule appModle;
+
     // FIXME: use dependency injection
     OkHttpClient.Builder createClientBuilder() {
         return new OkHttpClient.Builder();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        appModle = new AppModule((Application) getContext().getApplicationContext());
     }
 
     @Test
@@ -80,7 +90,9 @@ public class ApiTest {
         EpitomeClient feedClient = new EpitomeClient(
                 createClientBuilder()
                         .addInterceptor(new MockInterceptor("/feed/beam", "epitome.json", "application/json"))
-                        .build());
+                        .build(),
+                appModle.provideGson()
+        );
 
         List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().single();
         assertThat(entry, hasSize(greaterThan(0)));

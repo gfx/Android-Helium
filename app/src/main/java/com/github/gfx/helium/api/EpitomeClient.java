@@ -1,5 +1,7 @@
 package com.github.gfx.helium.api;
 
+import com.google.gson.Gson;
+
 import com.github.gfx.helium.model.EpitomeBeam;
 import com.github.gfx.helium.model.EpitomeEntry;
 
@@ -26,12 +28,12 @@ public class EpitomeClient {
     final EpitomeService service;
 
     @Inject
-    public EpitomeClient(OkHttpClient client) {
+    public EpitomeClient(OkHttpClient client, Gson gson) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ENDPOINT)
                 .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         service = retrofit.create(EpitomeService.class);
