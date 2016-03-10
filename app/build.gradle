@@ -1,20 +1,3 @@
-repositories {
-    jcenter()
-}
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
-        classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
-    }
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.gfx.android.powerassert'
@@ -23,13 +6,13 @@ apply plugin: 'com.github.gfx.ribbonizer'
 apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 'android-N'
+    buildToolsVersion '24.0.0 rc1'
     dataBinding.enabled = true
     defaultConfig {
         applicationId "com.github.gfx.helium"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 'N'
         def version = readVersion(rootProject.file("VERSION"))
         versionName version.toVersionName()
         versionCode version.toVersionCode()
@@ -103,15 +86,19 @@ android {
     }
     lintOptions {
         disable 'InvalidPackage'
+        disable 'ResourceCycle' // support library 24.0.0-alpha1
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 ext {
-    supportLibraryVersion = '23.2.0'
+    supportLibraryVersion = '24.0.0-alpha1'
 }
 
 configurations.all {
@@ -135,22 +122,22 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
-    compile('com.squareup.retrofit2:converter-simplexml:2.0.0-beta4') {
-        exclude module: 'stax'
-        exclude module: 'stax-api'
-        exclude module: 'xpp3'
-    }
     compile 'com.cookpad.android.rxt4a:rxt4a:1.0.0'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.3'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.google.dagger:dagger:2.0.2'
+    compile 'com.github.gfx.android.orma:orma:2.2.0'
+    compile 'com.github.gfx.static_gson:static-gson:0.9.1'
+    compile('com.squareup.retrofit2:converter-simplexml:2.0.0-beta4') {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'javax.annotation:jsr250-api:1.0'
     apt 'com.github.gfx.android.orma:orma-processor:2.2.0'
-    compile 'com.github.gfx.android.orma:orma:2.2.0'
     apt 'com.github.gfx.static_gson:static-gson-processor:0.9.1'
-    compile 'com.github.gfx.static_gson:static-gson:0.9.1'
     debugCompile 'com.facebook.stetho:stetho:1.3.0'
     debugCompile 'com.facebook.stetho:stetho-okhttp:1.3.0'
     betaCompile 'com.facebook.stetho:stetho:1.3.0'
@@ -165,5 +152,4 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.google.guava:guava:19.0'
-
 }
