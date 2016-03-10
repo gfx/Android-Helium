@@ -1,11 +1,11 @@
 package com.github.gfx.helium.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.github.gfx.static_gson.annotation.JsonSerializable;
 
 import java.util.List;
 
+@JsonSerializable
 public class EpitomeBeam {
 
-    @SerializedName("sources")
     public List<EpitomeEntry> sources;
 }

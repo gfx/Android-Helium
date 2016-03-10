@@ -37,7 +37,5 @@
 #-keep class com.github.gfx.android.helium.** { *; }
 -keepnames class ** { *; }
 
-
-# Orma (v2.1.1 will include them)
--dontwarn org.antlr.v4.runtime.**
--dontwarn org.abego.treelayout.**
+# StaticGson
+-keepnames @com.github.gfx.static_gson.annotation.StaticGsonGenerated class *

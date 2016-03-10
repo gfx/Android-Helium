@@ -2,12 +2,15 @@ package com.github.gfx.helium.di;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.github.gfx.helium.model.OrmaDatabase;
 import com.github.gfx.helium.model.UsernameChangedEvent;
+import com.github.gfx.static_gson.StaticGsonTypeAdapterFactory;
 
 import android.app.Application;
 import android.content.Context;
@@ -59,6 +62,14 @@ public class AppModule {
     @Provides
     public ConnectivityManager provideConnectivityManager(Context context) {
         return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    @Singleton
+    @Provides
+    public Gson provideGson() {
+        return new GsonBuilder()
+                .registerTypeAdapterFactory(StaticGsonTypeAdapterFactory.newInstance())
+                .create();
     }
 
     @Singleton

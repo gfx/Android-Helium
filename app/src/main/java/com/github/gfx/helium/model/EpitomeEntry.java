@@ -1,37 +1,34 @@
 package com.github.gfx.helium.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.FieldNamingPolicy;
+
+import com.github.gfx.static_gson.annotation.JsonSerializable;
 
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
+@JsonSerializable(
+        fieldNamingPolicy = FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES
+)
 public class EpitomeEntry {
 
     final static String SCHEME_GISTS = "gists";
 
-    @SerializedName("id")
     public String id;
 
-    @SerializedName("scheme")
     public String scheme;
 
-    @SerializedName("title")
     public String title;
 
-    @SerializedName("views")
     public int views;
 
-    @SerializedName("epitome_url")
     public String epitomeUrl;
 
-    @SerializedName("upstream_url")
     public String upstreamUrl;
 
-    @SerializedName("published_at")
     public String publishedAt;
 
-    @SerializedName("gists")
     public List<Gist> gists;
 
     public ZonedDateTime getTimestamp() {
@@ -46,9 +43,9 @@ public class EpitomeEntry {
         return SCHEME_GISTS.equals(scheme);
     }
 
+    @JsonSerializable
     public static class Gist {
 
-        @SerializedName("content")
         public String content;
     }
 }
