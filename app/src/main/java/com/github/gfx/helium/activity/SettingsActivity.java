@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
@@ -40,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
         return new Intent(context, SettingsActivity.class);
     }
 
+    @DebugLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

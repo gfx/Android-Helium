@@ -31,6 +31,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
+
 import static com.github.gfx.helium.Constants.SITE_APP;
 import static com.github.gfx.helium.Constants.SITE_EPITOME;
 import static com.github.gfx.helium.Constants.SITE_HATEBU;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         tracker.sendTiming(TAG, "onCreate", System.currentTimeMillis() - t0);
     }
 
+    @DebugLog
     List<EntryTab> buildTabs() {
         // TODO: make tabs customizable
         List<EntryTab> tabs = new ArrayList<>();

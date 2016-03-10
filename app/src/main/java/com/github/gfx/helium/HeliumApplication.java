@@ -14,6 +14,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
+import hugo.weaving.DebugLog;
+
 public class HeliumApplication extends Application {
 
     AppComponent appComponent;
@@ -40,6 +42,7 @@ public class HeliumApplication extends Application {
                 .plus(new ActivityModule(activity));
     }
 
+    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
