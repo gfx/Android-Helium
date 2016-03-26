@@ -59,7 +59,7 @@ public class ApiTest {
                         .addInterceptor(new MockInterceptor("/hatena/b/hotentry", "hotentries.rss", "application/xml"))
                         .build());
 
-        List<HatebuEntry> entry = feedClient.getHotentries().toBlocking().single();
+        List<HatebuEntry> entry = feedClient.getHotentries().toBlocking().value();
         assertThat(entry, hasSize(greaterThan(0)));
     }
 
@@ -70,7 +70,7 @@ public class ApiTest {
                         .addInterceptor(new MockInterceptor("/hotentry/it.rss", "hotentries.rss", "application/xml"))
                         .build());
 
-        List<HatebuEntry> entry = feedClient.getHotentries("it").toBlocking().single();
+        List<HatebuEntry> entry = feedClient.getHotentries("it").toBlocking().value();
         assertThat(entry, hasSize(greaterThan(0)));
     }
 
@@ -81,7 +81,7 @@ public class ApiTest {
                         .addInterceptor(new MockInterceptor("/gfx/favorite.rss", "favorites.rss", "application/xml"))
                         .build());
 
-        List<HatebuEntry> entry = feedClient.getFavotites("gfx", 1).toBlocking().single();
+        List<HatebuEntry> entry = feedClient.getFavotites("gfx", 1).toBlocking().value();
         assertThat(entry, hasSize(greaterThan(0)));
     }
 
@@ -94,7 +94,7 @@ public class ApiTest {
                 appModle.provideGson()
         );
 
-        List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().single();
+        List<EpitomeEntry> entry = feedClient.getEntries().toBlocking().value();
         assertThat(entry, hasSize(greaterThan(0)));
     }
 

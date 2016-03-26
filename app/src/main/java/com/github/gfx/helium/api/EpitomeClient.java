@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
@@ -39,7 +39,7 @@ public class EpitomeClient {
         service = retrofit.create(EpitomeService.class);
     }
 
-    public Observable<List<EpitomeEntry>> getEntries() {
+    public Single<List<EpitomeEntry>> getEntries() {
         return service.getBeam().map(new Func1<EpitomeBeam, List<EpitomeEntry>>() {
             @Override
             public List<EpitomeEntry> call(EpitomeBeam epitomeBeam) {
@@ -51,6 +51,6 @@ public class EpitomeClient {
     interface EpitomeService {
 
         @GET("/feed/beam")
-        Observable<EpitomeBeam> getBeam();
+        Single<EpitomeBeam> getBeam();
     }
 }

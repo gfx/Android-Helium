@@ -1,6 +1,5 @@
 package com.github.gfx.helium.fragment;
 
-import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
@@ -38,7 +37,9 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
-import rx.Observable;
+import rx.Single;
+import rx.Subscription;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -123,23 +124,30 @@ public class HatebuEntryFragment extends Fragment
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reload().subscribe(new Action1<List<HatebuEntry>>() {
-                    @Override
-                    public void call(List<HatebuEntry> items) {
-                        adapter.reset(items);
-                        binding.swipeRefresh.setRefreshing(false);
-                    }
-                });
-
+                Subscription subscription = reload()
+                        .doOnUnsubscribe(new Action0() {
+                            @Override
+                            public void call() {
+                                binding.swipeRefresh.setRefreshing(false);
+                            }
+                        })
+                        .subscribe(new Action1<List<HatebuEntry>>() {
+                            @Override
+                            public void call(List<HatebuEntry> items) {
+                                adapter.reset(items);
+                            }
+                        });
+                compositeSubscription.add(subscription);
             }
         });
 
-        reload().subscribe(new Action1<List<HatebuEntry>>() {
+        Subscription subscription = reload().subscribe(new Action1<List<HatebuEntry>>() {
             @Override
             public void call(List<HatebuEntry> items) {
                 adapter.reset(items);
             }
         });
+        compositeSubscription.add(subscription);
 
         return binding.getRoot();
     }
@@ -161,8 +169,8 @@ public class HatebuEntryFragment extends Fragment
         }
     }
 
-    Observable<List<HatebuEntry>> reload() {
-        Observable<List<HatebuEntry>> observable;
+    Single<List<HatebuEntry>> reload() {
+        Single<List<HatebuEntry>> observable;
         if (getCategory() != null) {
             observable = hatenaClient.getHotentries(getCategory());
         } else {
@@ -171,7 +179,6 @@ public class HatebuEntryFragment extends Fragment
         return observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
                     public List<HatebuEntry> call(Throwable throwable) {
