@@ -1,4 +1,4 @@
--keepattributes SourceFile,LineNumberTable,Exceptions
+-keepattributes SourceFile,Signature,Exceptions,*Annotation*,*Table
 -keepnames class * extends java.lang.Throwable
 
 # RxJava
@@ -21,9 +21,10 @@
 -keep class android.support.** { *; }
 
 # Retrofit and OkHttp
--dontwarn com.squareup.okhttp3.**
+-dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
 
 # SimpleXML Framework
 -dontwarn org.simpleframework.xml.stream.**
@@ -38,4 +39,4 @@
 -keepnames class ** { *; }
 
 # StaticGson
--keepnames @com.github.gfx.static_gson.annotation.StaticGsonGenerated class *
+-keep @com.github.gfx.static_gson.annotation.StaticGsonGenerated class * { *; }
