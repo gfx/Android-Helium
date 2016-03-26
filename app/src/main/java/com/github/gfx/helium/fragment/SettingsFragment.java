@@ -1,7 +1,6 @@
 package com.github.gfx.helium.fragment;
 
 
-import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.HeliumApplication;
@@ -28,8 +27,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import retrofit2.adapter.rxjava.HttpException;
-import rx.Observable;
-import rx.Subscriber;
+import rx.Single;
+import rx.SingleSubscriber;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -118,23 +117,18 @@ public class SettingsFragment extends Fragment {
         checkHatenaId(username)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(subscriptions))
-                .subscribe(new Subscriber<List<HatebuEntry>>() {
+                .subscribe(new SingleSubscriber<List<HatebuEntry>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onSuccess(List<HatebuEntry> value) {
+                        saveUsername(username);
+                        tracker.sendEvent(TAG, "success: set a hatena name");
                     }
 
                     @Override
-                    public void onError(final Throwable e) {
+                    public void onError(Throwable e) {
                         finishProgress();
                         showError(e);
                         tracker.sendEvent(TAG, "fail: set a hatena name");
-                    }
-
-                    @Override
-                    public void onNext(List<HatebuEntry> hatebuEntries) {
-                        saveUsername(username);
-                        tracker.sendEvent(TAG, "success: set a hatena name");
                     }
                 });
     }
@@ -143,7 +137,7 @@ public class SettingsFragment extends Fragment {
         return username.matches("^[a-zA-Z0-9_]+$");
     }
 
-    Observable<List<HatebuEntry>> checkHatenaId(String username) {
+    Single<List<HatebuEntry>> checkHatenaId(String username) {
         return hatenaClient.getBookmark(username, 0);
     }
 

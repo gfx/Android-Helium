@@ -1,7 +1,6 @@
 package com.github.gfx.helium.fragment;
 
 import com.bumptech.glide.Glide;
-import com.cookpad.android.rxt4a.operators.OperatorAddToCompositeSubscription;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.android.orma.TransactionTask;
@@ -46,8 +45,10 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
-import rx.Observable;
+import rx.Single;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -141,18 +142,24 @@ public class TimelineFragment extends Fragment
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reload().subscribe(new Action1<List<HatebuEntry>>() {
+                Subscription subscription = reload()
+                        .doOnUnsubscribe(new Action0() {
+                            @Override
+                            public void call() {
+                                binding.swipeRefresh.setRefreshing(false);
+                            }
+                        })
+                        .subscribe(new Action1<List<HatebuEntry>>() {
                     @Override
                     public void call(List<HatebuEntry> items) {
                         mergeItemsAndCache(items);
-                        binding.swipeRefresh.setRefreshing(false);
                     }
                 });
-
+                compositeSubscription.add(subscription);
             }
         });
 
-        reload().subscribe(new Action1<List<HatebuEntry>>() {
+        Subscription subscription = reload().subscribe(new Action1<List<HatebuEntry>>() {
             @Override
             public void call(List<HatebuEntry> items) {
                 mergeItemsAndCache(items);
@@ -167,6 +174,7 @@ public class TimelineFragment extends Fragment
                 });
             }
         });
+        compositeSubscription.add(subscription);
 
         return binding.getRoot();
     }
@@ -249,13 +257,11 @@ public class TimelineFragment extends Fragment
         }
     }
 
-    Observable<List<HatebuEntry>> reload() {
+    Single<List<HatebuEntry>> reload() {
         currentEntries = 0;
-        Observable<List<HatebuEntry>> observable = hatenaClient.getFavotites(username, currentEntries);
-        return observable
+        return hatenaClient.getFavotites(username, currentEntries)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .onErrorReturn(new Func1<Throwable, List<HatebuEntry>>() {
                     @Override
                     public List<HatebuEntry> call(Throwable e) {
@@ -267,9 +273,8 @@ public class TimelineFragment extends Fragment
 
     void loadMore() {
         currentEntries += adapter.getItemCount();
-        hatenaClient.getFavotites(username, currentEntries)
+        Subscription subscription = hatenaClient.getFavotites(username, currentEntries)
                 .observeOn(AndroidSchedulers.mainThread())
-                .lift(new OperatorAddToCompositeSubscription<List<HatebuEntry>>(compositeSubscription))
                 .subscribe(new Subscriber<List<HatebuEntry>>() {
                     @Override
                     public void onCompleted() {
@@ -286,6 +291,7 @@ public class TimelineFragment extends Fragment
                         adapter.addAllWithNotification(items);
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     void reportError(Throwable e) {

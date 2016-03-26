@@ -19,7 +19,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 @ParametersAreNonnullByDefault
@@ -75,7 +75,7 @@ public class HatenaClient {
         return Uri.parse(uri);
     }
 
-    public Observable<List<HatebuEntry>> getHotentries() {
+    public Single<List<HatebuEntry>> getHotentries() {
         return feedburnerService.getHotentries().map(new Func1<HatebuFeed, List<HatebuEntry>>() {
             @Override
             public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
@@ -84,7 +84,7 @@ public class HatenaClient {
         });
     }
 
-    public Observable<List<HatebuEntry>> getHotentries(final String category) {
+    public Single<List<HatebuEntry>> getHotentries(final String category) {
         return hatebuService.getHotentries(category).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
             @Override
             public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
@@ -93,7 +93,7 @@ public class HatenaClient {
         });
     }
 
-    public Observable<List<HatebuEntry>> getFavotites(final String user, final int of) {
+    public Single<List<HatebuEntry>> getFavotites(final String user, final int of) {
         return hatebuService.getFavorites(user, of).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
             @Override
             public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
@@ -102,7 +102,7 @@ public class HatenaClient {
         });
     }
 
-    public Observable<List<HatebuEntry>> getBookmark(final String user, final int of) {
+    public Single<List<HatebuEntry>> getBookmark(final String user, final int of) {
         return hatebuService.getBookmark(user, of).map(new Func1<HatebuFeed, List<HatebuEntry>>() {
             @Override
             public List<HatebuEntry> call(HatebuFeed hatebuFeed) {
@@ -114,18 +114,18 @@ public class HatenaClient {
     interface FeedburnerService {
 
         @GET("/hatena/b/hotentry")
-        Observable<HatebuFeed> getHotentries();
+        Single<HatebuFeed> getHotentries();
     }
 
     interface HatebuService {
 
         @GET("/hotentry/{category}.rss")
-        Observable<HatebuFeed> getHotentries(@Path("category") String category);
+        Single<HatebuFeed> getHotentries(@Path("category") String category);
 
         @GET("/{user}/favorite.rss")
-        Observable<HatebuFeed> getFavorites(@Path("user") String user, @Query("of") int of);
+        Single<HatebuFeed> getFavorites(@Path("user") String user, @Query("of") int of);
 
         @GET("/{user}/bookmark.rss")
-        Observable<HatebuFeed> getBookmark(@Path("user") String user, @Query("of") int of);
+        Single<HatebuFeed> getBookmark(@Path("user") String user, @Query("of") int of);
     }
 }
