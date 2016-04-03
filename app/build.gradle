@@ -26,7 +26,7 @@ apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/b
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
     dataBinding.enabled = true
     defaultConfig {
         applicationId "com.github.gfx.helium"
@@ -134,10 +134,10 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile('com.squareup.retrofit2:converter-simplexml:2.0.0') {
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile('com.squareup.retrofit2:converter-simplexml:2.0.1') {
         exclude module: 'stax'
         exclude module: 'stax-api'
         exclude module: 'xpp3'
