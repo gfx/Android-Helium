@@ -10,9 +10,12 @@ import com.github.gfx.helium.di.FragmentModule;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import android.app.Application;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+
+import java.util.Locale;
 
 import hugo.weaving.DebugLog;
 
@@ -54,5 +57,14 @@ public class HeliumApplication extends Application {
         new StethoDelegator(this).setup();
 
         AndroidThreeTen.init(this);
+
+        updateLanguage(Locale.JAPANESE);
+    }
+
+    public void updateLanguage(Locale locale) {
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getResources().updateConfiguration(configuration, null);
     }
 }
