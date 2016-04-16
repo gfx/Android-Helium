@@ -3,7 +3,6 @@ package com.github.gfx.helium.fragment;
 import com.bumptech.glide.Glide;
 import com.cookpad.android.rxt4a.schedulers.AndroidSchedulers;
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
-import com.github.gfx.android.orma.TransactionTask;
 import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
@@ -213,22 +212,25 @@ public class TimelineFragment extends Fragment
 
         final List<HatebuEntry> items = newItems.subList(0, i);
 
-        orma.transactionAsync(new TransactionTask() {
+        orma.transactionAsync(new Runnable() {
             @Override
-            public void execute() throws Exception {
+            public void run() {
                 List<HatebuEntry> reversedItems = new ArrayList<>(items);
                 Collections.reverse(reversedItems);
                 relation().inserter()
                         .executeAll(reversedItems);
             }
+        }).subscribe(new Action0() {
+            @Override
+            public void call() {
+                if (cachedEntries.isEmpty()) {
+                    adapter.reset(items);
+                } else {
+                    adapter.addAll(0, items);
+                    adapter.notifyItemRangeInserted(0, items.size());
+                }
+            }
         });
-
-        if (cachedEntries.isEmpty()) {
-            adapter.reset(items);
-        } else {
-            adapter.addAll(0, items);
-            adapter.notifyItemRangeInserted(0, items.size());
-        }
     }
 
     @Override
@@ -274,6 +276,7 @@ public class TimelineFragment extends Fragment
     void loadMore() {
         currentEntries += adapter.getItemCount();
         Subscription subscription = hatenaClient.getFavotites(username, currentEntries)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<HatebuEntry>>() {
                     @Override
