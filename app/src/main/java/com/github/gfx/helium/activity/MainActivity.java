@@ -220,10 +220,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @DebugLog
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult with " + requestCode + " " + resultCode);
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != RESULT_OK) {
@@ -234,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
                 break;
             default:
-                Log.w(TAG, "unknown result code: " + resultCode);
+                Log.e(TAG, "unknown result code: " + resultCode);
         }
     }
 
