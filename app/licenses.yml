@@ -1,0 +1,90 @@
+- artifact: com.jakewharton.hugo:hugo-annotations:+
+  name: Hugo
+  copyrightHolder: Jake Wharton
+  license: apache2
+- artifact: com.squareup.okhttp3:+:+
+  name: OkHttp
+  copyrightHolder: Square, Inc.
+  license: apache2
+- artifact: com.android.databinding:+:+
+  skip: true
+- artifact: io.reactivex:rxjava:+
+  name: RxJava
+  copyrightHolder: Netflix, Inc.
+  license: apache2
+- artifact: com.jakewharton.threetenabp:threetenabp:+
+  name: ThreeTen Android Backport
+  copyrightHolder: Jake Wharton
+  license: apache2
+- artifact: com.android.support:+:+
+  name: Android Support Libraries
+  copyrightHolder: The Android Open Source Project
+  license: apache2
+- artifact: com.squareup.retrofit2:+:+
+  name: Retrofit
+  copyrightHolder: Square, Inc.
+  license: apache2
+- artifact: com.google.code.gson:gson:+
+  name: Gson
+  copyrightHolder: Google Inc.
+  license: apache2
+- artifact: org.simpleframework:simple-xml:+
+  name: Simple XML
+  copyrightHolder: Niall Gallagher
+  license: apache2
+- artifact: com.google.code.findbugs:jsr305:+
+  name: JSR305 by FindBugs
+  copyrightHolder: The FindBugs Project
+  license: apache2
+- artifact: org.threeten:threetenbp:+
+  name: ThreeTen backport project
+  authors:
+    - Stephen Colebourne
+    - Michael Nascimento Santos
+  license: bsd_3_clauses
+- artifact: com.squareup.okio:okio:+
+  name: Okio
+  copyrightHolder: Square, Inc.
+  license: apache2
+- artifact: javax.inject:javax.inject:+
+  name: JSR-330
+  copyrightHolder: The JSR-330 Expert Group
+  license: apache2
+- artifact: org.abego.treelayout:org.abego.treelayout.core:+
+  name: abego TreeLayout
+  copyrightHolder: abego Software
+  license: bsd_3_clauses
+- artifact: com.cookpad.android.rxt4a:rxt4a:+
+  name: RxT4A
+  copyrightHolder: Cookpad Inc.
+  license: apache2
+- artifact: com.tunnelvisionlabs:antlr4-runtime:+
+  name: ANTLR4 by Tunnel Vision Laboratories
+  authors:
+    - Terence Parr
+    - Sam Harwell
+  license: bsd_3_clauses
+- artifact: com.github.gfx.android.orma:+:+
+  name: Android Orma
+  copyrightHolder: FUJI Goro
+  license: apache2
+- artifact: com.github.bumptech.glide:glide:+
+  name: Glide
+  copyrightHolder: Google Inc.
+  license: bsd_3_clauses
+- artifact: com.google.dagger:dagger:+
+  name: Google Dagger
+  copyrightHolders:
+    - Google, Inc.
+    - Square, Inc.
+  license: apache2
+- artifact: com.github.gfx.static_gson:static-gson:+
+  name: Static Gson
+  copyrightHolder: FUJI Goro
+  license: apache2
+- artifact: com.google.android.gms:play-services-ads:+
+  skip: true
+- artifact: com.google.android.gms:play-services-analytics:+
+  skip: true
+- artifact: com.google.android.gms:play-services-basement:+
+  skip: true
