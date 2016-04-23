@@ -50,10 +50,6 @@
   name: JSR-330
   copyrightHolder: The JSR-330 Expert Group
   license: apache2
-- artifact: org.abego.treelayout:org.abego.treelayout.core:+
-  name: abego TreeLayout
-  copyrightHolder: abego Software
-  license: bsd_3_clauses
 - artifact: com.cookpad.android.rxt4a:rxt4a:+
   name: RxT4A
   copyrightHolder: Cookpad Inc.
