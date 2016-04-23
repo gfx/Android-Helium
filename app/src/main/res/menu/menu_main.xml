@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".MainActivity"
         >
 
     <item
@@ -30,10 +30,17 @@
             app:showAsAction="never"
             />
     <item
+            android:id="@+id/action_view_licenses"
+            android:orderInCategory="100"
+            android:title="@string/action_view_licenses"
+            app:showAsAction="never"
+            />
+    <item
             android:id="@+id/action_view_setting"
             android:orderInCategory="100"
             android:title="@string/action_view_setting"
             app:showAsAction="never"
             />
+
 
 </menu>

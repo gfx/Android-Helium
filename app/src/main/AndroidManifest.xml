@@ -31,7 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
                 android:name=".activity.SettingsActivity"
                 android:label="@string/action_view_configure_username"
@@ -68,6 +67,8 @@
                 android:enabled="true"
                 android:exported="false"
                 />
+
+        <activity android:name=".activity.LicensePageActivity"></activity>
     </application>
 
 </manifest>
