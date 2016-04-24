@@ -22,4 +22,5 @@
     <string name="error_network">はてなに接続できませんでした。もう一度お試しください</string>
     <string name="error_field_required">この項目は必須です</string>
     <string name="action_view_setting">アプリの管理</string>
+    <string name="action_view_licenses">OSS Licenses</string>
 </resources>

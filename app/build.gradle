@@ -1,7 +1,3 @@
-repositories {
-    jcenter()
-}
-
 buildscript {
     repositories {
         jcenter()
@@ -13,7 +9,11 @@ buildscript {
         classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
         classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.7.0'
     }
+}
+plugins {
+    id "com.github.hierynomus.license" version "0.12.1"
 }
 
 apply plugin: 'com.android.application'
@@ -21,8 +21,14 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.gfx.android.powerassert'
 apply plugin: 'com.github.gfx.ribbonizer'
 apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'com.cookpad.android.licensetools'
 
 apply from: 'https://raw.githubusercontent.com/gfx/gradle-android-utils/master/build.gradle'
+
+repositories {
+    jcenter()
+}
+
 
 android {
     compileSdkVersion 23
@@ -115,13 +121,27 @@ android {
     }
 }
 
+license {
+    header = project.file('../LICENSE.md')
+    ignoreFailures = true
+}
+
+downloadLicenses {
+    includeProjectDependencies = true
+    dependencyConfiguration = 'compile'
+}
+
 ext {
     supportLibraryVersion = '23.3.0'
 }
 
-configurations.all {
-    resolutionStrategy {
-        force "com.android.support:support-annotations:$supportLibraryVersion"
+configurations {
+    all*.exclude group: 'org.abego.treelayout', module: 'org.abego.treelayout.core'
+
+    all {
+        resolutionStrategy {
+            force "com.android.support:support-annotations:$supportLibraryVersion"
+        }
     }
 }
 

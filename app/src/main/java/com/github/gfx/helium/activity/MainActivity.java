@@ -207,13 +207,17 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             }
-            case R.id.action_view_setting: {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + getPackageName()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            case R.id.action_view_licenses: {
+                Intent intent = LicensePageActivity.createIntent(this);
                 startActivity(intent);
                 return true;
 
+            }
+            case R.id.action_view_setting: {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+                return true;
             }
         }
 
