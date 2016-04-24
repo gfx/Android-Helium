@@ -9,11 +9,8 @@ buildscript {
         classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
         classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.7.0'
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.8.0'
     }
-}
-plugins {
-    id "com.github.hierynomus.license" version "0.12.1"
 }
 
 apply plugin: 'com.android.application'
@@ -119,16 +116,6 @@ android {
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-}
-
-license {
-    header = project.file('../LICENSE.md')
-    ignoreFailures = true
-}
-
-downloadLicenses {
-    includeProjectDependencies = true
-    dependencyConfiguration = 'compile'
 }
 
 ext {
