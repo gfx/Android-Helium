@@ -78,9 +78,5 @@
   name: Static Gson
   copyrightHolder: FUJI Goro
   license: apache2
-- artifact: com.google.android.gms:play-services-ads:+
-  skip: true
-- artifact: com.google.android.gms:play-services-analytics:+
-  skip: true
-- artifact: com.google.android.gms:play-services-basement:+
+- artifact: com.google.android.gms:+:+
   skip: true
