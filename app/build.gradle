@@ -9,7 +9,7 @@ buildscript {
         classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
         classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.11.0'
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.12.0'
     }
 }
 
@@ -119,7 +119,7 @@ android {
 }
 
 ext {
-    supportLibraryVersion = '23.3.0'
+    supportLibraryVersion = '23.4.0'
 }
 
 configurations {
@@ -151,14 +151,14 @@ dependencies {
         exclude module: 'xpp3'
     }
     compile 'com.cookpad.android.rxt4a:rxt4a:1.0.0'
-    compile 'io.reactivex:rxjava:1.1.3'
+    compile 'io.reactivex:rxjava:1.1.5'
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.3'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.dagger:dagger:2.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'javax.annotation:jsr250-api:1.0'
-    apt 'com.github.gfx.android.orma:orma-processor:2.4.5'
-    compile 'com.github.gfx.android.orma:orma:2.4.5'
+    apt 'com.github.gfx.android.orma:orma-processor:2.4.6'
+    compile 'com.github.gfx.android.orma:orma:2.4.6'
     apt 'com.github.gfx.static_gson:static-gson-processor:0.9.7'
     compile 'com.github.gfx.static_gson:static-gson:0.9.7'
     debugCompile 'com.facebook.stetho:stetho:1.3.1'
