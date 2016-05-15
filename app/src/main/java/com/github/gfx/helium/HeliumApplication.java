@@ -10,6 +10,7 @@ import com.github.gfx.helium.di.FragmentModule;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,10 @@ public class HeliumApplication extends Application {
     @NonNull
     public AppComponent getComponent() {
         return appComponent;
+    }
+
+    @NonNull public static AppComponent getComponent(Context context) {
+        return ((HeliumApplication)context.getApplicationContext()).appComponent;
     }
 
     @NonNull
