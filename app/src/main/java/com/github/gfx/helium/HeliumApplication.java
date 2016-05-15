@@ -54,7 +54,7 @@ public class HeliumApplication extends Application {
                 .appModule(new AppModule(this))
                 .build();
 
-        new StethoDelegator(this).setup();
+        StethoDelegator.setup(this);
 
         AndroidThreeTen.init(this);
 

@@ -40,3 +40,5 @@
 
 # StaticGson
 -keep @com.github.gfx.static_gson.annotation.StaticGsonGenerated class * { *; }
+
+-keep public class * implements com.bumptech.glide.module.GlideModule

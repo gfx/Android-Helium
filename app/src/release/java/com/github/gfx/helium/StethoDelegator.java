@@ -1,11 +1,13 @@
 package com.github.gfx.helium;
 
+import okhttp3.Interceptor;
+
 public class StethoDelegator {
 
-    public StethoDelegator(HeliumApplication application) {
-
+    public static void setup() {
     }
 
-    public void setup() {
+    public static Interceptor createNetworkInterceptor() {
+        return null;
     }
 }

@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
 import com.github.gfx.helium.BuildConfig;
+import com.github.gfx.helium.StethoDelegator;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
 import com.github.gfx.helium.model.OrmaDatabase;
 import com.github.gfx.helium.model.UsernameChangedEvent;
@@ -81,9 +82,12 @@ public class AppModule {
         OkHttpClient.Builder c = new OkHttpClient.Builder()
                 .cache(cache)
                 .addInterceptor(interceptor);
+
         if (BuildConfig.DEBUG) {
+            c.addNetworkInterceptor(StethoDelegator.createNetworkInterceptor());
             c.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
         }
+
         return c.build();
     }
 

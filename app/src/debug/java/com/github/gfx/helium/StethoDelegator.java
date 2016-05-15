@@ -1,21 +1,19 @@
 package com.github.gfx.helium;
 
 import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
-import android.content.Context;
+import android.app.Application;
 
-import javax.inject.Inject;
+import okhttp3.Interceptor;
 
 public class StethoDelegator {
 
-    @Inject
-    Context context;
-
-    public StethoDelegator(HeliumApplication application) {
-        application.getComponent().inject(this);
+    public static void setup(Application context) {
+        Stetho.initializeWithDefaults(context);
     }
 
-    public void setup() {
-        Stetho.initializeWithDefaults(context);
+    public static Interceptor createNetworkInterceptor() {
+        return new StethoInterceptor();
     }
 }
