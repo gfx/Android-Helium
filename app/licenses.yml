@@ -64,7 +64,7 @@
   name: Android Orma
   copyrightHolder: FUJI Goro
   license: apache2
-- artifact: com.github.bumptech.glide:glide:+
+- artifact: com.github.bumptech.glide:+:+
   name: Glide
   copyrightHolder: Google Inc.
   license: bsd_2_clauses
