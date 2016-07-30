@@ -24,7 +24,7 @@
                 android:padding="8dp"
                 >
 
-            <TextView
+            <com.github.gfx.helium.view.NormalizedTextView
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
                     tools:text="@string/placeholder_title"
                     />
 
-            <TextView
+            <com.github.gfx.helium.view.NormalizedTextView
                     android:id="@+id/original_url"
                     style="@style/BookmarkUrl"
                     android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                     android:orientation="horizontal"
                     >
 
-                <TextView
+                <com.github.gfx.helium.view.NormalizedTextView
                         android:id="@+id/views"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                         tools:text="@string/placeholder_count"
                         />
 
-                <TextView
+                <com.github.gfx.helium.view.NormalizedTextView
                         android:id="@+id/published_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

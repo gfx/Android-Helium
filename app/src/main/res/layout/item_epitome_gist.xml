@@ -7,7 +7,7 @@
             android:orientation="horizontal"
             >
 
-        <TextView
+        <com.github.gfx.helium.view.NormalizedTextView
                 android:id="@+id/gist_point"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -19,7 +19,7 @@
                 android:textColor="@color/gist_point"
                 />
 
-        <TextView
+        <com.github.gfx.helium.view.NormalizedTextView
                 android:id="@+id/gist_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
