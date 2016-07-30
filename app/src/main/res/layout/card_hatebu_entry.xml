@@ -30,7 +30,7 @@
                     android:padding="8dp"
                     >
 
-                <TextView
+                <com.github.gfx.helium.view.NormalizedTextView
                         android:id="@+id/bookmark_count"
                         android:layout_width="44dp"
                         android:layout_height="44dp"
@@ -47,7 +47,7 @@
                         android:orientation="vertical"
                         >
 
-                    <TextView
+                    <com.github.gfx.helium.view.NormalizedTextView
                             android:id="@+id/title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                             tools:text="@string/placeholder_title"
                             />
 
-                    <TextView
+                    <com.github.gfx.helium.view.NormalizedTextView
                             android:id="@+id/original_url"
                             style="@style/BookmarkUrl"
                             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                             android:orientation="horizontal"
                             >
 
-                        <TextView
+                        <com.github.gfx.helium.view.NormalizedTextView
                                 android:id="@+id/subject"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                                 tools:text="@string/placeholder_subject"
                                 />
 
-                        <TextView
+                        <com.github.gfx.helium.view.NormalizedTextView
                                 android:id="@+id/date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                     android:background="@color/card_divider"
                     />
 
-            <TextView
+            <com.github.gfx.helium.view.NormalizedTextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
