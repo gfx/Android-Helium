@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.cookpad.android.rxt4a.subscriptions.AndroidCompositeSubscription;
+import com.github.gfx.android.orma.AccessThreadConstraint;
 import com.github.gfx.helium.BuildConfig;
 import com.github.gfx.helium.StethoDelegator;
 import com.github.gfx.helium.api.HeliumRequestInterceptor;
@@ -116,6 +117,7 @@ public class AppModule {
     @Provides
     public OrmaDatabase provideOrmaDatabase(Context context) {
         return OrmaDatabase.builder(context)
+                .writeOnMainThread(AccessThreadConstraint.WARNING)
                 .build();
     }
 }
