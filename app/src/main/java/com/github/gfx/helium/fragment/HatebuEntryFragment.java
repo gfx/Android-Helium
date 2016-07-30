@@ -163,7 +163,7 @@ public class HatebuEntryFragment extends Fragment
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser) {
+        if (isVisibleToUser && isAdded()) {
             String category = getCategory();
             tracker.sendScreenView(category != null ? TAG + "-" + category : TAG);
         }
