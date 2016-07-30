@@ -1,11 +1,16 @@
 machine:
-    services:
-        - docker
-
+  java:
+    version: oraclejdk8
+  environment:
+    TERM: dumb
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 dependencies:
-    override:
-        - docker build -t test .
-
+  cache_directories:
+      - "~/.gradle"
+  pre:
+      - echo y | android -s update sdk -u -a -t "tools"
+      - echo y | android -s update sdk -u -a -t "platform-tools,build-tools-24.0.1,android-24"
+      - echo y | android -s update sdk -u -a -t "extra-android-m2repository,extra-google-m2repository"
 test:
-    override:
-        - docker run test
+  override:
+    - ./gradlew --info check
