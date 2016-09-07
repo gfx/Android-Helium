@@ -237,7 +237,7 @@ public class TimelineFragment extends Fragment
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser) {
+        if (isVisibleToUser && isAdded()) {
             tracker.sendScreenView(TAG);
         }
     }
