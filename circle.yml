@@ -8,9 +8,11 @@ dependencies:
   cache_directories:
       - "~/.gradle"
   pre:
-      - echo y | android -s update sdk -u -a -t "tools"
-      - echo y | android -s update sdk -u -a -t "platform-tools,build-tools-24.0.1,android-24"
-      - echo y | android -s update sdk -u -a -t "extra-android-m2repository,extra-google-m2repository"
+      - mkdir $ANDROID_HOME/licenses
+      - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+      - android -s update sdk -u -a -t "tools"
+      - android -s update sdk -u -a -t "platform-tools,build-tools-24.0.1,android-24"
+      - android -s update sdk -u -a -t "extra-android-m2repository,extra-google-m2repository"
 test:
   override:
     - ./gradlew --info check
