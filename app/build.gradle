@@ -24,6 +24,9 @@ repositories {
     jcenter()
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all" << "-Xlint:-processing"
+}
 
 android {
     compileSdkVersion 24
