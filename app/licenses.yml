@@ -54,9 +54,9 @@
   name: RxT4A
   copyrightHolder: Cookpad Inc.
   license: apache2
-- artifact: com.tunnelvisionlabs:antlr4-runtime:+
-  name: ANTLR4 by Tunnel Vision Laboratories
-  authors:
+- artifact: org.antlr:antlr4-runtime:+
+  name: ANTLR 4 Runtime
+  copyrightHolders:
     - Terence Parr
     - Sam Harwell
   license: bsd_3_clauses
