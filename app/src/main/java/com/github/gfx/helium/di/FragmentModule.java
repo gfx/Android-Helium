@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,6 +18,7 @@ public class FragmentModule {
         this.fragment = fragment;
     }
 
+    @Named("fragment")
     @Provides
     public Context context() {
         return fragment.getContext();

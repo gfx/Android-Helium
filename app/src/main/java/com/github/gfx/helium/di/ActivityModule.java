@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -22,6 +24,7 @@ public class ActivityModule {
         return activity;
     }
 
+    @Named("activity")
     @Provides
     public Context context() {
         return activity;

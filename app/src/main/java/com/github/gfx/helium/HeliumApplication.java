@@ -69,7 +69,7 @@ public class HeliumApplication extends Application {
     public void updateLanguage(Locale locale) {
         Locale.setDefault(locale);
         Configuration configuration = new Configuration();
-        configuration.locale = locale;
+        configuration.setLocale(locale);
         getResources().updateConfiguration(configuration, null);
     }
 }

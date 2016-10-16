@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @ParametersAreNonnullByDefault
 public class ViewSwitcher {
@@ -18,7 +19,7 @@ public class ViewSwitcher {
     final int animationTime;
 
     @Inject
-    public ViewSwitcher(Context context) {
+    public ViewSwitcher(@Named("app") Context context) {
         animationTime = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
