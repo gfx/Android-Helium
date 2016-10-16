@@ -5,7 +5,6 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.1'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
         //classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
@@ -14,7 +13,6 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 //apply plugin: 'com.github.gfx.android.powerassert'
 apply plugin: 'com.github.gfx.ribbonizer'
 apply plugin: 'com.jakewharton.hugo'
@@ -159,11 +157,11 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'com.google.dagger:dagger:2.7'
-    apt 'com.google.dagger:dagger-compiler:2.7'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
-    apt 'com.github.gfx.android.orma:orma-processor:3.0.0'
+    annotationProcessor 'com.github.gfx.android.orma:orma-processor:3.0.0'
     compile 'com.github.gfx.android.orma:orma:3.0.0'
-    apt 'com.github.gfx.static_gson:static-gson-processor:0.9.7'
+    annotationProcessor 'com.github.gfx.static_gson:static-gson-processor:0.9.7'
     compile 'com.github.gfx.static_gson:static-gson:0.9.7'
     debugCompile 'com.facebook.stetho:stetho:1.3.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
