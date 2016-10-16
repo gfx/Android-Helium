@@ -21,6 +21,7 @@ import android.net.ConnectivityManager;
 
 import java.io.File;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -46,6 +47,7 @@ public class AppModule {
         context = app;
     }
 
+    @Named("app")
     @Provides
     public Context provideContext() {
         return context;
@@ -53,7 +55,7 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public Tracker providesGoogleAnalyticsTracker(Context context) {
+    public Tracker providesGoogleAnalyticsTracker(@Named("app") Context context) {
         GoogleAnalytics ga = GoogleAnalytics.getInstance(context);
         Tracker tracker = ga.newTracker(BuildConfig.GA_TRACKING_ID);
         tracker.enableAdvertisingIdCollection(true);
@@ -62,7 +64,7 @@ public class AppModule {
     }
 
     @Provides
-    public ConnectivityManager provideConnectivityManager(Context context) {
+    public ConnectivityManager provideConnectivityManager(@Named("app") Context context) {
         return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
@@ -76,7 +78,7 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public OkHttpClient provideHttpClient(Context context, Interceptor interceptor) {
+    public OkHttpClient provideHttpClient(@Named("app") Context context, Interceptor interceptor) {
         File cacheDir = new File(context.getCacheDir(), CACHE_FILE_NAME);
         Cache cache = new Cache(cacheDir, MAX_CACHE_SIZE);
 
@@ -98,7 +100,7 @@ public class AppModule {
     }
 
     @Provides
-    public SharedPreferences provideSharedPreferences(Context context) {
+    public SharedPreferences provideSharedPreferences(@Named("app") Context context) {
         return context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 
@@ -115,7 +117,7 @@ public class AppModule {
 
     @Singleton
     @Provides
-    public OrmaDatabase provideOrmaDatabase(Context context) {
+    public OrmaDatabase provideOrmaDatabase(@Named("app") Context context) {
         return OrmaDatabase.builder(context)
                 .writeOnMainThread(AccessThreadConstraint.WARNING)
                 .build();
