@@ -4,7 +4,6 @@ import com.github.gfx.helium.HeliumApplication;
 import com.github.gfx.helium.R;
 import com.github.gfx.helium.api.HatenaClient;
 import com.github.gfx.helium.databinding.ActivityMainBinding;
-import com.github.gfx.helium.fragment.EpitomeEntryFragment;
 import com.github.gfx.helium.fragment.HatebuEntryFragment;
 import com.github.gfx.helium.fragment.TimelineFragment;
 import com.github.gfx.helium.model.EntryTab;
@@ -79,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
         // TODO: make tabs customizable
         List<EntryTab> tabs = new ArrayList<>();
 
-        tabs.add(new EntryTab("Epitome", new EntryTab.FragmentFactory() {
-            @Override
-            public Fragment createFragment() {
-                return EpitomeEntryFragment.newInstance();
-            }
-        }));
+//        tabs.add(new EntryTab("Epitome", new EntryTab.FragmentFactory() {
+//            @Override
+//            public Fragment createFragment() {
+//                return EpitomeEntryFragment.newInstance();
+//            }
+//        }));
 
         if (hatenaUsername != null) {
             tabs.add(new EntryTab(hatenaUsername + "のタイムライン", new EntryTab.FragmentFactory() {
