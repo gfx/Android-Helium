@@ -12,4 +12,5 @@ dependencies:
     - $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "extras;android;m2repository" "extras;google;m2repository"
 test:
   override:
-    - ./gradlew --info check
+    - # ./gradlew check
+    - ./gradlew lint
