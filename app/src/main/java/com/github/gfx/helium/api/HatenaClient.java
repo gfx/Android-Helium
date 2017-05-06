@@ -61,9 +61,9 @@ public class HatenaClient {
     }
 
     @NonNull
-    public Uri buildHatebuEntryUri(String path) {
+    public Uri buildHatebuEntryUri(@NonNull String link) {
         return HATEBU_ENTRY.buildUpon()
-                .appendPath(path)
+                .appendEncodedPath(link.replaceFirst("^https://", "s/").replaceFirst("^http://", ""))
                 .build();
     }
 
