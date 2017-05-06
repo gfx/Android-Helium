@@ -80,3 +80,5 @@
   license: apache2
 - artifact: com.google.android.gms:+:+
   skip: true
+- artifact: com.artemzin.rxjava:proguard-rules:+
+  skip: true
