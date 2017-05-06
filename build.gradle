@@ -1,1 +1,13 @@
-// see app/build.gradle
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
+        //classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.18.0'
+    }
+}

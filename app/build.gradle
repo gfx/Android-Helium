@@ -1,17 +1,3 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
-        classpath 'com.github.gfx.ribbonizer:plugin:0.5.0'
-        //classpath 'com.github.gfx.android.powerassert:plugin:1.5.2'
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.18.0'
-    }
-}
-
 apply plugin: 'com.android.application'
 //apply plugin: 'com.github.gfx.android.powerassert'
 apply plugin: 'com.github.gfx.ribbonizer'
@@ -29,13 +15,13 @@ tasks.withType(JavaCompile) {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
     dataBinding.enabled = true
     defaultConfig {
         applicationId "com.github.gfx.helium"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 25
         def version = readVersion(rootProject.file("VERSION"))
         versionName version.toVersionName()
         versionCode version.toVersionCode()
@@ -69,6 +55,10 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             signingConfig signingConfigs.debug
+
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField("String", "GA_TRACKING_ID",
                     "\"${project.ext.has('GA_TRACKING_ID_DEBUG') ? project.ext.GA_TRACKING_ID_DEBUG : ''}\"")
@@ -123,7 +113,7 @@ android {
 }
 
 ext {
-    supportLibraryVersion = '24.2.1'
+    supportLibraryVersion = '25.3.1'
 }
 
 configurations {
@@ -181,5 +171,4 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.google.guava:guava:19.0'
-
 }
