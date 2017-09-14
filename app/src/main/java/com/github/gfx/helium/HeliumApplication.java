@@ -12,6 +12,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -68,8 +69,11 @@ public class HeliumApplication extends Application {
 
     public void updateLanguage(Locale locale) {
         Locale.setDefault(locale);
-        Configuration configuration = new Configuration();
-        configuration.setLocale(locale);
-        getResources().updateConfiguration(configuration, null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Configuration configuration = new Configuration();
+            configuration.setLocale(locale);
+            getResources().updateConfiguration(configuration, null);
+        }
     }
 }
